@@ -1,0 +1,52 @@
+{
+  "nav": {
+    "about": "About",
+    "blog": "Blog",
+    "consulting": "Consulting",
+    "contact": "Contact"
+  },
+  "home": {
+    "eyebrow": "// system online",
+    "headline": "Builder. Strategist. Operator.",
+    "subheadline": "I help ambitious teams build what they mean to build.",
+    "cta_consulting": "Work with me",
+    "cta_blog": "Read the log"
+  },
+  "consulting": {
+    "eyebrow": "// available for select engagements",
+    "headline": "Clarity, then execution.",
+    "tiers": {
+      "signal": {
+        "name": "The Signal",
+        "price": "$400",
+        "description": "A focused audit and strategy session. One problem, one clear direction."
+      },
+      "sprint": {
+        "name": "The Sprint",
+        "price": "$3,500",
+        "description": "A time-boxed execution sprint. Defined scope, delivered output."
+      },
+      "stack": {
+        "name": "The Stack",
+        "price": "$5,500/mo",
+        "description": "A retained partnership. Embedded strategy, ongoing execution."
+      }
+    }
+  },
+  "contact": {
+    "eyebrow": "// open channel",
+    "headline": "Say something.",
+    "fields": {
+      "name": "Name",
+      "email": "Email",
+      "subject": "Subject",
+      "message": "Message",
+      "budget": "Budget (optional)"
+    },
+    "submit": "Send",
+    "success": "// message received"
+  },
+  "footer": {
+    "rights": "All rights reserved."
+  }
+}

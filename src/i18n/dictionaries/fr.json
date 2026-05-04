@@ -1,0 +1,52 @@
+{
+  "nav": {
+    "about": "À propos",
+    "blog": "Blog",
+    "consulting": "Consulting",
+    "contact": "Contact"
+  },
+  "home": {
+    "eyebrow": "// système en ligne",
+    "headline": "Bâtisseur. Stratège. Opérateur.",
+    "subheadline": "J'aide les équipes ambitieuses à construire ce qu'elles ont vraiment en tête.",
+    "cta_consulting": "Travailler ensemble",
+    "cta_blog": "Lire le journal"
+  },
+  "consulting": {
+    "eyebrow": "// disponible pour des missions sélectionnées",
+    "headline": "Clarté, puis exécution.",
+    "tiers": {
+      "signal": {
+        "name": "The Signal",
+        "price": "400 $",
+        "description": "Un audit ciblé et une session stratégique. Un problème, une direction claire."
+      },
+      "sprint": {
+        "name": "The Sprint",
+        "price": "3 500 $",
+        "description": "Un sprint d'exécution limité dans le temps. Périmètre défini, livraison garantie."
+      },
+      "stack": {
+        "name": "The Stack",
+        "price": "5 500 $/mois",
+        "description": "Un partenariat durable. Stratégie intégrée, exécution continue."
+      }
+    }
+  },
+  "contact": {
+    "eyebrow": "// canal ouvert",
+    "headline": "Dites quelque chose.",
+    "fields": {
+      "name": "Nom",
+      "email": "Email",
+      "subject": "Sujet",
+      "message": "Message",
+      "budget": "Budget (optionnel)"
+    },
+    "submit": "Envoyer",
+    "success": "// message reçu"
+  },
+  "footer": {
+    "rights": "Tous droits réservés."
+  }
+}

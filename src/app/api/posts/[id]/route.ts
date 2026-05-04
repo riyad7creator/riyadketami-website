@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@/auth';
 import dbConnect from '@/lib/db/connect';
 import Post from '@/models/Post';
 import { postSchema } from '@/lib/validation';
 import DOMPurify from 'isomorphic-dompurify';
+import { requireAdmin, zodFail, serverError } from '@/lib/api-helpers';
 
 export async function GET(
   _req: Request,
@@ -22,13 +22,12 @@ export async function GET(
     }
 
     if (!isObjectId && post.status === 'published') {
-      await Post.findByIdAndUpdate(post._id, { $inc: { views: 1 } });
+      Post.findByIdAndUpdate(post._id, { $inc: { views: 1 } }).exec();
     }
 
     return NextResponse.json(post);
   } catch (error) {
-    console.error('Error fetching post:', error);
-    return NextResponse.json({ error: 'Failed to fetch post' }, { status: 500 });
+    return serverError('Failed to fetch post', error);
   }
 }
 
@@ -37,19 +36,14 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await auth();
-    if (session?.user?.role !== 'admin') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const check = await requireAdmin();
+    if (!check.ok) return check.response;
 
     const { id } = await params;
     await dbConnect();
     const body = await req.json() as unknown;
     const result = postSchema.partial().safeParse(body);
-
-    if (!result.success) {
-      return NextResponse.json({ error: result.error.issues[0]?.message }, { status: 400 });
-    }
+    if (!result.success) return zodFail(result.error);
 
     const data = result.data;
     if (data.content) data.content = DOMPurify.sanitize(data.content);
@@ -59,8 +53,7 @@ export async function PATCH(
 
     return NextResponse.json(post);
   } catch (error) {
-    console.error('Error updating post:', error);
-    return NextResponse.json({ error: 'Failed to update post' }, { status: 500 });
+    return serverError('Failed to update post', error);
   }
 }
 
@@ -69,10 +62,8 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await auth();
-    if (session?.user?.role !== 'admin') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const check = await requireAdmin();
+    if (!check.ok) return check.response;
 
     const { id } = await params;
     await dbConnect();
@@ -81,7 +72,6 @@ export async function DELETE(
     if (!post) return NextResponse.json({ error: 'Post not found' }, { status: 404 });
     return NextResponse.json({ message: 'Post deleted' });
   } catch (error) {
-    console.error('Error deleting post:', error);
-    return NextResponse.json({ error: 'Failed to delete post' }, { status: 500 });
+    return serverError('Failed to delete post', error);
   }
 }

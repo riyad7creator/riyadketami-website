@@ -9,6 +9,7 @@ export const BLOG_CATEGORIES = [
 ] as const;
 
 export type BlogCategory = (typeof BLOG_CATEGORIES)[number]['value'];
+export const BLOG_CATEGORY_VALUES = BLOG_CATEGORIES.map((c) => c.value) as [BlogCategory, ...BlogCategory[]];
 
 export const POST_LANGUAGES = ['en', 'fr', 'ar'] as const;
 export type PostLanguage = (typeof POST_LANGUAGES)[number];
@@ -40,13 +41,10 @@ const PostSchema = new mongoose.Schema(
     excerpt: { type: String, maxlength: 300 },
     content: { type: String, required: true },
     featuredImage: { type: String },
-    category: {
-      type: String,
-      enum: ['business', 'digital-marketing', 'ai', 'productivity', 'creativity'],
-    },
+    category: { type: String, enum: BLOG_CATEGORY_VALUES },
     tags: [{ type: String }],
-    status: { type: String, enum: ['draft', 'published'], default: 'draft' },
-    language: { type: String, enum: ['en', 'fr', 'ar'], default: 'en', required: true },
+    status: { type: String, enum: POST_STATUSES, default: 'draft' },
+    language: { type: String, enum: POST_LANGUAGES, default: 'en', required: true },
     views: { type: Number, default: 0 },
     author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     readTime: { type: Number, default: 1 },

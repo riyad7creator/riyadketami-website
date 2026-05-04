@@ -1,4 +1,5 @@
 import type { NextAuthConfig } from 'next-auth';
+import type { UserRole } from '@/models/User';
 
 export const authConfig = {
   pages: {
@@ -7,18 +8,15 @@ export const authConfig = {
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
-      const isOnAdmin = nextUrl.pathname.startsWith('/admin');
-      if (isOnAdmin) {
+      if (nextUrl.pathname.startsWith('/admin')) {
         return isLoggedIn;
       }
       return true;
     },
     async session({ session, token }) {
-      if (token.sub && session.user) {
-        session.user.id = token.sub;
-      }
-      if (token.role && session.user) {
-        session.user.role = token.role as 'admin' | 'editor' | 'viewer';
+      if (session.user) {
+        if (token.sub) session.user.id = token.sub;
+        if (token.role) session.user.role = token.role as UserRole;
       }
       return session;
     },

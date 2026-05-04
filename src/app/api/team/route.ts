@@ -1,42 +1,34 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@/auth';
 import dbConnect from '@/lib/db/connect';
 import User from '@/models/User';
 import bcrypt from 'bcryptjs';
 import { teamMemberSchema } from '@/lib/validation';
+import { requireAdmin, zodFail, serverError } from '@/lib/api-helpers';
 
 export async function GET() {
   try {
-    const session = await auth();
-    if (session?.user?.role !== 'admin') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const check = await requireAdmin();
+    if (!check.ok) return check.response;
 
     await dbConnect();
-    const members = await User.find({ _id: { $ne: session.user.id } })
+    const members = await User.find({ _id: { $ne: check.session.user.id } })
       .select('-password')
       .sort({ createdAt: -1 });
 
     return NextResponse.json(members);
   } catch (error) {
-    console.error('Error fetching team:', error);
-    return NextResponse.json({ error: 'Failed to fetch team' }, { status: 500 });
+    return serverError('Failed to fetch team', error);
   }
 }
 
 export async function POST(req: Request) {
   try {
-    const session = await auth();
-    if (session?.user?.role !== 'admin') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const check = await requireAdmin();
+    if (!check.ok) return check.response;
 
     const body = await req.json() as unknown;
     const result = teamMemberSchema.safeParse(body);
-
-    if (!result.success) {
-      return NextResponse.json({ error: result.error.issues[0]?.message }, { status: 400 });
-    }
+    if (!result.success) return zodFail(result.error);
 
     await dbConnect();
 
@@ -49,15 +41,12 @@ export async function POST(req: Request) {
     const newMember = await User.create({
       ...result.data,
       password: hashedPassword,
-      createdBy: session.user.id,
+      createdBy: check.session.user.id,
       isActive: true,
     });
 
-    const memberObj = newMember.toObject() as unknown as Record<string, unknown>;
-    delete memberObj['password'];
-    return NextResponse.json(memberObj, { status: 201 });
+    return NextResponse.json(newMember.toObject(), { status: 201 });
   } catch (error) {
-    console.error('Error creating team member:', error);
-    return NextResponse.json({ error: 'Failed to create team member' }, { status: 500 });
+    return serverError('Failed to create team member', error);
   }
 }

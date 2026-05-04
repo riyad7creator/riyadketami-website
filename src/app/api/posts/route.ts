@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@/auth';
 import dbConnect from '@/lib/db/connect';
 import Post from '@/models/Post';
 import { postSchema } from '@/lib/validation';
 import DOMPurify from 'isomorphic-dompurify';
+import { requireAdmin, zodFail, serverError, generateSlug } from '@/lib/api-helpers';
 
 export async function GET(req: Request) {
   try {
@@ -17,23 +17,21 @@ export async function GET(req: Request) {
     const language = searchParams.get('language') ?? '';
 
     if (isAdmin) {
-      const session = await auth();
-      if (session?.user?.role !== 'admin') {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-      }
+      const check = await requireAdmin();
+      if (!check.ok) return check.response;
     }
 
     await dbConnect();
 
     const query: Record<string, unknown> = {};
-    if (!isAdmin) query.status = 'published';
-    if (language) query.language = language;
-    if (search) query.$or = [
+    if (!isAdmin) query['status'] = 'published';
+    if (language) query['language'] = language;
+    if (search) query['$or'] = [
       { title: { $regex: search, $options: 'i' } },
       { content: { $regex: search, $options: 'i' } },
     ];
-    if (tag) query.tags = tag;
-    if (category) query.category = category;
+    if (tag) query['tags'] = tag;
+    if (category) query['category'] = category;
 
     const skip = (page - 1) * limit;
 
@@ -44,40 +42,30 @@ export async function GET(req: Request) {
 
     return NextResponse.json({ posts, pagination: { total, page, pages: Math.ceil(total / limit) } });
   } catch (error) {
-    console.error('Error fetching posts:', error);
-    return NextResponse.json({ error: 'Failed to fetch posts' }, { status: 500 });
+    return serverError('Failed to fetch posts', error);
   }
 }
 
 export async function POST(req: Request) {
   try {
-    const session = await auth();
-    if (session?.user?.role !== 'admin') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const check = await requireAdmin();
+    if (!check.ok) return check.response;
 
     await dbConnect();
     const body = await req.json() as unknown;
     const result = postSchema.safeParse(body);
-
-    if (!result.success) {
-      return NextResponse.json({ error: result.error.issues[0]?.message }, { status: 400 });
-    }
+    if (!result.success) return zodFail(result.error);
 
     const data = result.data;
     if (data.content) data.content = DOMPurify.sanitize(data.content);
+    if (!data.slug && data.title) data.slug = generateSlug(data.title);
 
-    if (!data.slug && data.title) {
-      data.slug = data.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
-    }
-
-    const post = await Post.create({ ...data, author: session.user.id });
+    const post = await Post.create({ ...data, author: check.session.user.id });
     return NextResponse.json(post, { status: 201 });
-  } catch (error: unknown) {
-    console.error('Error creating post:', error);
-    const message = (error as { code?: number })?.code === 11000
-      ? 'A post with this slug already exists'
-      : 'Failed to create post';
-    return NextResponse.json({ error: message }, { status: 500 });
+  } catch (error) {
+    if ((error as { code?: number })?.code === 11000) {
+      return NextResponse.json({ error: 'A post with this slug already exists' }, { status: 409 });
+    }
+    return serverError('Failed to create post', error);
   }
 }

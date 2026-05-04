@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { contactFormSchema } from '@/lib/validation';
 import { rateLimit } from '@/lib/rate-limit';
+import { zodFail, serverError } from '@/lib/api-helpers';
 
 export async function POST(req: Request) {
   try {
@@ -9,19 +10,13 @@ export async function POST(req: Request) {
 
     const body = await req.json() as unknown;
     const result = contactFormSchema.safeParse(body);
-
-    if (!result.success) {
-      return NextResponse.json({ error: result.error.issues[0]?.message }, { status: 400 });
-    }
-
-    const { name, email, subject, message, budget } = result.data;
+    if (!result.success) return zodFail(result.error);
 
     // TODO: wire to email provider (Resend/SendGrid) in step 4
-    console.warn('Contact form submission:', { name, email, subject, budget, messageLength: message.length });
+    // Submission received — no-op until email is wired
 
     return NextResponse.json({ message: 'Message received' });
   } catch (error) {
-    console.error('Contact form error:', error);
-    return NextResponse.json({ error: 'Failed to send message' }, { status: 500 });
+    return serverError('Failed to send message', error);
   }
 }

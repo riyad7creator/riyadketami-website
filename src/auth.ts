@@ -27,22 +27,27 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             user.password as string
           );
 
-          if (passwordsMatch) {
-            if (user.loginAttempts > 0) {
-              await user.updateOne({ $set: { loginAttempts: 0 }, $unset: { lockUntil: 1 } });
-            }
-            await user.updateOne({ $set: { lastLoginAt: new Date() } });
-            return {
-              id: user._id.toString(),
-              name: user.name,
-              email: user.email,
-              image: user.image,
-              role: user.role,
-            };
-          } else {
+          if (!passwordsMatch) {
             await user.incLoginAttempts();
             return null;
           }
+
+          if (user.loginAttempts > 0) {
+            await user.updateOne({
+              $set: { loginAttempts: 0, lastLoginAt: new Date() },
+              $unset: { lockUntil: 1 },
+            });
+          } else {
+            await user.updateOne({ $set: { lastLoginAt: new Date() } });
+          }
+
+          return {
+            id: user._id.toString(),
+            name: user.name,
+            email: user.email,
+            image: user.image,
+            role: user.role,
+          };
         } catch (error) {
           console.error('Auth error:', error);
           throw error;

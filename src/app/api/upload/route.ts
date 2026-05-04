@@ -1,15 +1,13 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@/auth';
+import { requireAdmin, serverError } from '@/lib/api-helpers';
 
-const MAX_FILE_SIZE = 4 * 1024 * 1024; // 4MB
+const MAX_FILE_SIZE = 4 * 1024 * 1024;
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'];
 
 export async function POST(req: Request) {
   try {
-    const session = await auth();
-    if (session?.user?.role !== 'admin') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const check = await requireAdmin();
+    if (!check.ok) return check.response;
 
     const formData = await req.formData();
     const file = formData.get('file') as File | null;
@@ -31,12 +29,10 @@ export async function POST(req: Request) {
 
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-    const base64 = buffer.toString('base64');
-    const url = `data:${file.type};base64,${base64}`;
+    const url = `data:${file.type};base64,${buffer.toString('base64')}`;
 
     return NextResponse.json({ success: true, url });
   } catch (error) {
-    console.error('Upload error:', error);
-    return NextResponse.json({ error: 'Failed to upload file' }, { status: 500 });
+    return serverError('Failed to upload file', error);
   }
 }

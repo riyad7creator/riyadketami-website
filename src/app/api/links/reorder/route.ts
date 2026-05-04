@@ -1,14 +1,12 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@/auth';
 import dbConnect from '@/lib/db/connect';
 import Link from '@/models/Link';
+import { requireAdmin, serverError } from '@/lib/api-helpers';
 
 export async function PUT(req: Request) {
   try {
-    const session = await auth();
-    if (session?.user?.role !== 'admin') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const check = await requireAdmin();
+    if (!check.ok) return check.response;
 
     await dbConnect();
     const body = await req.json() as { links?: { _id: string; order: number }[] };
@@ -24,7 +22,6 @@ export async function PUT(req: Request) {
     await Link.bulkWrite(operations);
     return NextResponse.json({ message: 'Links reordered' });
   } catch (error) {
-    console.error('Error reordering links:', error);
-    return NextResponse.json({ error: 'Failed to reorder links' }, { status: 500 });
+    return serverError('Failed to reorder links', error);
   }
 }

@@ -1,5 +1,7 @@
 import { z } from 'zod';
+import { BLOG_CATEGORY_VALUES, POST_STATUSES, POST_LANGUAGES } from '@/models/Post';
 import { SOCIAL_PLATFORMS } from '@/models/SocialAccount';
+import { USER_ROLES } from '@/models/User';
 
 export const contactFormSchema = z.object({
   name: z.string().min(2).max(50),
@@ -14,9 +16,9 @@ export const postSchema = z.object({
   slug: z.string().min(3).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Invalid slug format'),
   content: z.string().min(10),
   excerpt: z.string().max(300).optional().or(z.literal('')),
-  category: z.enum(['business', 'digital-marketing', 'ai', 'productivity', 'creativity']).optional(),
-  status: z.enum(['draft', 'published']).optional(),
-  language: z.enum(['en', 'fr', 'ar']).optional(),
+  category: z.enum(BLOG_CATEGORY_VALUES).optional(),
+  status: z.enum(POST_STATUSES).optional(),
+  language: z.enum(POST_LANGUAGES).optional(),
   tags: z.array(z.string()).optional(),
   featuredImage: z.string().optional().or(z.literal('')),
   readTime: z.number().optional(),
@@ -43,6 +45,6 @@ export const socialAccountSchema = z.object({
 export const teamMemberSchema = z.object({
   name: z.string().min(2).max(60),
   email: z.string().email(),
-  role: z.enum(['admin', 'editor', 'viewer']),
+  role: z.enum(USER_ROLES),
   password: z.string().min(8),
 });

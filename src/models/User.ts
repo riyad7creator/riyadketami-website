@@ -1,6 +1,7 @@
 import mongoose, { Document, Model } from 'mongoose';
 
 export type UserRole = 'admin' | 'editor' | 'viewer';
+export const USER_ROLES: [UserRole, ...UserRole[]] = ['admin', 'editor', 'viewer'];
 
 export interface IUser extends Document {
   name: string;
@@ -21,6 +22,11 @@ export interface IUser extends Document {
   incLoginAttempts: () => Promise<mongoose.UpdateWriteOpResult>;
 }
 
+const stripPassword = (_doc: unknown, ret: Record<string, unknown>) => {
+  delete ret['password'];
+  return ret;
+};
+
 const UserSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, maxlength: 60 },
@@ -29,14 +35,18 @@ const UserSchema = new mongoose.Schema(
     image: { type: String, default: '/portraits/portrait-clean.png' },
     bio: { type: String, maxlength: 500 },
     tagline: { type: String, maxlength: 100 },
-    role: { type: String, enum: ['admin', 'editor', 'viewer'], default: 'viewer' },
+    role: { type: String, enum: USER_ROLES, default: 'viewer' },
     lastLoginAt: { type: Date },
     loginAttempts: { type: Number, default: 0 },
     lockUntil: { type: Date },
     isActive: { type: Boolean, default: true },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: { transform: stripPassword },
+    toObject: { transform: stripPassword },
+  }
 );
 
 UserSchema.methods.isLocked = function () {

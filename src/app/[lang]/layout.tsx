@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { locales, isValidLocale } from '@/i18n/config';
 import { getDictionary } from '@/lib/dictionaries';
-import { NavBar, Footer } from '@/components/ui';
+import { NavBar, Footer, PageTransition } from '@/components/ui';
 
 export async function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
@@ -44,8 +44,16 @@ export default async function LangLayout({
   return (
     <>
       <link rel="preload" as="image" href="/portraits/portrait-hero.png" fetchPriority="high" />
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[var(--z-toast)] focus:px-4 focus:py-2 focus:bg-matrix focus:text-bg-0 focus:text-sm focus:font-medium focus:rounded-[var(--radius-md)]"
+      >
+        Skip to content
+      </a>
       <NavBar locale={lang} items={navItems} />
-      <main className="min-h-[100dvh]">{children}</main>
+      <main id="main-content" className="min-h-[100dvh]">
+        <PageTransition>{children}</PageTransition>
+      </main>
       <Footer locale={lang} />
     </>
   );

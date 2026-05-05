@@ -25,3 +25,4 @@ export { default as Stat } from './Stat';
 export { default as Pill } from './Pill';
 export { default as Badge } from './Badge';
 export { default as ArrowLink } from './ArrowLink';
+export { default as PageTransition } from './PageTransition';

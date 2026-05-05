@@ -1,7 +1,34 @@
 @import "tailwindcss";
+@import "../styles/tokens.css";
 
-:root {
-  color-scheme: dark;
+@theme {
+  /* Colors */
+  --color-bg-0: var(--bg-0);
+  --color-bg-1: var(--bg-1);
+  --color-bg-2: var(--bg-2);
+  --color-text-0: var(--text-0);
+  --color-text-1: var(--text-1);
+  --color-text-2: var(--text-2);
+  --color-matrix: var(--matrix);
+  --color-matrix-dim: var(--matrix-dim);
+  --color-accent: var(--accent);
+  --color-danger: var(--danger);
+  --color-warning: var(--warning);
+  --color-border: var(--border);
+  --color-surface: var(--surface);
+
+  /* Fonts — font-family utilities come from tailwind.config.ts fontFamily extension */
+  --font-display: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* Breakpoints */
+  --breakpoint-xs: 375px;
+
+  /* Border radius */
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
 }
 
 *,
@@ -13,20 +40,93 @@
 html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color-scheme: dark;
+  scroll-behavior: smooth;
 }
 
 body {
-  background: #0a0b0d;
-  color: #ffffff;
+  background: var(--bg-0);
+  color: var(--text-0);
+  font-family: var(--font-display);
   margin: 0;
+  min-height: 100dvh;
+}
+
+/* Arabic locale */
+:lang(ar) body {
+  font-family: var(--font-arabic), ui-sans-serif, system-ui, sans-serif;
 }
 
 ::selection {
-  background: #00ff6630;
-  color: #00ff66;
+  background: rgba(0, 255, 102, 0.2);
+  color: var(--matrix);
 }
 
 :focus-visible {
-  outline: 2px solid #7dd3fc;
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-1);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--bg-2);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-2);
+}
+
+/* Typography scale — uses @layer base so utilities can override these defaults */
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+
+  p {
+    line-height: 1.7;
+    margin: 0;
+  }
+}
+
+/* Utility classes */
+.font-display { font-family: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif; }
+.font-mono { font-family: var(--font-mono-var), ui-monospace, monospace; }
+
+.text-gradient-matrix {
+  background: linear-gradient(135deg, var(--matrix) 0%, var(--matrix-dim) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-accent {
+  background: linear-gradient(135deg, var(--accent) 0%, #38bdf8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.glass {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.glow-matrix {
+  box-shadow: var(--glow-matrix);
+}
+
+.glow-accent {
+  box-shadow: var(--glow-accent);
 }

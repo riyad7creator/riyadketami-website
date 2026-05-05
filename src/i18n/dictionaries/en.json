@@ -10,28 +10,129 @@
     "headline": "Builder. Strategist. Operator.",
     "subheadline": "I help ambitious teams build what they mean to build.",
     "cta_consulting": "Work with me",
-    "cta_blog": "Read the log"
+    "cta_blog": "Read the log",
+    "audience": {
+      "eyebrow": "// audience",
+      "title": "A few million people are listening.",
+      "subtitle": "Across platforms, the work compounds."
+    },
+    "about_teaser": {
+      "eyebrow": "// who",
+      "title": "Operator first, content creator second.",
+      "body": "I write code, ship product, and turn ambiguous problems into focused execution. The audience came from doing the work in public.",
+      "cta": "Read the long version"
+    },
+    "consulting_teaser": {
+      "eyebrow": "// available for select engagements",
+      "title": "Three ways to work together.",
+      "subtitle": "Pick the depth that matches the moment.",
+      "cta": "See full engagement details"
+    },
+    "blog_teaser": {
+      "eyebrow": "// the log",
+      "title": "Notes from the build.",
+      "subtitle": "What's working. What's not. What I'm still figuring out.",
+      "cta": "Browse the archive",
+      "empty": "Posts are loading. Check back soon."
+    }
+  },
+  "about": {
+    "eyebrow": "// operator",
+    "headline": "Builder, strategist, operator.",
+    "subheadline": "I write code, ship product, and turn ambiguous problems into focused execution.",
+    "bio": [
+      "Started in digital marketing. Moved into product. Built in public — and a few million people started paying attention.",
+      "Today I run an independent practice helping technical founders and digital-first teams move faster, build cleaner, and communicate what they're doing more clearly."
+    ],
+    "skills_eyebrow": "// stack",
+    "skills_title": "What I bring to the table.",
+    "skills": [
+      "Product strategy",
+      "Full-stack development",
+      "AI implementation",
+      "Content systems",
+      "Growth operations",
+      "Team architecture"
+    ],
+    "cta": "Work with me"
   },
   "consulting": {
     "eyebrow": "// available for select engagements",
     "headline": "Clarity, then execution.",
+    "subheadline": "Pick the depth that matches the moment. Every engagement starts with a clear brief.",
     "tiers": {
       "signal": {
         "name": "The Signal",
         "price": "$400",
-        "description": "A focused audit and strategy session. One problem, one clear direction."
+        "description": "A focused audit and strategy session. One problem, one clear direction.",
+        "highlights": ["60-min strategy session", "Written brief", "One clear direction"]
       },
       "sprint": {
         "name": "The Sprint",
         "price": "$3,500",
-        "description": "A time-boxed execution sprint. Defined scope, delivered output."
+        "description": "A time-boxed execution sprint. Defined scope, delivered output.",
+        "highlights": ["2–3 week engagement", "Defined deliverable", "Async + sync collaboration"]
       },
       "stack": {
         "name": "The Stack",
         "price": "$5,500/mo",
-        "description": "A retained partnership. Embedded strategy, ongoing execution."
+        "description": "A retained partnership. Embedded strategy, ongoing execution.",
+        "highlights": ["Embedded partnership", "Monthly cadence", "Priority access"]
       }
-    }
+    },
+    "tier_cta": "Get in touch",
+    "process_eyebrow": "// how it works",
+    "process_title": "Three steps, no noise.",
+    "process": [
+      {
+        "step": "01",
+        "title": "Brief",
+        "body": "Fill out the contact form. I review every submission within 48 hours."
+      },
+      {
+        "step": "02",
+        "title": "Align",
+        "body": "A short call to confirm scope, deliverable, and timing."
+      },
+      {
+        "step": "03",
+        "title": "Execute",
+        "body": "I deliver. You get clear, usable output — not decks."
+      }
+    ],
+    "faq_eyebrow": "// questions",
+    "faq_title": "Frequently asked.",
+    "faq": [
+      {
+        "q": "How quickly can we start?",
+        "a": "For The Signal, usually within a week. Sprint and Stack depend on current capacity — fill out the form and I'll give you a real date."
+      },
+      {
+        "q": "Do you work with early-stage founders?",
+        "a": "Yes, if the problem is sharp. I work best when direction exists and execution is the gap."
+      },
+      {
+        "q": "What's the cancellation policy?",
+        "a": "Signal: non-refundable after the session. Sprint: 50% refund if cancelled before kickoff. Stack: 30-day notice to cancel."
+      },
+      {
+        "q": "Do you sign NDAs?",
+        "a": "Yes. Standard mutual NDA available on request."
+      }
+    ],
+    "cta_eyebrow": "// start here",
+    "cta_title": "Ready to move?",
+    "cta_body": "Fill out the contact form. I read everything.",
+    "cta_button": "Get in touch"
+  },
+  "blog": {
+    "eyebrow": "// the log",
+    "headline": "Notes from the build.",
+    "subheadline": "What's working. What's not. What I'm still figuring out.",
+    "filter_all": "All",
+    "empty": "No posts yet. Check back soon.",
+    "back": "Back to blog",
+    "min_read": "min read"
   },
   "contact": {
     "eyebrow": "// open channel",
@@ -44,7 +145,8 @@
       "budget": "Budget (optional)"
     },
     "submit": "Send",
-    "success": "// message received"
+    "success": "// message received",
+    "error": "Something went wrong. Try again."
   },
   "footer": {
     "rights": "All rights reserved."

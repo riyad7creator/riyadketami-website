@@ -1,17 +1,126 @@
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import Link from 'next/link';
+import Image from 'next/image';
+import DOMPurify from 'isomorphic-dompurify';
+import { isValidLocale } from '@/i18n/config';
+import { getDictionary } from '@/lib/dictionaries';
+import { getBlogPost } from '@/lib/blog-data';
+import { Pill, Reveal } from '@/components/ui';
+import { ArrowLeft } from 'lucide-react';
 
+export const revalidate = 300;
 
-export const metadata: Metadata = { title: 'Post' };
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string; slug: string }>;
+}): Promise<Metadata> {
+  const { lang, slug } = await params;
+  if (!isValidLocale(lang)) return {};
+  const post = await getBlogPost(lang, slug);
+  if (!post) return { title: 'Post not found' };
+  return {
+    title: post.title,
+    description: post.excerpt,
+    openGraph: post.featuredImage ? { images: [post.featuredImage] } : undefined,
+  };
+}
 
 export default async function BlogPostPage({
   params,
 }: {
   params: Promise<{ lang: string; slug: string }>;
 }) {
-  const { slug } = await params;
+  const { lang, slug } = await params;
+  if (!isValidLocale(lang)) notFound();
+
+  const [post, dict] = await Promise.all([getBlogPost(lang, slug), Promise.resolve(getDictionary(lang))]);
+  if (!post) notFound();
+
+  const cleanHtml = DOMPurify.sanitize(post.content);
+
+  const date = new Date(post.createdAt).toLocaleDateString(
+    lang === 'fr' ? 'fr-FR' : lang === 'ar' ? 'ar-MA' : 'en-US',
+    { year: 'numeric', month: 'long', day: 'numeric' }
+  );
+
   return (
-    <main style={{ minHeight: '100vh', background: '#0A0B0D', color: '#6B7280', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'monospace', fontSize: '12px' }}>
-      // post: {slug} — coming in step 4
-    </main>
+    <article className="pt-28 pb-24 px-5 sm:px-8">
+      <div className="max-w-3xl mx-auto">
+        {/* Back */}
+        <Reveal direction="up">
+          <Link
+            href={`/${lang}/blog`}
+            className="inline-flex items-center gap-2 font-mono text-xs text-text-2 hover:text-matrix transition-colors duration-[var(--duration-fast)] mb-10 group"
+          >
+            <ArrowLeft size={12} className="transition-transform duration-[var(--duration-fast)] group-hover:-translate-x-1 rtl:rotate-180" />
+            {dict.blog.back}
+          </Link>
+        </Reveal>
+
+        {/* Header */}
+        <header className="flex flex-col gap-5 mb-10">
+          {post.category && (
+            <Reveal direction="up" delay={0.04}>
+              <Pill variant="matrix">{post.category}</Pill>
+            </Reveal>
+          )}
+          <Reveal direction="up" delay={0.08}>
+            <h1 className="font-display font-bold text-[clamp(1.8rem,4vw,3rem)] tracking-[-0.02em] text-text-0 leading-[1.1]">
+              {post.title}
+            </h1>
+          </Reveal>
+          <Reveal direction="up" delay={0.12}>
+            <div className="flex items-center gap-4 font-mono text-xs text-text-2">
+              <span>{date}</span>
+              {post.readTime && (
+                <>
+                  <span className="text-border">·</span>
+                  <span>{post.readTime} {dict.blog.min_read}</span>
+                </>
+              )}
+            </div>
+          </Reveal>
+        </header>
+
+        {/* Featured image */}
+        {post.featuredImage && (
+          <Reveal direction="up" delay={0.16}>
+            <div className="relative aspect-[16/9] w-full rounded-[var(--radius-lg)] overflow-hidden border border-border mb-10">
+              <Image
+                src={post.featuredImage}
+                alt={post.title}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 800px"
+                priority
+              />
+            </div>
+          </Reveal>
+        )}
+
+        {/* Content */}
+        <Reveal direction="up" delay={0.2}>
+          <div
+            className="prose prose-invert prose-sm sm:prose-base max-w-none prose-headings:font-display prose-headings:text-text-0 prose-p:text-text-1 prose-a:text-matrix prose-a:no-underline hover:prose-a:underline prose-code:text-matrix prose-code:bg-bg-2 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-pre:bg-bg-1 prose-pre:border prose-pre:border-border prose-blockquote:border-matrix/40 prose-blockquote:text-text-2"
+            dangerouslySetInnerHTML={{ __html: cleanHtml }}
+          />
+        </Reveal>
+
+        {/* Tags */}
+        {post.tags && post.tags.length > 0 && (
+          <Reveal direction="up" delay={0.1}>
+            <div className="flex flex-wrap gap-2 mt-10 pt-8 border-t border-border">
+              {post.tags.map((tag) => (
+                <span key={tag} className="font-mono text-xs text-text-2 border border-border rounded-full px-3 py-1">
+                  #{tag}
+                </span>
+              ))}
+            </div>
+          </Reveal>
+        )}
+      </div>
+    </article>
   );
 }

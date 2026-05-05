@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
+import { interTight, inter, jetbrainsMono, ibmPlexArabic } from '@/lib/fonts';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -21,7 +22,17 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const dir = locale === 'ar' ? 'rtl' : 'ltr';
 
   return (
-    <html lang={locale} dir={dir} suppressHydrationWarning>
+    <html
+      lang={locale}
+      dir={dir}
+      suppressHydrationWarning
+      className={[
+        interTight.variable,
+        inter.variable,
+        jetbrainsMono.variable,
+        ibmPlexArabic.variable,
+      ].join(' ')}
+    >
       <body suppressHydrationWarning>{children}</body>
     </html>
   );

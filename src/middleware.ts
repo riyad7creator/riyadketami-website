@@ -1,7 +1,10 @@
-import { auth } from '@/auth';
+import NextAuth from 'next-auth';
+import { authConfig } from '@/auth.config';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { defaultLocale, isValidLocale } from '@/i18n/config';
+
+const { auth } = NextAuth(authConfig);
 
 const PUBLIC_FILE = /\.(.*)$/;
 
@@ -20,7 +23,8 @@ export default auth(function middleware(request) {
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
     pathname.startsWith('/login') ||
-    pathname.startsWith('/admin')
+    pathname.startsWith('/admin') ||
+    pathname.startsWith('/design-system')
   ) {
     return NextResponse.next();
   }

@@ -1,5 +1,15 @@
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import { isValidLocale } from '@/i18n/config';
+import { getDictionary } from '@/lib/dictionaries';
+import { getHomeData } from '@/lib/home-data';
+import Hero from '@/components/home/Hero';
+import FollowerStrip from '@/components/home/FollowerStrip';
+import AboutTeaser from '@/components/home/AboutTeaser';
+import ConsultingPreview from '@/components/home/ConsultingPreview';
+import BlogTeaser from '@/components/home/BlogTeaser';
 
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: 'Riyad Ketami',
@@ -8,29 +18,18 @@ export const metadata: Metadata = {
 
 export default async function HomePage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
+  if (!isValidLocale(lang)) notFound();
+
+  const dict = getDictionary(lang);
+  const { socials, posts } = await getHomeData(lang);
 
   return (
-    <main
-      style={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: '#0A0B0D',
-        flexDirection: 'column',
-        gap: '8px',
-        fontFamily: '"JetBrains Mono", "Courier New", monospace',
-      }}
-    >
-      <span style={{ color: '#6B7280', fontSize: '12px', letterSpacing: '0.15em' }}>
-        // system online
-      </span>
-      <span style={{ color: '#00FF66', fontSize: '14px', letterSpacing: '0.1em' }}>
-        riyadketami.com · {lang} · step 1 of 6
-      </span>
-      <span style={{ color: '#6B7280', fontSize: '11px', marginTop: '24px' }}>
-        design system incoming ↓
-      </span>
-    </main>
+    <>
+      <Hero locale={lang} dict={dict} />
+      <FollowerStrip lang={lang} dict={dict} entries={socials} />
+      <AboutTeaser locale={lang} dict={dict} />
+      <ConsultingPreview locale={lang} dict={dict} />
+      <BlogTeaser locale={lang} dict={dict} posts={posts} />
+    </>
   );
 }

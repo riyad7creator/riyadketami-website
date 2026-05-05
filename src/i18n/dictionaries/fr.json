@@ -10,28 +10,129 @@
     "headline": "Bâtisseur. Stratège. Opérateur.",
     "subheadline": "J'aide les équipes ambitieuses à construire ce qu'elles ont vraiment en tête.",
     "cta_consulting": "Travailler ensemble",
-    "cta_blog": "Lire le journal"
+    "cta_blog": "Lire le journal",
+    "audience": {
+      "eyebrow": "// audience",
+      "title": "Quelques millions de personnes écoutent.",
+      "subtitle": "Sur toutes les plateformes, le travail s'accumule."
+    },
+    "about_teaser": {
+      "eyebrow": "// qui",
+      "title": "Opérateur d'abord, créateur ensuite.",
+      "body": "J'écris du code, je livre des produits, je transforme des problèmes flous en exécution claire. L'audience est venue en faisant le travail à découvert.",
+      "cta": "Lire la version longue"
+    },
+    "consulting_teaser": {
+      "eyebrow": "// disponible pour des missions sélectionnées",
+      "title": "Trois façons de collaborer.",
+      "subtitle": "Choisissez la profondeur qui correspond au moment.",
+      "cta": "Voir tous les détails"
+    },
+    "blog_teaser": {
+      "eyebrow": "// le journal",
+      "title": "Notes de chantier.",
+      "subtitle": "Ce qui marche. Ce qui ne marche pas. Ce que je cherche encore.",
+      "cta": "Parcourir les archives",
+      "empty": "Les articles arrivent. Reviens bientôt."
+    }
+  },
+  "about": {
+    "eyebrow": "// opérateur",
+    "headline": "Bâtisseur, stratège, opérateur.",
+    "subheadline": "J'écris du code, je livre des produits et transforme des problèmes flous en exécution claire.",
+    "bio": [
+      "Commencé dans le marketing digital. Passé au produit. Construit en public — et quelques millions de personnes ont commencé à écouter.",
+      "Aujourd'hui je dirige une pratique indépendante qui aide les fondateurs techniques et les équipes digitales à aller plus vite, construire plus proprement et communiquer plus clairement."
+    ],
+    "skills_eyebrow": "// stack",
+    "skills_title": "Ce que j'apporte à la table.",
+    "skills": [
+      "Stratégie produit",
+      "Développement full-stack",
+      "Implémentation IA",
+      "Systèmes de contenu",
+      "Opérations de croissance",
+      "Architecture d'équipe"
+    ],
+    "cta": "Travailler ensemble"
   },
   "consulting": {
     "eyebrow": "// disponible pour des missions sélectionnées",
     "headline": "Clarté, puis exécution.",
+    "subheadline": "Choisissez la profondeur qui correspond au moment. Chaque mission commence par un brief clair.",
     "tiers": {
       "signal": {
         "name": "The Signal",
         "price": "400 $",
-        "description": "Un audit ciblé et une session stratégique. Un problème, une direction claire."
+        "description": "Un audit ciblé et une session stratégique. Un problème, une direction claire.",
+        "highlights": ["Session stratégique 60 min", "Brief écrit", "Une direction claire"]
       },
       "sprint": {
         "name": "The Sprint",
         "price": "3 500 $",
-        "description": "Un sprint d'exécution limité dans le temps. Périmètre défini, livraison garantie."
+        "description": "Un sprint d'exécution limité dans le temps. Périmètre défini, livraison garantie.",
+        "highlights": ["Engagement 2–3 semaines", "Livrable défini", "Collaboration async + sync"]
       },
       "stack": {
         "name": "The Stack",
         "price": "5 500 $/mois",
-        "description": "Un partenariat durable. Stratégie intégrée, exécution continue."
+        "description": "Un partenariat durable. Stratégie intégrée, exécution continue.",
+        "highlights": ["Partenariat intégré", "Cadence mensuelle", "Accès prioritaire"]
       }
-    }
+    },
+    "tier_cta": "Prendre contact",
+    "process_eyebrow": "// comment ça marche",
+    "process_title": "Trois étapes, pas de bruit.",
+    "process": [
+      {
+        "step": "01",
+        "title": "Brief",
+        "body": "Remplissez le formulaire de contact. Je réponds à chaque demande dans les 48 heures."
+      },
+      {
+        "step": "02",
+        "title": "Aligner",
+        "body": "Un court appel pour confirmer le périmètre, le livrable et le timing."
+      },
+      {
+        "step": "03",
+        "title": "Exécuter",
+        "body": "Je livre. Vous obtenez un résultat clair et utilisable — pas des présentations."
+      }
+    ],
+    "faq_eyebrow": "// questions",
+    "faq_title": "Questions fréquentes.",
+    "faq": [
+      {
+        "q": "Quand peut-on commencer ?",
+        "a": "Pour The Signal, généralement en moins d'une semaine. Sprint et Stack dépendent de la capacité disponible — remplissez le formulaire et je vous donne une date réelle."
+      },
+      {
+        "q": "Travaillez-vous avec des fondateurs en phase initiale ?",
+        "a": "Oui, si le problème est bien défini. Je fonctionne mieux quand la direction existe et que l'exécution est le manque."
+      },
+      {
+        "q": "Quelle est la politique d'annulation ?",
+        "a": "Signal : non remboursable après la session. Sprint : 50% de remboursement si annulé avant le lancement. Stack : préavis de 30 jours."
+      },
+      {
+        "q": "Signez-vous des NDA ?",
+        "a": "Oui. NDA mutuel standard disponible sur demande."
+      }
+    ],
+    "cta_eyebrow": "// commencer ici",
+    "cta_title": "Prêt à avancer ?",
+    "cta_body": "Remplissez le formulaire de contact. Je lis tout.",
+    "cta_button": "Prendre contact"
+  },
+  "blog": {
+    "eyebrow": "// le journal",
+    "headline": "Notes de chantier.",
+    "subheadline": "Ce qui marche. Ce qui ne marche pas. Ce que je cherche encore.",
+    "filter_all": "Tout",
+    "empty": "Aucun article pour l'instant. Revenez bientôt.",
+    "back": "Retour au blog",
+    "min_read": "min de lecture"
   },
   "contact": {
     "eyebrow": "// canal ouvert",
@@ -44,7 +145,8 @@
       "budget": "Budget (optionnel)"
     },
     "submit": "Envoyer",
-    "success": "// message reçu"
+    "success": "// message reçu",
+    "error": "Quelque chose a mal tourné. Réessayez."
   },
   "footer": {
     "rights": "Tous droits réservés."

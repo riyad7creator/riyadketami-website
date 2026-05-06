@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import { isValidLocale } from '@/i18n/config';
 import { getDictionary } from '@/lib/dictionaries';
 import { Button, Reveal } from '@/components/ui';
+import MatrixText from '@/components/ui/MatrixText';
 import { Check } from 'lucide-react';
 
 export async function generateMetadata({
@@ -38,7 +39,7 @@ export default async function AboutPage({
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 md:gap-20 items-center">
           <div className="flex flex-col gap-6 order-2 md:order-1">
             <Reveal direction="up">
-              <span className="font-mono text-xs tracking-[0.2em] text-matrix">{t.eyebrow}</span>
+              <MatrixText text={t.eyebrow} className="text-xs tracking-[0.2em] text-matrix" />
             </Reveal>
             <Reveal direction="up" delay={0.08}>
               <h1 className="font-display font-bold tracking-[-0.02em] text-text-0 text-[clamp(2rem,5vw,3.5rem)] leading-[1.1]">
@@ -89,7 +90,7 @@ export default async function AboutPage({
         <div className="max-w-6xl mx-auto flex flex-col gap-10">
           <div className="flex flex-col gap-3">
             <Reveal direction="up">
-              <span className="font-mono text-xs tracking-[0.2em] text-matrix">{t.skills_eyebrow}</span>
+              <MatrixText text={t.skills_eyebrow} className="text-xs tracking-[0.2em] text-matrix" />
             </Reveal>
             <Reveal direction="up" delay={0.08}>
               <h2 className="font-display font-bold text-3xl sm:text-4xl tracking-tight text-text-0">
@@ -115,9 +116,7 @@ export default async function AboutPage({
       <section className="py-24 px-5 sm:px-8">
         <div className="max-w-3xl mx-auto text-center flex flex-col items-center gap-6">
           <Reveal direction="up">
-            <span className="font-mono text-xs tracking-[0.2em] text-matrix">
-              // available for select engagements
-            </span>
+            <MatrixText text="// available for select engagements" className="text-xs tracking-[0.2em] text-matrix" />
           </Reveal>
           <Reveal direction="up" delay={0.08}>
             <h2 className="font-display font-bold text-3xl sm:text-4xl tracking-tight text-text-0">

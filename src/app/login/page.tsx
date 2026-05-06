@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { FormField, Button } from '@/components/ui';
+import MatrixText from '@/components/ui/MatrixText';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -34,7 +35,7 @@ export default function LoginPage() {
     <main className="min-h-[100dvh] flex items-center justify-center px-5">
       <div className="w-full max-w-sm flex flex-col gap-8">
         <div className="flex flex-col gap-2">
-          <span className="font-mono text-xs tracking-[0.2em] text-matrix">// admin access</span>
+          <MatrixText text="// admin access" className="text-xs tracking-[0.2em] text-matrix" autoPlay />
           <h1 className="font-display font-bold text-3xl text-text-0 tracking-tight">Sign in</h1>
         </div>
 

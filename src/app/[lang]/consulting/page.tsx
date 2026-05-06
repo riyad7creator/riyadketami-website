@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { isValidLocale } from '@/i18n/config';
 import { getDictionary } from '@/lib/dictionaries';
 import { Accordion, Button, Reveal } from '@/components/ui';
+import MatrixText from '@/components/ui/MatrixText';
 import type { AccordionItem } from '@/components/ui';
 import { Check } from 'lucide-react';
 import TestimonialsSection from '@/components/home/TestimonialsSection';
@@ -47,7 +48,7 @@ export default async function ConsultingPage({
       <section className="pt-32 pb-20 px-5 sm:px-8">
         <div className="max-w-3xl mx-auto flex flex-col gap-5">
           <Reveal direction="up">
-            <span className="font-mono text-xs tracking-[0.2em] text-matrix">{t.eyebrow}</span>
+            <MatrixText text={t.eyebrow} className="text-xs tracking-[0.2em] text-matrix" />
           </Reveal>
           <Reveal direction="up" delay={0.08}>
             <h1 className="font-display font-bold text-[clamp(2.5rem,6vw,4rem)] tracking-[-0.02em] text-text-0 leading-[1.05]">
@@ -123,7 +124,7 @@ export default async function ConsultingPage({
         <div className="max-w-6xl mx-auto flex flex-col gap-14">
           <div className="flex flex-col gap-3">
             <Reveal direction="up">
-              <span className="font-mono text-xs tracking-[0.2em] text-matrix">{t.process_eyebrow}</span>
+              <MatrixText text={t.process_eyebrow} className="text-xs tracking-[0.2em] text-matrix" />
             </Reveal>
             <Reveal direction="up" delay={0.08}>
               <h2 className="font-display font-bold text-3xl sm:text-4xl tracking-tight text-text-0">
@@ -153,7 +154,7 @@ export default async function ConsultingPage({
         <div className="max-w-3xl mx-auto flex flex-col gap-10">
           <div className="flex flex-col gap-3">
             <Reveal direction="up">
-              <span className="font-mono text-xs tracking-[0.2em] text-matrix">{t.faq_eyebrow}</span>
+              <MatrixText text={t.faq_eyebrow} className="text-xs tracking-[0.2em] text-matrix" />
             </Reveal>
             <Reveal direction="up" delay={0.08}>
               <h2 className="font-display font-bold text-3xl sm:text-4xl tracking-tight text-text-0">
@@ -171,7 +172,7 @@ export default async function ConsultingPage({
       <section className="py-24 px-5 sm:px-8 border-t border-border">
         <div className="max-w-3xl mx-auto text-center flex flex-col items-center gap-6">
           <Reveal direction="up">
-            <span className="font-mono text-xs tracking-[0.2em] text-matrix">{t.cta_eyebrow}</span>
+            <MatrixText text={t.cta_eyebrow} className="text-xs tracking-[0.2em] text-matrix" />
           </Reveal>
           <Reveal direction="up" delay={0.08}>
             <h2 className="font-display font-bold text-3xl sm:text-4xl tracking-tight text-text-0">

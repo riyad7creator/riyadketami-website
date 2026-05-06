@@ -8,25 +8,25 @@ export const metadata: Metadata = {
     default: 'Riyad Ketami',
     template: '%s — Riyad Ketami',
   },
-  description: 'Builder. Strategist. Operator. I help ambitious teams build what they mean to build.',
+  description: 'Digital entrepreneur, AI consultant, and content creator with a 400K+ community. Building in public since day one.',
   metadataBase: new URL('https://riyadketami.com'),
   openGraph: {
     type: 'website',
     siteName: 'Riyad Ketami',
-    title: 'Riyad Ketami',
-    description: 'Builder. Strategist. Operator.',
+    title: 'Riyad Ketami — Builder. Creator. Entrepreneur.',
+    description: 'Digital entrepreneur, AI consultant, and content creator with a 400K+ community.',
     images: [{ url: '/portraits/portrait-hero.png', width: 1200, height: 630, alt: 'Riyad Ketami' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Riyad Ketami',
-    description: 'Builder. Strategist. Operator.',
+    title: 'Riyad Ketami — Builder. Creator. Entrepreneur.',
+    description: 'Digital entrepreneur, AI consultant, and content creator with a 400K+ community.',
     images: ['/portraits/portrait-hero.png'],
   },
   icons: {
     icon: '/favicon.ico',
   },
-  keywords: ['Riyad Ketami', 'consulting', 'product strategy', 'AI', 'full-stack'],
+  keywords: ['Riyad Ketami', 'AI consultant', 'digital entrepreneur', 'content creator', 'consulting', 'TikTok', 'newsletter'],
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

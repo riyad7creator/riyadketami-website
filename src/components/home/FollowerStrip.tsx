@@ -1,4 +1,5 @@
 import { Marquee } from '@/components/ui';
+import MatrixText from '@/components/ui/MatrixText';
 import type { SocialPlatform } from '@/lib/social-platforms';
 import type { Locale } from '@/i18n/config';
 import type { Dictionary } from '@/lib/dictionaries';
@@ -47,7 +48,7 @@ export default function FollowerStrip({ lang, dict, entries }: FollowerStripProp
   return (
     <section className="py-20 sm:py-28 border-y border-border bg-bg-1/40">
       <div className="max-w-6xl mx-auto px-5 sm:px-8 mb-10 flex flex-col gap-2">
-        <span className="font-mono text-xs tracking-[0.2em] text-matrix">{t.eyebrow}</span>
+        <MatrixText text={t.eyebrow} className="text-xs tracking-[0.2em] text-matrix" />
         <h2 className="font-display font-bold tracking-tight text-text-0 text-3xl sm:text-4xl">
           {t.title}
         </h2>

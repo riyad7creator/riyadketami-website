@@ -37,7 +37,7 @@
       "title": "Notes from the build.",
       "subtitle": "What's working. What's not. What I'm still figuring out.",
       "cta": "Browse the archive",
-      "empty": "Posts are loading. Check back soon."
+      "empty": "Posts coming soon."
     },
     "newsletter": {
       "eyebrow": "// weekly insights",
@@ -136,19 +136,31 @@
         "name": "The Signal",
         "price": "$400",
         "description": "A focused audit and strategy session. One problem, one clear direction.",
-        "highlights": ["60-min strategy session", "Written brief", "One clear direction"]
+        "highlights": [
+          "60-min strategy session",
+          "Written brief",
+          "One clear direction"
+        ]
       },
       "sprint": {
         "name": "The Sprint",
         "price": "$3,500",
         "description": "A time-boxed execution sprint. Defined scope, delivered output.",
-        "highlights": ["2–3 week engagement", "Defined deliverable", "Async + sync collaboration"]
+        "highlights": [
+          "2–3 week engagement",
+          "Defined deliverable",
+          "Async + sync collaboration"
+        ]
       },
       "stack": {
         "name": "The Stack",
         "price": "$5,500/mo",
         "description": "A retained partnership. Embedded strategy, ongoing execution.",
-        "highlights": ["Embedded partnership", "Monthly cadence", "Priority access"]
+        "highlights": [
+          "Embedded partnership",
+          "Monthly cadence",
+          "Priority access"
+        ]
       }
     },
     "tier_cta": "Get in touch",

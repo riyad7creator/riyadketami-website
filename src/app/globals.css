@@ -101,35 +101,36 @@ body {
   }
 }
 
-/* Utility classes */
-.font-display { font-family: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif; }
-.font-mono { font-family: var(--font-mono), ui-monospace, monospace; }
+@layer base {
+  .font-display { font-family: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif; }
+  .font-mono { font-family: var(--font-mono), ui-monospace, monospace; }
 
-.text-gradient-matrix {
-  background: linear-gradient(135deg, var(--matrix) 0%, var(--matrix-dim) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
+  .text-gradient-matrix {
+    background: linear-gradient(135deg, var(--matrix) 0%, var(--matrix-dim) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
 
-.text-gradient-accent {
-  background: linear-gradient(135deg, var(--accent) 0%, #38bdf8 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
+  .text-gradient-accent {
+    background: linear-gradient(135deg, var(--accent) 0%, #38bdf8 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
 
-.glass {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
+  .glass {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
 
-.glow-matrix {
-  box-shadow: var(--glow-matrix);
-}
+  .glow-matrix {
+    box-shadow: var(--glow-matrix);
+  }
 
-.glow-accent {
-  box-shadow: var(--glow-accent);
+  .glow-accent {
+    box-shadow: var(--glow-accent);
+  }
 }

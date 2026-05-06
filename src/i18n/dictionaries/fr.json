@@ -6,11 +6,15 @@
     "contact": "Contact"
   },
   "home": {
-    "eyebrow": "// système en ligne",
-    "headline": "Bâtisseur. Stratège. Opérateur.",
-    "subheadline": "J'aide les équipes ambitieuses à construire ce qu'elles ont vraiment en tête.",
+    "eyebrow": "// entrepreneur digital · consultant IA · créateur de contenu",
+    "headline": "Bâtisseur. Créateur. Entrepreneur.",
+    "subheadline": "Communauté de 400K+. Consulting IA. Contenu qui s'accumule.",
     "cta_consulting": "Travailler ensemble",
-    "cta_blog": "Lire le journal",
+    "cta_blog": "Lire le blog",
+    "links": {
+      "eyebrow": "// me trouver",
+      "title": "Tous mes liens au même endroit."
+    },
     "audience": {
       "eyebrow": "// audience",
       "title": "Quelques millions de personnes écoutent.",
@@ -18,8 +22,8 @@
     },
     "about_teaser": {
       "eyebrow": "// qui",
-      "title": "Opérateur d'abord, créateur ensuite.",
-      "body": "J'écris du code, je livre des produits, je transforme des problèmes flous en exécution claire. L'audience est venue en faisant le travail à découvert.",
+      "title": "Entrepreneur digital dans l'ère de l'IA.",
+      "body": "Je crée du contenu pour 400K+ personnes, j'accompagne des équipes ambitieuses sur l'IA et le produit, et je code les outils dont j'ai besoin. Construit en public dès le premier jour.",
       "cta": "Lire la version longue"
     },
     "consulting_teaser": {
@@ -34,15 +38,82 @@
       "subtitle": "Ce qui marche. Ce qui ne marche pas. Ce que je cherche encore.",
       "cta": "Parcourir les archives",
       "empty": "Les articles arrivent. Reviens bientôt."
+    },
+    "newsletter": {
+      "eyebrow": "// insights hebdomadaires",
+      "title": "Prenez de l'avance.",
+      "subtitle": "Rejoignez 50 000+ entrepreneurs qui reçoivent chaque semaine des stratégies IA, des tactiques créateur et des insights business digitaux. Gratuit.",
+      "placeholder": "votre@email.com",
+      "cta": "S'inscrire gratuitement",
+      "success": "// c'est fait — vérifiez votre boîte mail."
+    },
+    "speaking": {
+      "eyebrow": "// conférences & événements",
+      "title": "Bookez-moi pour votre prochain événement.",
+      "subtitle": "Keynotes, workshops et tables rondes — sur l'IA, l'entrepreneuriat digital et le build en public. Disponible dans le monde entier.",
+      "stat_events": "30+",
+      "stat_events_label": "Événements",
+      "stat_continents": "3",
+      "stat_continents_label": "Continents",
+      "stat_reach": "10K+",
+      "stat_reach_label": "Participants en direct",
+      "cta_primary": "Réserver une intervention",
+      "cta_secondary": "Voir le consulting"
+    },
+    "products": {
+      "eyebrow": "// ce que j'offre",
+      "title": "Tout ce qu'il faut pour construire et croître.",
+      "subtitle": "Ressources, systèmes et stratégies issus d'une expérience réelle avec une communauté de 400K+.",
+      "items": [
+        {
+          "tag": "Gratuit",
+          "name": "La Newsletter",
+          "description": "Stratégies IA, tactiques créateur et insights business digital chaque semaine. 50 000+ lecteurs déjà à l'intérieur.",
+          "cta": "S'inscrire gratuitement"
+        },
+        {
+          "tag": "Formation",
+          "name": "Masterclass IA Business",
+          "description": "Les systèmes et workflows IA que j'utilise pour gérer un business digital high-output à une fraction du coût habituel.",
+          "cta": "Accéder"
+        },
+        {
+          "tag": "Consulting",
+          "name": "Session Stratégique",
+          "description": "60 minutes. Votre plus grand blocage. Une direction claire et actionnable. Places limitées.",
+          "cta": "Réserver votre session"
+        }
+      ]
+    },
+    "testimonials": {
+      "eyebrow": "// ce qu'ils disent",
+      "title": "Des résultats concrets, des vraies personnes.",
+      "items": [
+        {
+          "quote": "Riyad nous a aidés à mettre en place un workflow IA qui a réduit notre temps de production de contenu de 70%. Le ROI a été visible dès le premier mois.",
+          "author": "Sarah M.",
+          "title": "Fondatrice, Agence Digitale"
+        },
+        {
+          "quote": "Sa newsletter seule a transformé ma façon de construire en ligne. Quand je l'ai engagé pour du consulting, il a dépassé mes attentes.",
+          "author": "Karim B.",
+          "title": "Entrepreneur E-commerce"
+        },
+        {
+          "quote": "Le consulting IA le plus pratique que j'aie rencontré. Pas de théorie — juste des systèmes qui fonctionnent dans le monde réel.",
+          "author": "Thomas L.",
+          "title": "Directeur Marketing"
+        }
+      ]
     }
   },
   "about": {
-    "eyebrow": "// opérateur",
-    "headline": "Bâtisseur, stratège, opérateur.",
-    "subheadline": "J'écris du code, je livre des produits et transforme des problèmes flous en exécution claire.",
+    "eyebrow": "// entrepreneur digital · consultant IA · créateur de contenu",
+    "headline": "Bâtisseur, créateur, entrepreneur.",
+    "subheadline": "Je construis dans l'ère de l'IA — et partage tout avec une communauté de 400K+.",
     "bio": [
-      "Commencé dans le marketing digital. Passé au produit. Construit en public — et quelques millions de personnes ont commencé à écouter.",
-      "Aujourd'hui je dirige une pratique indépendante qui aide les fondateurs techniques et les équipes digitales à aller plus vite, construire plus proprement et communiquer plus clairement."
+      "Commencé dans le marketing digital. Passé au produit et à l'IA. Construit en public — et une communauté de 400K+ personnes a commencé à suivre.",
+      "Aujourd'hui je gère une pratique indépendante : consulting IA pour équipes ambitieuses, contenu qui enseigne des compétences réelles, et logiciels qui résolvent de vrais problèmes."
     ],
     "skills_eyebrow": "// stack",
     "skills_title": "Ce que j'apporte à la table.",
@@ -123,7 +194,9 @@
     "cta_eyebrow": "// commencer ici",
     "cta_title": "Prêt à avancer ?",
     "cta_body": "Remplissez le formulaire de contact. Je lis tout.",
-    "cta_button": "Prendre contact"
+    "cta_button": "Prendre contact",
+    "testimonials_eyebrow": "// résultats clients",
+    "testimonials_title": "Ce que disent les clients."
   },
   "blog": {
     "eyebrow": "// le journal",

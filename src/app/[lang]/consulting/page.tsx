@@ -6,6 +6,7 @@ import { getDictionary } from '@/lib/dictionaries';
 import { Accordion, Button, Reveal } from '@/components/ui';
 import type { AccordionItem } from '@/components/ui';
 import { Check } from 'lucide-react';
+import TestimonialsSection from '@/components/home/TestimonialsSection';
 
 export async function generateMetadata({
   params,
@@ -99,7 +100,7 @@ export default async function ConsultingPage({
                   </ul>
 
                   <Link href={`/${lang}/contact`} className="mt-auto">
-                    <Button variant={featured ? 'primary' : 'secondary'} className="w-full" magnetic={featured}>
+                    <Button variant={featured ? 'primary' : 'secondary'} className="w-full">
                       {t.tier_cta}
                     </Button>
                   </Link>
@@ -109,6 +110,13 @@ export default async function ConsultingPage({
           })}
         </div>
       </section>
+
+      {/* Testimonials */}
+      <TestimonialsSection
+        dict={dict}
+        eyebrow={t.testimonials_eyebrow}
+        title={t.testimonials_title}
+      />
 
       {/* Process */}
       <section className="py-24 px-5 sm:px-8 border-t border-border bg-bg-1/40">
@@ -175,7 +183,7 @@ export default async function ConsultingPage({
           </Reveal>
           <Reveal direction="up" delay={0.24}>
             <Link href={`/${lang}/contact`}>
-              <Button variant="primary" size="lg" magnetic>
+              <Button variant="primary" size="lg">
                 {t.cta_button}
               </Button>
             </Link>

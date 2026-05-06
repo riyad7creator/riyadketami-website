@@ -6,11 +6,15 @@
     "contact": "Contact"
   },
   "home": {
-    "eyebrow": "// system online",
-    "headline": "Builder. Strategist. Operator.",
-    "subheadline": "I help ambitious teams build what they mean to build.",
+    "eyebrow": "// digital entrepreneur · ai consultant · content creator",
+    "headline": "Builder. Creator. Entrepreneur.",
+    "subheadline": "400K+ community across platforms. AI consulting. Content that compounds.",
     "cta_consulting": "Work with me",
-    "cta_blog": "Read the log",
+    "cta_blog": "Read the blog",
+    "links": {
+      "eyebrow": "// find me",
+      "title": "All my links in one place."
+    },
     "audience": {
       "eyebrow": "// audience",
       "title": "A few million people are listening.",
@@ -18,8 +22,8 @@
     },
     "about_teaser": {
       "eyebrow": "// who",
-      "title": "Operator first, content creator second.",
-      "body": "I write code, ship product, and turn ambiguous problems into focused execution. The audience came from doing the work in public.",
+      "title": "Digital entrepreneur building in the AI era.",
+      "body": "I create content for 400K+ people, consult with ambitious teams on AI and product, and ship the tools I need along the way. Built in public since day one.",
       "cta": "Read the long version"
     },
     "consulting_teaser": {
@@ -34,15 +38,82 @@
       "subtitle": "What's working. What's not. What I'm still figuring out.",
       "cta": "Browse the archive",
       "empty": "Posts are loading. Check back soon."
+    },
+    "newsletter": {
+      "eyebrow": "// weekly insights",
+      "title": "Stay ahead of the curve.",
+      "subtitle": "Join 50,000+ entrepreneurs getting AI strategies, digital business tactics, and creator insights every week. Free.",
+      "placeholder": "your@email.com",
+      "cta": "Subscribe free",
+      "success": "// you're in — check your inbox."
+    },
+    "speaking": {
+      "eyebrow": "// speaking & events",
+      "title": "Book me for your next event.",
+      "subtitle": "Keynotes, workshops, and panels — on AI, digital entrepreneurship, and building in public. Available globally.",
+      "stat_events": "30+",
+      "stat_events_label": "Events",
+      "stat_continents": "3",
+      "stat_continents_label": "Continents",
+      "stat_reach": "10K+",
+      "stat_reach_label": "Live attendees",
+      "cta_primary": "Book a speaking slot",
+      "cta_secondary": "See consulting"
+    },
+    "products": {
+      "eyebrow": "// what i offer",
+      "title": "Everything you need to build and grow.",
+      "subtitle": "Resources, systems, and strategies built from real experience with a 400K+ community.",
+      "items": [
+        {
+          "tag": "Free",
+          "name": "The Newsletter",
+          "description": "Weekly AI strategies, creator tactics, and digital business insights. 50,000+ readers already inside.",
+          "cta": "Subscribe free"
+        },
+        {
+          "tag": "Course",
+          "name": "AI Business Masterclass",
+          "description": "The exact AI systems and workflows I use to run a high-output digital business at a fraction of the usual cost.",
+          "cta": "Get access"
+        },
+        {
+          "tag": "Consulting",
+          "name": "Strategy Session",
+          "description": "60 minutes. Your biggest bottleneck. A clear, actionable direction forward. Limited slots available.",
+          "cta": "Book your session"
+        }
+      ]
+    },
+    "testimonials": {
+      "eyebrow": "// what people say",
+      "title": "Real results, real people.",
+      "items": [
+        {
+          "quote": "Riyad helped us implement an AI workflow that cut our content production time by 70%. The ROI was visible within the first month.",
+          "author": "Sarah M.",
+          "title": "Founder, Digital Agency"
+        },
+        {
+          "quote": "His newsletter alone transformed how I think about building online. When I hired him for consulting, he delivered beyond what I expected.",
+          "author": "Karim B.",
+          "title": "E-commerce Entrepreneur"
+        },
+        {
+          "quote": "The most practical AI consulting I've encountered. No fluff — just systems that work in the real world.",
+          "author": "Thomas L.",
+          "title": "Marketing Director"
+        }
+      ]
     }
   },
   "about": {
-    "eyebrow": "// operator",
-    "headline": "Builder, strategist, operator.",
-    "subheadline": "I write code, ship product, and turn ambiguous problems into focused execution.",
+    "eyebrow": "// digital entrepreneur · ai consultant · content creator",
+    "headline": "Builder, creator, entrepreneur.",
+    "subheadline": "I build in the AI era — and share everything along the way with a 400K+ community.",
     "bio": [
-      "Started in digital marketing. Moved into product. Built in public — and a few million people started paying attention.",
-      "Today I run an independent practice helping technical founders and digital-first teams move faster, build cleaner, and communicate what they're doing more clearly."
+      "Started in digital marketing. Moved into product and AI. Built in public — and a community of 400K+ people started paying attention.",
+      "Today I run an independent practice: AI consulting for ambitious teams, content that teaches real skills, and software that solves real problems."
     ],
     "skills_eyebrow": "// stack",
     "skills_title": "What I bring to the table.",
@@ -123,7 +194,9 @@
     "cta_eyebrow": "// start here",
     "cta_title": "Ready to move?",
     "cta_body": "Fill out the contact form. I read everything.",
-    "cta_button": "Get in touch"
+    "cta_button": "Get in touch",
+    "testimonials_eyebrow": "// client results",
+    "testimonials_title": "What clients say."
   },
   "blog": {
     "eyebrow": "// the log",

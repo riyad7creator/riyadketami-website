@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { FileText, Link2, BarChart2, ArrowRight } from 'lucide-react';
+import { FileText, Link2, BarChart2, Mail, ArrowRight } from 'lucide-react';
 
 interface PostRow {
   _id: string;
@@ -19,11 +19,16 @@ interface PostsResponse {
 
 export default function AdminDashboard() {
   const [data, setData] = useState<PostsResponse | null>(null);
+  const [subscribers, setSubscribers] = useState<number | null>(null);
 
   useEffect(() => {
     fetch('/api/posts?admin=true&limit=5')
       .then((r) => r.json())
       .then(setData)
+      .catch(() => null);
+    fetch('/api/newsletter')
+      .then((r) => r.json())
+      .then((d: { count: number }) => setSubscribers(d.count))
       .catch(() => null);
   }, []);
 
@@ -32,6 +37,7 @@ export default function AdminDashboard() {
 
   const stats = [
     { label: 'Total posts', value: total, icon: FileText, href: '/admin/posts' },
+    { label: 'Subscribers', value: subscribers ?? '—', icon: Mail, href: '/admin/newsletter' },
     { label: 'Links', value: '—', icon: Link2, href: '/admin/links' },
     { label: 'Social accounts', value: '—', icon: BarChart2, href: '/admin/social' },
   ];
@@ -43,7 +49,7 @@ export default function AdminDashboard() {
         <h1 className="font-display font-bold text-2xl text-text-0 mt-1">Overview</h1>
       </div>
 
-      <div className="grid sm:grid-cols-3 gap-4">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map(({ label, value, icon: Icon, href }) => (
           <Link
             key={label}

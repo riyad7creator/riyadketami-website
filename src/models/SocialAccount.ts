@@ -3,6 +3,7 @@ import mongoose, { Document, Model } from 'mongoose';
 export const SOCIAL_PLATFORMS = [
   'tiktok',
   'instagram',
+  'facebook',
   'youtube',
   'x',
   'linkedin',

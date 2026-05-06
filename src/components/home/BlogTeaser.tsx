@@ -1,4 +1,5 @@
 import { ArrowLink, BlogCard, Reveal } from '@/components/ui';
+import MatrixText from '@/components/ui/MatrixText';
 import type { Locale } from '@/i18n/config';
 import type { Dictionary } from '@/lib/dictionaries';
 import type { TeaserPost } from '@/lib/home-data';
@@ -18,7 +19,7 @@ export default function BlogTeaser({ locale, dict, posts }: BlogTeaserProps) {
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
           <div className="flex flex-col gap-3 max-w-2xl">
             <Reveal direction="up">
-              <span className="font-mono text-xs tracking-[0.2em] text-matrix">{t.eyebrow}</span>
+              <MatrixText text={t.eyebrow} className="text-xs tracking-[0.2em] text-matrix" />
             </Reveal>
             <Reveal direction="up" delay={0.08}>
               <h2 className="font-display font-bold tracking-tight text-text-0 text-3xl sm:text-4xl md:text-5xl leading-[1.1]">

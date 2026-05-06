@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, FileText, Link2, BarChart2, Users } from 'lucide-react';
+import { LayoutDashboard, FileText, Link2, BarChart2, Users, Mail } from 'lucide-react';
 import SignOutButton from './SignOutButton';
 
 interface AdminUser {
@@ -20,6 +20,7 @@ const NAV = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard, exact: true },
   { href: '/admin/posts', label: 'Posts', icon: FileText, exact: false },
   { href: '/admin/links', label: 'Links', icon: Link2, exact: false },
+  { href: '/admin/newsletter', label: 'Newsletter', icon: Mail, exact: false },
   { href: '/admin/social', label: 'Social', icon: BarChart2, exact: false },
   { href: '/admin/team', label: 'Team', icon: Users, exact: false },
 ];

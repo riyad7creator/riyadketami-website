@@ -1,4 +1,5 @@
 import { ArrowLink, Reveal } from '@/components/ui';
+import MatrixText from '@/components/ui/MatrixText';
 import type { Locale } from '@/i18n/config';
 import type { Dictionary } from '@/lib/dictionaries';
 
@@ -14,7 +15,7 @@ export default function AboutTeaser({ locale, dict }: AboutTeaserProps) {
     <section className="py-24 sm:py-32 px-5 sm:px-8">
       <div className="max-w-3xl mx-auto flex flex-col gap-6">
         <Reveal direction="up">
-          <span className="font-mono text-xs tracking-[0.2em] text-matrix">{t.eyebrow}</span>
+          <MatrixText text={t.eyebrow} className="text-xs tracking-[0.2em] text-matrix" />
         </Reveal>
 
         <Reveal direction="up" delay={0.08}>

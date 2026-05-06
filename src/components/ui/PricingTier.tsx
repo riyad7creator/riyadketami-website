@@ -64,7 +64,7 @@ export default function PricingTier({
         variant={featured ? 'primary' : 'secondary'}
         className="w-full mt-auto"
         onClick={onSelect}
-        magnetic
+       
       >
         {cta}
       </Button>

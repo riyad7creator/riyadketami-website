@@ -1,5 +1,5 @@
 import { Marquee } from '@/components/ui';
-import type { SocialPlatform } from '@/models/SocialAccount';
+import type { SocialPlatform } from '@/lib/social-platforms';
 import type { Locale } from '@/i18n/config';
 import type { Dictionary } from '@/lib/dictionaries';
 import type { SocialEntry } from '@/lib/home-data';
@@ -7,6 +7,7 @@ import type { SocialEntry } from '@/lib/home-data';
 const PLATFORM_LABELS: Record<SocialPlatform, string> = {
   tiktok: 'TikTok',
   instagram: 'Instagram',
+  facebook: 'Facebook',
   youtube: 'YouTube',
   x: 'X',
   linkedin: 'LinkedIn',

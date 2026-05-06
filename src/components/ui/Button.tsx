@@ -1,7 +1,7 @@
 'use client';
 
-import { forwardRef, useRef } from 'react';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { forwardRef } from 'react';
+import { motion } from 'framer-motion';
 import type { ComponentPropsWithoutRef } from 'react';
 
 type Variant = 'primary' | 'secondary' | 'ghost' | 'danger';
@@ -11,7 +11,6 @@ interface ButtonProps extends ComponentPropsWithoutRef<'button'> {
   variant?: Variant;
   size?: Size;
   loading?: boolean;
-  magnetic?: boolean;
   as?: 'button' | 'a';
   href?: string;
 }
@@ -30,41 +29,16 @@ const sizes: Record<Size, string> = {
 };
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ variant = 'secondary', size = 'md', loading, magnetic = false, children, className = '', disabled, ...props }, ref) => {
-    const buttonRef = useRef<HTMLButtonElement>(null);
-    const x = useMotionValue(0);
-    const y = useMotionValue(0);
-    const springX = useSpring(x, { stiffness: 300, damping: 25 });
-    const springY = useSpring(y, { stiffness: 300, damping: 25 });
-
-    const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
-      if (!magnetic || !buttonRef.current) return;
-      const rect = buttonRef.current.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-      x.set((e.clientX - cx) * 0.3);
-      y.set((e.clientY - cy) * 0.3);
-    };
-
-    const handleMouseLeave = () => {
-      x.set(0);
-      y.set(0);
-    };
-
+  ({ variant = 'secondary', size = 'md', loading, children, className = '', disabled, ...props }, ref) => {
     const base =
       'inline-flex items-center justify-center gap-2 cursor-pointer select-none transition-colors duration-[var(--duration-fast)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-40 disabled:pointer-events-none';
 
     return (
       <motion.button
-        ref={(node) => {
-          (buttonRef as React.MutableRefObject<HTMLButtonElement | null>).current = node;
-          if (typeof ref === 'function') ref(node as HTMLButtonElement);
-          else if (ref) (ref as React.MutableRefObject<HTMLButtonElement | null>).current = node as HTMLButtonElement;
-        }}
-        style={magnetic ? { x: springX, y: springY } : undefined}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
+        ref={ref as React.Ref<HTMLButtonElement>}
+        whileHover={{ scale: 1.015 }}
         whileTap={{ scale: 0.97 }}
+        transition={{ duration: 0.15, ease: 'easeOut' }}
         className={`${base} ${variants[variant]} ${sizes[size]} ${className}`}
         disabled={disabled ?? loading}
         {...(props as ComponentPropsWithoutRef<typeof motion.button>)}

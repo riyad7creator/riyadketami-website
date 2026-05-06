@@ -63,7 +63,7 @@ export default function LoginPage() {
             variant="primary"
             className="w-full mt-2"
             disabled={loading}
-            magnetic
+           
           >
             {loading ? '...' : 'Sign in'}
           </Button>

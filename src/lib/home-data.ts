@@ -3,7 +3,17 @@ import SocialAccount from '@/models/SocialAccount';
 import type { ISocialAccount, SocialPlatform } from '@/models/SocialAccount';
 import Post from '@/models/Post';
 import type { IPost } from '@/models/Post';
+import Link from '@/models/Link';
+import type { ILink } from '@/models/Link';
 import type { Locale } from '@/i18n/config';
+
+export interface LinkEntry {
+  id: string;
+  title: string;
+  url: string;
+  icon?: string;
+  description?: string;
+}
 
 export interface SocialEntry {
   platform: SocialPlatform;
@@ -16,6 +26,25 @@ export type TeaserPost = Pick<
   IPost,
   'slug' | 'title' | 'excerpt' | 'category' | 'featuredImage' | 'createdAt' | 'readTime' | 'language'
 >;
+
+async function getLinks(): Promise<LinkEntry[]> {
+  try {
+    await dbConnect();
+    const docs = await Link.find({ isVisible: true })
+      .sort({ order: 1 })
+      .select('_id title url icon description')
+      .lean<Array<Pick<ILink, 'title' | 'url' | 'icon' | 'description'> & { _id: unknown }>>();
+    return docs.map((d) => ({
+      id: String(d._id),
+      title: d.title,
+      url: d.url,
+      icon: d.icon,
+      description: d.description,
+    }));
+  } catch {
+    return [];
+  }
+}
 
 async function getSocials(): Promise<SocialEntry[]> {
   try {
@@ -48,6 +77,6 @@ async function getRecentPosts(lang: Locale): Promise<TeaserPost[]> {
 }
 
 export async function getHomeData(lang: Locale) {
-  const [socials, posts] = await Promise.all([getSocials(), getRecentPosts(lang)]);
-  return { socials, posts };
+  const [socials, posts, links] = await Promise.all([getSocials(), getRecentPosts(lang), getLinks()]);
+  return { socials, posts, links };
 }

@@ -87,7 +87,7 @@ export default function DesignSystemPage() {
       {/* Buttons */}
       <Section title="Buttons">
         <div className="flex flex-wrap gap-3">
-          <Button variant="primary" magnetic>Primary</Button>
+          <Button variant="primary">Primary</Button>
           <Button variant="secondary">Secondary</Button>
           <Button variant="ghost">Ghost</Button>
           <Button variant="danger">Danger</Button>

@@ -50,7 +50,7 @@ export default async function AboutPage({
             </Reveal>
             <Reveal direction="up" delay={0.24}>
               <Link href={`/${lang}/consulting`}>
-                <Button variant="primary" size="lg" magnetic>
+                <Button variant="primary" size="lg">
                   {t.cta}
                 </Button>
               </Link>
@@ -126,7 +126,7 @@ export default async function AboutPage({
           </Reveal>
           <Reveal direction="up" delay={0.16}>
             <Link href={`/${lang}/consulting`}>
-              <Button variant="primary" size="lg" magnetic>
+              <Button variant="primary" size="lg">
                 {t.cta}
               </Button>
             </Link>

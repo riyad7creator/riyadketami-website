@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FormField, Button } from '@/components/ui';
-import { contactFormSchema } from '@/lib/contact-schema';
+import { contactFormSchema } from '@/lib/validation';
 import type { z } from 'zod';
 
 type FormValues = z.infer<typeof contactFormSchema>;

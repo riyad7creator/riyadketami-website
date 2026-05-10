@@ -77,6 +77,9 @@ async function getRecentPosts(lang: Locale): Promise<TeaserPost[]> {
 }
 
 export async function getHomeData(lang: Locale) {
-  const [socials, posts, links] = await Promise.all([getSocials(), getRecentPosts(lang), getLinks()]);
-  return { socials, posts, links };
+  const [socials, posts] = await Promise.all([getSocials(), getRecentPosts(lang)]);
+  return { socials, posts };
 }
+
+// Used by the standalone /links page (client-side via API) and admin
+export { getLinks };

@@ -24,6 +24,7 @@ export default auth(function middleware(request) {
     pathname.startsWith('/api') ||
     pathname.startsWith('/login') ||
     pathname.startsWith('/admin') ||
+    pathname.startsWith('/links') ||
     pathname.startsWith('/design-system')
   ) {
     return NextResponse.next();

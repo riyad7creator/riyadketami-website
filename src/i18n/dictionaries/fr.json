@@ -3,7 +3,8 @@
     "about": "À propos",
     "blog": "Blog",
     "consulting": "Consulting",
-    "contact": "Contact"
+    "contact": "Contact",
+    "services": "Services"
   },
   "home": {
     "eyebrow": "// entrepreneur digital · consultant IA · créateur de contenu",
@@ -105,6 +106,12 @@
           "title": "Directeur Marketing"
         }
       ]
+    },
+    "services": {
+      "eyebrow": "// services",
+      "title": "Comment je peux vous aider.",
+      "subtitle": "Conseil, ateliers et conférences — pensés pour ce dont votre équipe a vraiment besoin.",
+      "cta": "Voir tous les services"
     }
   },
   "about": {
@@ -136,19 +143,31 @@
         "name": "The Signal",
         "price": "400 $",
         "description": "Un audit ciblé et une session stratégique. Un problème, une direction claire.",
-        "highlights": ["Session stratégique 60 min", "Brief écrit", "Une direction claire"]
+        "highlights": [
+          "Session stratégique 60 min",
+          "Brief écrit",
+          "Une direction claire"
+        ]
       },
       "sprint": {
         "name": "The Sprint",
         "price": "3 500 $",
         "description": "Un sprint d'exécution limité dans le temps. Périmètre défini, livraison garantie.",
-        "highlights": ["Engagement 2–3 semaines", "Livrable défini", "Collaboration async + sync"]
+        "highlights": [
+          "Engagement 2–3 semaines",
+          "Livrable défini",
+          "Collaboration async + sync"
+        ]
       },
       "stack": {
         "name": "The Stack",
         "price": "5 500 $/mois",
         "description": "Un partenariat durable. Stratégie intégrée, exécution continue.",
-        "highlights": ["Partenariat intégré", "Cadence mensuelle", "Accès prioritaire"]
+        "highlights": [
+          "Partenariat intégré",
+          "Cadence mensuelle",
+          "Accès prioritaire"
+        ]
       }
     },
     "tier_cta": "Prendre contact",
@@ -223,5 +242,107 @@
   },
   "footer": {
     "rights": "Tous droits réservés."
+  },
+  "links_page": {
+    "bio": "Entrepreneur Digital · Consultant IA · Créateur de Contenu",
+    "tagline": "Communauté de 400K+ sur toutes les plateformes.",
+    "cta_home": "Visiter le site",
+    "cta_contact": "Me contacter",
+    "newsletter_eyebrow": "// insights hebdomadaires",
+    "newsletter_title": "IA & business, chaque semaine.",
+    "newsletter_cta": "S'inscrire gratuitement",
+    "newsletter_placeholder": "votre@email.com",
+    "newsletter_success": "// c'est parti"
+  },
+  "services": {
+    "eyebrow": "// comment je peux aider",
+    "headline": "Services",
+    "subheadline": "Conseil, ateliers et conférences — sans bullshit, avec des résultats.",
+    "items": [
+      {
+        "tag": "Conseil",
+        "name": "Conseil en Stratégie IA",
+        "description": "J'aide les équipes ambitieuses à construire des workflows IA qui fonctionnent vraiment. De l'audit à l'implémentation — clair, pratique, mesurable.",
+        "features": [
+          "Audit de maturité IA",
+          "Feuille de route stratégique",
+          "Formation et accompagnement",
+          "Distanciel ou présentiel"
+        ],
+        "cta": "Réserver une session"
+      },
+      {
+        "tag": "Atelier",
+        "name": "Animation d'Ateliers",
+        "description": "Ateliers demi-journée ou journée entière pour aligner votre équipe et passer à l'action. Concret, pratique, zéro bullshit corporate.",
+        "features": [
+          "Programme sur mesure",
+          "Formats demi-journée ou journée",
+          "Distanciel ou présentiel",
+          "Livrable de synthèse inclus"
+        ],
+        "cta": "Réserver un atelier"
+      },
+      {
+        "tag": "Conférence",
+        "name": "Keynote & Conférence",
+        "description": "Interventions sur l'IA, l'entrepreneuriat digital et le build en public — pour conférences, sommets et événements corporate. Disponible dans le monde entier.",
+        "features": [
+          "Keynotes & tables rondes",
+          "Conférences & événements corporate",
+          "Disponible partout dans le monde",
+          "Français, anglais & arabe"
+        ],
+        "cta": "Réserver une conférence"
+      }
+    ],
+    "process_eyebrow": "// comment ça marche",
+    "process_title": "Un processus simple et clair.",
+    "process": [
+      {
+        "step": "01",
+        "title": "Découverte",
+        "body": "Un appel de 30 min pour comprendre votre situation, vos objectifs et ce que représente le succès pour vous."
+      },
+      {
+        "step": "02",
+        "title": "Proposition",
+        "body": "Vous recevez une proposition claire et personnalisée — périmètre, livrables et calendrier. Sans surprises."
+      },
+      {
+        "step": "03",
+        "title": "Exécution",
+        "body": "On construit, facilite ou intervient. Vous repartez avec des résultats concrets."
+      }
+    ],
+    "faq_eyebrow": "// questions",
+    "faq_title": "Questions fréquentes.",
+    "faq": [
+      {
+        "q": "Comment réserver ?",
+        "a": "Cliquez sur n'importe quel bouton 'Réserver' pour accéder au formulaire de contact. Je réponds sous 48 heures."
+      },
+      {
+        "q": "Les sessions sont-elles disponibles à distance ?",
+        "a": "Oui. Tous les services sont disponibles à distance ou en présentiel — selon votre préférence."
+      },
+      {
+        "q": "Dans quelles langues travaillez-vous ?",
+        "a": "Français, anglais et arabe — selon ce qui convient le mieux à votre équipe."
+      },
+      {
+        "q": "Combien ça coûte ?",
+        "a": "Le tarif dépend du périmètre et du format. Contactez-moi et je vous envoie un devis personnalisé sous 24 heures."
+      },
+      {
+        "q": "Travaillez-vous avec des clients internationaux ?",
+        "a": "Oui — j'ai accompagné des équipes en Europe, au Moyen-Orient et en Amérique du Nord."
+      }
+    ],
+    "cta_eyebrow": "// parlons-en",
+    "cta_title": "Prêt à démarrer ?",
+    "cta_body": "Chaque collaboration commence par une conversation. Sans pitch, sans pression.",
+    "cta_button": "Prendre contact",
+    "cta_button_alt": "Demander un devis"
   }
 }

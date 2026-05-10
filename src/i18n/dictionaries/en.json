@@ -3,7 +3,8 @@
     "about": "About",
     "blog": "Blog",
     "consulting": "Consulting",
-    "contact": "Contact"
+    "contact": "Contact",
+    "services": "Services"
   },
   "home": {
     "eyebrow": "// digital entrepreneur · ai consultant · content creator",
@@ -105,6 +106,12 @@
           "title": "Marketing Director"
         }
       ]
+    },
+    "services": {
+      "eyebrow": "// services",
+      "title": "How I can help.",
+      "subtitle": "Strategy, workshops, and keynotes — built around what your team actually needs.",
+      "cta": "See all services"
     }
   },
   "about": {
@@ -235,5 +242,107 @@
   },
   "footer": {
     "rights": "All rights reserved."
+  },
+  "links_page": {
+    "bio": "Digital Entrepreneur · AI Consultant · Content Creator",
+    "tagline": "400K+ community across platforms.",
+    "cta_home": "Visit website",
+    "cta_contact": "Get in touch",
+    "newsletter_eyebrow": "// weekly insights",
+    "newsletter_title": "AI & business insights, every week.",
+    "newsletter_cta": "Subscribe free",
+    "newsletter_placeholder": "your@email.com",
+    "newsletter_success": "// you're in"
+  },
+  "services": {
+    "eyebrow": "// how i can help",
+    "headline": "Services",
+    "subheadline": "Strategy, workshops, and keynotes — no fluff, just results.",
+    "items": [
+      {
+        "tag": "Consulting",
+        "name": "AI Strategy Consulting",
+        "description": "I help ambitious teams cut through the noise and build AI workflows that actually work. From audit to full implementation — clear, practical, measurable.",
+        "features": [
+          "AI readiness audit",
+          "Custom strategy roadmap",
+          "Team enablement & training",
+          "Async or on-site options"
+        ],
+        "cta": "Book a session"
+      },
+      {
+        "tag": "Workshop",
+        "name": "Workshop Facilitation",
+        "description": "Half-day and full-day workshops designed to get your team aligned, skilled, and building. Hands-on, practical, zero corporate fluff.",
+        "features": [
+          "Custom agenda for your team",
+          "Half-day or full-day formats",
+          "Remote or on-site",
+          "Follow-up playbook included"
+        ],
+        "cta": "Book a workshop"
+      },
+      {
+        "tag": "Speaking",
+        "name": "Keynote Speaking",
+        "description": "Talks on AI, digital entrepreneurship, and building in public — for conferences, summits, and corporate events. Available worldwide.",
+        "features": [
+          "Keynotes & panel discussions",
+          "Conferences & corporate events",
+          "Available globally",
+          "English, French & Arabic"
+        ],
+        "cta": "Book a keynote"
+      }
+    ],
+    "process_eyebrow": "// how it works",
+    "process_title": "Simple, clear process.",
+    "process": [
+      {
+        "step": "01",
+        "title": "Discovery",
+        "body": "A 30-min call to understand your situation, goals, and what success looks like."
+      },
+      {
+        "step": "02",
+        "title": "Proposal",
+        "body": "You receive a clear, custom proposal — scope, deliverables, and timeline. No surprises."
+      },
+      {
+        "step": "03",
+        "title": "Execution",
+        "body": "We build, facilitate, or speak. You leave with results you can actually use."
+      }
+    ],
+    "faq_eyebrow": "// questions",
+    "faq_title": "Frequently asked.",
+    "faq": [
+      {
+        "q": "How do I book?",
+        "a": "Click any 'Book' button to reach the contact form. I respond within 48 hours."
+      },
+      {
+        "q": "Are sessions available remotely?",
+        "a": "Yes. All services are available remotely or on-site — your preference."
+      },
+      {
+        "q": "What languages do you work in?",
+        "a": "English, French, and Arabic — whichever works best for your team."
+      },
+      {
+        "q": "How much does it cost?",
+        "a": "Pricing depends on scope and format. Reach out and I'll send a custom quote within 24 hours."
+      },
+      {
+        "q": "Do you work with international clients?",
+        "a": "Yes — I've worked with teams across Europe, the Middle East, and North America."
+      }
+    ],
+    "cta_eyebrow": "// let's talk",
+    "cta_title": "Ready to start?",
+    "cta_body": "Every engagement starts with a conversation. No pitch, no pressure.",
+    "cta_button": "Get in touch",
+    "cta_button_alt": "Request a quote"
   }
 }

@@ -24,10 +24,11 @@ export default function Footer({ locale, links = [] }: FooterProps) {
   const year = new Date().getFullYear();
 
   const defaultLinks: FooterLink[] = [
-    { label: locale === 'fr' ? 'À propos' : locale === 'ar' ? 'عني' : 'About', href: `/${locale}/about` },
     { label: locale === 'fr' ? 'Blog' : locale === 'ar' ? 'المدونة' : 'Blog', href: `/${locale}/blog` },
-    { label: locale === 'fr' ? 'Consulting' : locale === 'ar' ? 'استشارات' : 'Consulting', href: `/${locale}/consulting` },
+    { label: locale === 'fr' ? 'Services' : locale === 'ar' ? 'الخدمات' : 'Services', href: `/${locale}/services` },
+    { label: locale === 'fr' ? 'À propos' : locale === 'ar' ? 'عني' : 'About', href: `/${locale}/about` },
     { label: locale === 'fr' ? 'Contact' : locale === 'ar' ? 'تواصل' : 'Contact', href: `/${locale}/contact` },
+    { label: 'Links', href: '/links' },
   ];
 
   const allLinks = links.length > 0 ? links : defaultLinks;

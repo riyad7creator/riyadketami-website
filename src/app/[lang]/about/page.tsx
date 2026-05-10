@@ -50,7 +50,7 @@ export default async function AboutPage({
               <p className="text-text-1 text-lg leading-relaxed max-w-md">{t.subheadline}</p>
             </Reveal>
             <Reveal direction="up" delay={0.24}>
-              <Link href={`/${lang}/consulting`}>
+              <Link href={`/${lang}/services`}>
                 <Button variant="primary" size="lg">
                   {t.cta}
                 </Button>
@@ -120,11 +120,11 @@ export default async function AboutPage({
           </Reveal>
           <Reveal direction="up" delay={0.08}>
             <h2 className="font-display font-bold text-3xl sm:text-4xl tracking-tight text-text-0">
-              {dict.consulting.headline}
+              {dict.services.cta_title}
             </h2>
           </Reveal>
           <Reveal direction="up" delay={0.16}>
-            <Link href={`/${lang}/consulting`}>
+            <Link href={`/${lang}/services`}>
               <Button variant="primary" size="lg">
                 {t.cta}
               </Button>

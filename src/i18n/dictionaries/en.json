@@ -236,8 +236,8 @@
       "message": "Message",
       "budget": "Budget (optional)"
     },
-    "submit": "Send",
-    "success": "// message received",
+    "submit": "Send message →",
+    "success": "// message received — I'll get back to you within 48h.",
     "error": "Something went wrong. Try again."
   },
   "footer": {

@@ -107,8 +107,7 @@ export default function ContactForm({ labels }: ContactFormProps) {
         variant="primary"
         size="lg"
         disabled={status === 'submitting'}
-        className="self-start"
-       
+        className="w-full"
       >
         {status === 'submitting' ? '...' : labels.submit}
       </Button>

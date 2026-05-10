@@ -4,10 +4,18 @@ import { getBlogPosts } from '@/lib/blog-data';
 
 const BASE = 'https://riyadketami.com';
 
-const STATIC_PATHS = ['', '/about', '/consulting', '/blog', '/contact'];
+const STATIC_PATHS = ['', '/about', '/services', '/blog', '/contact'];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries: MetadataRoute.Sitemap = [];
+
+  // Locale-independent pages
+  entries.push({
+    url: `${BASE}/links`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly',
+    priority: 0.7,
+  });
 
   // Static pages for all locales
   for (const locale of locales) {
@@ -16,7 +24,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         url: `${BASE}/${locale}${path}`,
         lastModified: new Date(),
         changeFrequency: path === '/blog' ? 'daily' : 'weekly',
-        priority: path === '' ? 1.0 : path === '/consulting' ? 0.9 : 0.8,
+        priority: path === '' ? 1.0 : path === '/services' ? 0.9 : 0.8,
       });
     }
   }

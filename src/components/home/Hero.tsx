@@ -53,7 +53,7 @@ export default function Hero({ locale, dict, socials = [] }: HeroProps) {
 
           <Reveal direction="up" delay={0.24}>
             <div className="flex flex-wrap gap-3 pt-2">
-              <Link href={`/${locale}/consulting`}>
+              <Link href={`/${locale}/services`}>
                 <Button variant="primary" size="lg">
                   {t.cta_consulting}
                 </Button>

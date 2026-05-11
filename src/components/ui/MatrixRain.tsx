@@ -2,13 +2,23 @@
 
 import { useEffect, useRef } from 'react';
 
-const GLYPHS = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEF';
+const GLYPHS = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEF$#@';
 
 interface MatrixRainProps {
   className?: string;
   opacity?: number;
   speed?: number;
   density?: number;
+}
+
+interface Drop {
+  x: number;
+  y: number;        // head Y in pixels
+  speed: number;
+  trailLen: number; // number of cells in trail
+  glyphs: string[];
+  nextSwap: number; // frame count for next glyph swap
+  alpha: number;    // per-drop brightness multiplier
 }
 
 export default function MatrixRain({
@@ -25,37 +35,88 @@ export default function MatrixRain({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const FONT_SIZE = 14;
-    let cols: number[] = [];
+    const FONT_SIZE = 13;
+    const TRAIL_MIN = 5;
+    const TRAIL_MAX = 24;
+
+    let drops: Drop[] = [];
     let raf: number;
+    let frame = 0;
+
+    const randomGlyph = () => GLYPHS[Math.floor(Math.random() * GLYPHS.length)] ?? '0';
+
+    const newDrop = (canvasW: number, canvasH: number, startAtRandom?: boolean): Drop => {
+      const trailLen = TRAIL_MIN + Math.floor(Math.random() * (TRAIL_MAX - TRAIL_MIN));
+      return {
+        x: Math.random() * (canvasW - FONT_SIZE),
+        y: startAtRandom
+          ? -Math.random() * canvasH * 1.5          // spread stagger on init
+          : -(trailLen * FONT_SIZE) - Math.random() * 120, // just off-screen top
+        speed: (0.35 + Math.random() * 1.1) * speed,
+        trailLen,
+        glyphs: Array.from({ length: trailLen }, randomGlyph),
+        nextSwap: Math.floor(Math.random() * 12),
+        alpha: 0.4 + Math.random() * 0.6,
+      };
+    };
 
     const resize = () => {
       canvas.width = canvas.offsetWidth;
       canvas.height = canvas.offsetHeight;
-      const count = Math.floor((canvas.width / FONT_SIZE) * density);
-      cols = Array.from({ length: count }, () => Math.random() * -(canvas.height / FONT_SIZE));
+      const count = Math.max(8, Math.floor((canvas.width / FONT_SIZE) * density * 0.55));
+      drops = Array.from({ length: count }, () => newDrop(canvas.width, canvas.height, true));
     };
 
     const draw = () => {
-      ctx.fillStyle = `rgba(10, 11, 13, 0.05)`;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      frame++;
+      const W = canvas.width;
+      const H = canvas.height;
 
-      ctx.font = `${FONT_SIZE}px "JetBrains Mono", monospace`;
+      // Full clear every frame — trails are drawn explicitly per drop
+      ctx.clearRect(0, 0, W, H);
 
-      cols.forEach((y, i) => {
-        const glyph = GLYPHS[Math.floor(Math.random() * GLYPHS.length)] ?? '0';
-        const x = (i / density) * FONT_SIZE;
+      ctx.font = `${FONT_SIZE}px "JetBrains Mono", ui-monospace, monospace`;
+      ctx.textBaseline = 'top';
 
-        const isHead = y * FONT_SIZE > canvas.height * 0.8;
-        ctx.fillStyle = isHead ? `rgba(200, 255, 220, ${opacity})` : `rgba(0, 255, 102, ${opacity})`;
-        ctx.fillText(glyph, x, y * FONT_SIZE);
+      for (const drop of drops) {
+        // Advance drop
+        drop.y += drop.speed;
 
-        if (y * FONT_SIZE > canvas.height && Math.random() > 0.975) {
-          cols[i] = 0;
-        } else {
-          cols[i] = (cols[i] ?? 0) + speed;
+        // Swap a random glyph in the trail for animation
+        if (frame >= drop.nextSwap) {
+          const idx = Math.floor(Math.random() * drop.glyphs.length);
+          drop.glyphs[idx] = randomGlyph();
+          drop.nextSwap = frame + 4 + Math.floor(Math.random() * 8);
         }
-      });
+
+        // Draw trail from tail → head (tail dim, head bright)
+        for (let j = drop.trailLen - 1; j >= 0; j--) {
+          const cy = drop.y - j * FONT_SIZE;
+          if (cy < -FONT_SIZE || cy > H + FONT_SIZE) continue;
+
+          // j=0 is head (brightest), j=trailLen-1 is tail (dimmest)
+          const t = j / (drop.trailLen - 1); // 0=head, 1=tail
+          const cellAlpha = drop.alpha * opacity * (1 - t * 0.88);
+
+          if (j === 0) {
+            // Head: near-white
+            ctx.fillStyle = `rgba(210,255,230,${Math.min(1, cellAlpha * 4)})`;
+          } else if (j <= 2) {
+            // Near-head: bright green
+            ctx.fillStyle = `rgba(0,255,102,${Math.min(1, cellAlpha * 2)})`;
+          } else {
+            // Body: deeper green fading out
+            ctx.fillStyle = `rgba(0,180,70,${Math.max(0, cellAlpha)})`;
+          }
+
+          ctx.fillText(drop.glyphs[drop.trailLen - 1 - j] ?? '0', drop.x, cy);
+        }
+
+        // Reset when entire trail is off-screen bottom
+        if (drop.y - drop.trailLen * FONT_SIZE > H) {
+          Object.assign(drop, newDrop(W, H, false));
+        }
+      }
 
       raf = requestAnimationFrame(draw);
     };

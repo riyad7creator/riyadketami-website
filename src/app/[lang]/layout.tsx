@@ -41,6 +41,7 @@ export default async function LangLayout({
   const dict = getDictionary(lang);
 
   const navItems = [
+    { label: dict.nav.about, href: `/${lang}/about` },
     { label: dict.nav.blog, href: `/${lang}/blog` },
     { label: dict.nav.services, href: `/${lang}/services` },
     { label: dict.nav.contact, href: `/${lang}/contact` },

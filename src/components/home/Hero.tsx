@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import HeroCanvas from './HeroCanvas';
+import HeroPortrait from './HeroPortrait';
 import { Button, Reveal, MatrixRain } from '@/components/ui';
 import MatrixText from '@/components/ui/MatrixText';
 import type { Locale } from '@/i18n/config';
@@ -87,7 +87,7 @@ export default function Hero({ locale, dict, socials = [] }: HeroProps) {
         </div>
 
         <div className="order-1 md:order-2 relative aspect-square w-full max-w-[480px] mx-auto">
-          <HeroCanvas src="/portraits/portrait-hero.png" />
+          <HeroPortrait src="/portraits/portrait-hero.png" />
         </div>
       </div>
 

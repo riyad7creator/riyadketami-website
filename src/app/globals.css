@@ -60,6 +60,28 @@ body {
   font-family: var(--font-arabic), ui-sans-serif, system-ui, sans-serif;
 }
 
+/* RTL text alignment — paragraphs, headings, and list items follow reading direction */
+[dir="rtl"] p,
+[dir="rtl"] h1,
+[dir="rtl"] h2,
+[dir="rtl"] h3,
+[dir="rtl"] h4,
+[dir="rtl"] li {
+  text-align: right;
+}
+
+/* Keep monospace/code elements LTR even in RTL layouts (matrix text, eyebrows, etc.) */
+[dir="rtl"] .font-mono,
+[dir="rtl"] [class*="tracking-"] {
+  direction: ltr;
+  unicode-bidi: embed;
+}
+
+/* Flip icon-left patterns for RTL */
+[dir="rtl"] .rtl-flip {
+  transform: scaleX(-1);
+}
+
 ::selection {
   background: rgba(0, 255, 102, 0.2);
   color: var(--matrix);

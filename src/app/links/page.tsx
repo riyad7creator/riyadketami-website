@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ExternalLink, ArrowUpRight, Mail, Zap } from 'lucide-react';
 import MatrixText from '@/components/ui/MatrixText';
 import MatrixRain from '@/components/ui/MatrixRain';
@@ -139,8 +140,15 @@ body: JSON.stringify({ email }),
               }
             `}</style>
             {/* Avatar */}
-            <div className="relative w-20 h-20 rounded-full border-2 border-matrix/50 overflow-hidden bg-bg-1 flex items-center justify-center shrink-0">
-              <span className="font-display font-bold text-2xl text-matrix">RK</span>
+            <div className="relative w-20 h-20 rounded-full border-2 border-matrix/50 overflow-hidden bg-bg-1 shrink-0">
+              <Image
+                src="/portraits/portrait-hero.png"
+                alt="Riyad Ketami"
+                fill
+                className="object-cover object-top"
+                sizes="80px"
+                priority
+              />
             </div>
           </div>
 

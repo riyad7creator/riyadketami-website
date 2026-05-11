@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { headers } from 'next/headers';
 import { locales, isValidLocale } from '@/i18n/config';
 import { getDictionary } from '@/lib/dictionaries';
 import { NavBar, Footer, PageTransition } from '@/components/ui';
@@ -14,10 +15,15 @@ export async function generateMetadata({
   params: Promise<{ lang: string }>;
 }): Promise<Metadata> {
   const { lang } = await params;
+  const headersList = await headers();
+  // Extract the path segment after the locale prefix (e.g. /en/services → /services)
+  const nextUrl = headersList.get('next-url') ?? `/${lang}`;
+  const suffix = nextUrl.replace(new RegExp(`^/${lang}`), '') || '';
+
   return {
     alternates: {
-      languages: Object.fromEntries(locales.map((l) => [l, `/${l}`])),
-      canonical: `/${lang}`,
+      languages: Object.fromEntries(locales.map((l) => [l, `/${l}${suffix}`])),
+      canonical: `/${lang}${suffix}`,
     },
   };
 }

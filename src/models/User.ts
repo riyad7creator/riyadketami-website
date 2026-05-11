@@ -1,7 +1,8 @@
 import mongoose, { Document, Model } from 'mongoose';
+export { USER_ROLES } from '@/lib/constants';
+import { USER_ROLES } from '@/lib/constants';
 
-export type UserRole = 'admin' | 'editor' | 'viewer';
-export const USER_ROLES: [UserRole, ...UserRole[]] = ['admin', 'editor', 'viewer'];
+export type UserRole = (typeof USER_ROLES)[number];
 
 export interface IUser extends Document {
   name: string;

@@ -1,7 +1,5 @@
 import { z } from 'zod';
-import { BLOG_CATEGORY_VALUES, POST_STATUSES, POST_LANGUAGES } from '@/models/Post';
-import { SOCIAL_PLATFORMS } from '@/models/SocialAccount';
-import { USER_ROLES } from '@/models/User';
+import { BLOG_CATEGORY_VALUES, POST_STATUSES, POST_LANGUAGES, SOCIAL_PLATFORMS, USER_ROLES } from '@/lib/constants';
 
 export const contactFormSchema = z.object({
   name: z.string().min(2).max(50),

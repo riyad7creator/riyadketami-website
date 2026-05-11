@@ -1,20 +1,9 @@
 import mongoose, { Document, Model } from 'mongoose';
+export { BLOG_CATEGORIES, BLOG_CATEGORY_VALUES, POST_LANGUAGES, POST_STATUSES } from '@/lib/constants';
+import { BLOG_CATEGORY_VALUES, POST_LANGUAGES, POST_STATUSES } from '@/lib/constants';
 
-export const BLOG_CATEGORIES = [
-  { value: 'business', label: 'Business' },
-  { value: 'digital-marketing', label: 'Digital Marketing' },
-  { value: 'ai', label: 'AI' },
-  { value: 'productivity', label: 'Productivity' },
-  { value: 'creativity', label: 'Creativity' },
-] as const;
-
-export type BlogCategory = (typeof BLOG_CATEGORIES)[number]['value'];
-export const BLOG_CATEGORY_VALUES = BLOG_CATEGORIES.map((c) => c.value) as [BlogCategory, ...BlogCategory[]];
-
-export const POST_LANGUAGES = ['en', 'fr', 'ar'] as const;
+export type BlogCategory = (typeof BLOG_CATEGORY_VALUES)[number];
 export type PostLanguage = (typeof POST_LANGUAGES)[number];
-
-export const POST_STATUSES = ['draft', 'published'] as const;
 export type PostStatus = (typeof POST_STATUSES)[number];
 
 export interface IPost extends Document {

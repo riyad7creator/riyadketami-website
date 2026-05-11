@@ -1,15 +1,6 @@
 import mongoose, { Document, Model } from 'mongoose';
-
-export const SOCIAL_PLATFORMS = [
-  'tiktok',
-  'instagram',
-  'facebook',
-  'youtube',
-  'x',
-  'linkedin',
-  'github',
-  'other',
-] as const;
+export { SOCIAL_PLATFORMS } from '@/lib/constants';
+import { SOCIAL_PLATFORMS } from '@/lib/constants';
 
 export type SocialPlatform = (typeof SOCIAL_PLATFORMS)[number];
 

@@ -20,6 +20,8 @@ interface PostsResponse {
 export default function AdminDashboard() {
   const [data, setData] = useState<PostsResponse | null>(null);
   const [subscribers, setSubscribers] = useState<number | null>(null);
+  const [linkCount, setLinkCount] = useState<number | null>(null);
+  const [socialCount, setSocialCount] = useState<number | null>(null);
 
   useEffect(() => {
     fetch('/api/posts?admin=true&limit=5')
@@ -30,6 +32,14 @@ export default function AdminDashboard() {
       .then((r) => r.json())
       .then((d: { count: number }) => setSubscribers(d.count))
       .catch(() => null);
+    fetch('/api/links?admin=true')
+      .then((r) => r.json())
+      .then((d: unknown[]) => Array.isArray(d) && setLinkCount(d.length))
+      .catch(() => null);
+    fetch('/api/social?admin=true')
+      .then((r) => r.json())
+      .then((d: unknown[]) => Array.isArray(d) && setSocialCount(d.length))
+      .catch(() => null);
   }, []);
 
   const total = data?.pagination.total ?? '—';
@@ -38,8 +48,8 @@ export default function AdminDashboard() {
   const stats = [
     { label: 'Total posts', value: total, icon: FileText, href: '/admin/posts' },
     { label: 'Subscribers', value: subscribers ?? '—', icon: Mail, href: '/admin/newsletter' },
-    { label: 'Links', value: '—', icon: Link2, href: '/admin/links' },
-    { label: 'Social accounts', value: '—', icon: BarChart2, href: '/admin/social' },
+    { label: 'Links', value: linkCount ?? '—', icon: Link2, href: '/admin/links' },
+    { label: 'Social accounts', value: socialCount ?? '—', icon: BarChart2, href: '/admin/social' },
   ];
 
   return (

@@ -15,13 +15,11 @@ export const metadata: Metadata = {
     siteName: 'Riyad Ketami',
     title: 'Riyad Ketami — Builder. Creator. Entrepreneur.',
     description: 'Digital entrepreneur, AI consultant, and content creator with a 400K+ community.',
-    images: [{ url: '/portraits/portrait-hero.png', width: 1200, height: 630, alt: 'Riyad Ketami' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Riyad Ketami — Builder. Creator. Entrepreneur.',
     description: 'Digital entrepreneur, AI consultant, and content creator with a 400K+ community.',
-    images: ['/portraits/portrait-hero.png'],
   },
   icons: {
     icon: '/favicon.ico',

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
-import { interTight, inter, jetbrainsMono, ibmPlexArabic } from '@/lib/fonts';
+import { interTight, inter, jetbrainsMono, ibmPlexArabic, tajawal, cairo } from '@/lib/fonts';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -42,6 +42,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         inter.variable,
         jetbrainsMono.variable,
         ibmPlexArabic.variable,
+        tajawal.variable,
+        cairo.variable,
       ].join(' ')}
     >
       <body suppressHydrationWarning>{children}</body>

@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { ArrowLink, Reveal } from '@/components/ui';
+import Image from 'next/image';
+import { ArrowLink, Reveal, ParallaxLayer } from '@/components/ui';
 import MatrixText from '@/components/ui/MatrixText';
 import type { Locale } from '@/i18n/config';
 import type { Dictionary } from '@/lib/dictionaries';
@@ -16,8 +17,21 @@ export default function ServicesSection({ locale, dict }: ServicesSectionProps) 
   const items = dict.services.items;
 
   return (
-    <section className="py-24 sm:py-32 px-5 sm:px-8 bg-bg-1/40 border-y border-border">
-      <div className="max-w-6xl mx-auto flex flex-col gap-12">
+    <section className="relative py-24 sm:py-32 px-5 sm:px-8 bg-bg-1/40 border-y border-border overflow-hidden">
+      {/* Parallax background image */}
+      <ParallaxLayer speed={0.18} className="absolute inset-0 z-0">
+        <div className="absolute inset-0">
+          <Image
+            src="/images/section-consulting.png"
+            alt=""
+            fill
+            className="object-cover opacity-[0.06]"
+            sizes="100vw"
+            aria-hidden
+          />
+        </div>
+      </ParallaxLayer>
+      <div className="relative z-10 max-w-6xl mx-auto flex flex-col gap-12">
 
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
           <div className="flex flex-col gap-3 max-w-xl">

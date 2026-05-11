@@ -25,11 +25,11 @@ interface HeroCanvasProps {
   className?: string;
 }
 
-const SAMPLE = 88;
+const SAMPLE = 96;
 const STEP = 2;
-const LUM_THRESHOLD = 75;
-const MAX_PARTICLES = 1600;
-const FONT_SIZE = 12;
+const LUM_THRESHOLD = 55;
+const MAX_PARTICLES = 2200;
+const FONT_SIZE = 14;
 
 function pickGlyph(): string {
   return GLYPHS[Math.floor(Math.random() * GLYPHS.length)] ?? '0';
@@ -152,18 +152,19 @@ export default function HeroCanvas({ src, className = '' }: HeroCanvasProps) {
       }
     };
 
-    const STIFFNESS = 0.06;
-    const DAMPING = 0.78;
+    const STIFFNESS = 0.08;
+    const DAMPING = 0.76;
     const SETTLE_THRESHOLD = 0.4;
 
     // Quantized fillStyle cache: 16 alpha buckets × 2 modes (head, settled)
+    // Using #00FF41 brand green
     const ALPHA_BUCKETS = 16;
     const headStyles: string[] = [];
     const settledStyles: string[] = [];
     for (let i = 0; i < ALPHA_BUCKETS; i++) {
       const a = (i + 1) / ALPHA_BUCKETS;
-      headStyles.push(`rgba(180,255,200,${a.toFixed(3)})`);
-      settledStyles.push(`rgba(0,255,102,${(a * 0.6).toFixed(3)})`);
+      headStyles.push(`rgba(200,255,220,${a.toFixed(3)})`);
+      settledStyles.push(`rgba(0,255,65,${(a * 0.75).toFixed(3)})`);
     }
 
     const draw = (t: number) => {

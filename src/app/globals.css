@@ -55,12 +55,41 @@ body {
   min-height: 100dvh;
 }
 
-/* Arabic locale */
+/* Arabic locale — body font */
 :lang(ar) body {
-  font-family: var(--font-arabic), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-cairo), ui-sans-serif, system-ui, sans-serif;
+  direction: rtl;
+  text-align: right;
+  word-spacing: normal;
 }
 
-/* RTL text alignment — paragraphs, headings, and list items follow reading direction */
+/* Arabic headlines — Tajawal Black */
+:lang(ar) h1,
+:lang(ar) h2,
+:lang(ar) h3,
+:lang(ar) h4,
+:lang(ar) h5,
+:lang(ar) h6 {
+  font-family: var(--font-tajawal), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 900;
+  line-height: 1.4;
+  letter-spacing: 0 !important;
+}
+
+/* Arabic body text */
+:lang(ar) p,
+:lang(ar) li,
+:lang(ar) span:not(.font-mono),
+:lang(ar) a:not(.font-mono),
+:lang(ar) button:not(.font-mono),
+:lang(ar) label {
+  font-family: var(--font-cairo), ui-sans-serif, system-ui, sans-serif;
+  line-height: 1.7;
+  letter-spacing: 0 !important;
+  word-spacing: normal;
+}
+
+/* RTL text alignment */
 [dir="rtl"] p,
 [dir="rtl"] h1,
 [dir="rtl"] h2,
@@ -70,14 +99,26 @@ body {
   text-align: right;
 }
 
-/* Keep monospace/code elements LTR even in RTL layouts (matrix text, eyebrows, etc.) */
-[dir="rtl"] .font-mono,
-[dir="rtl"] [class*="tracking-"] {
-  direction: ltr;
-  unicode-bidi: embed;
+/* Kill ALL letter-spacing on Arabic — broken glyph connections otherwise */
+[dir="rtl"] *:not(.font-mono):not([class*="tracking-"]) {
+  letter-spacing: 0 !important;
 }
 
-/* Flip icon-left patterns for RTL */
+/* Keep monospace/eyebrow elements LTR — matrix text, code, etc. */
+[dir="rtl"] .font-mono {
+  direction: ltr;
+  unicode-bidi: embed;
+  font-family: var(--font-mono), ui-monospace, monospace !important;
+}
+
+/* IBM Plex Arabic for tagline/monospace Arabic lines */
+:lang(ar) .font-mono {
+  font-family: var(--font-arabic), ui-monospace, monospace;
+  font-weight: 400;
+  direction: ltr;
+}
+
+/* Flip arrow icons for RTL */
 [dir="rtl"] .rtl-flip {
   transform: scaleX(-1);
 }

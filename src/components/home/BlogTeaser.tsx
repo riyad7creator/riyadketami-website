@@ -1,4 +1,5 @@
-import { ArrowLink, BlogCard, Reveal } from '@/components/ui';
+import Image from 'next/image';
+import { ArrowLink, BlogCard, Reveal, ParallaxLayer } from '@/components/ui';
 import MatrixText from '@/components/ui/MatrixText';
 import type { Locale } from '@/i18n/config';
 import type { Dictionary } from '@/lib/dictionaries';
@@ -14,8 +15,20 @@ export default function BlogTeaser({ locale, dict, posts }: BlogTeaserProps) {
   const t = dict.home.blog_teaser;
 
   return (
-    <section className="py-24 sm:py-32 px-5 sm:px-8">
-      <div className="max-w-6xl mx-auto flex flex-col gap-10">
+    <section className="relative py-24 sm:py-32 px-5 sm:px-8 overflow-hidden">
+      <ParallaxLayer speed={0.12} className="absolute inset-0 z-0">
+        <div className="absolute inset-0">
+          <Image
+            src="/images/section-blog.png"
+            alt=""
+            fill
+            className="object-cover opacity-[0.05]"
+            sizes="100vw"
+            aria-hidden
+          />
+        </div>
+      </ParallaxLayer>
+      <div className="relative z-10 max-w-6xl mx-auto flex flex-col gap-10">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
           <div className="flex flex-col gap-3 max-w-2xl">
             <Reveal direction="up">

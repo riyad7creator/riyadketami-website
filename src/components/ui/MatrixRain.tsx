@@ -35,9 +35,9 @@ export default function MatrixRain({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const FONT_SIZE = 13;
-    const TRAIL_MIN = 5;
-    const TRAIL_MAX = 24;
+    const FONT_SIZE = 15;
+    const TRAIL_MIN = 6;
+    const TRAIL_MAX = 28;
 
     let drops: Drop[] = [];
     let raf: number;
@@ -99,14 +99,14 @@ export default function MatrixRain({
           const cellAlpha = drop.alpha * opacity * (1 - t * 0.88);
 
           if (j === 0) {
-            // Head: near-white
-            ctx.fillStyle = `rgba(210,255,230,${Math.min(1, cellAlpha * 4)})`;
+            // Head: near-white hot
+            ctx.fillStyle = `rgba(220,255,235,${Math.min(1, cellAlpha * 5)})`;
           } else if (j <= 2) {
-            // Near-head: bright green
-            ctx.fillStyle = `rgba(0,255,102,${Math.min(1, cellAlpha * 2)})`;
+            // Near-head: #00FF41 bright
+            ctx.fillStyle = `rgba(0,255,65,${Math.min(1, cellAlpha * 2.5)})`;
           } else {
-            // Body: deeper green fading out
-            ctx.fillStyle = `rgba(0,180,70,${Math.max(0, cellAlpha)})`;
+            // Body: #00FF41 fading
+            ctx.fillStyle = `rgba(0,200,50,${Math.max(0, cellAlpha)})`;
           }
 
           ctx.fillText(drop.glyphs[drop.trailLen - 1 - j] ?? '0', drop.x, cy);

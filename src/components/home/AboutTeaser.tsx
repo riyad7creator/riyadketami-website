@@ -1,4 +1,5 @@
-import { ArrowLink, Reveal } from '@/components/ui';
+import Image from 'next/image';
+import { ArrowLink, Reveal, ParallaxLayer } from '@/components/ui';
 import MatrixText from '@/components/ui/MatrixText';
 import type { Locale } from '@/i18n/config';
 import type { Dictionary } from '@/lib/dictionaries';
@@ -12,8 +13,22 @@ export default function AboutTeaser({ locale, dict }: AboutTeaserProps) {
   const t = dict.home.about_teaser;
 
   return (
-    <section className="py-24 sm:py-32 px-5 sm:px-8">
-      <div className="max-w-3xl mx-auto flex flex-col gap-6">
+    <section className="relative py-24 sm:py-32 px-5 sm:px-8 overflow-hidden">
+      {/* Parallax background image */}
+      <ParallaxLayer speed={0.15} className="absolute inset-0 z-0">
+        <div className="absolute inset-0">
+          <Image
+            src="/images/section-content.png"
+            alt=""
+            fill
+            className="object-cover opacity-[0.07]"
+            sizes="100vw"
+            aria-hidden
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-bg-0/80 via-bg-0/40 to-bg-0/80" />
+        </div>
+      </ParallaxLayer>
+      <div className="relative z-10 max-w-3xl mx-auto flex flex-col gap-6">
         <Reveal direction="up">
           <MatrixText text={t.eyebrow} className="text-xs tracking-[0.2em] text-matrix" />
         </Reveal>

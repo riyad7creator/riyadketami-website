@@ -29,7 +29,7 @@ export default function Error({
         </h1>
 
         <p className="text-text-2 text-base">
-          An unexpected error occurred. Try refreshing — if it persists, contact support.
+          An unexpected error occurred. Try refreshing. If it persists, contact support.
         </p>
 
         <button

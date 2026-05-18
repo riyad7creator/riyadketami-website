@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: '404 — Page not found',
+  title: '404 | Page not found',
 };
 
 export default function NotFound() {
@@ -26,7 +26,7 @@ export default function NotFound() {
         </h1>
 
         <p className="text-text-1 text-lg">
-          This page doesn&apos;t exist — or it moved.
+          This page doesn&apos;t exist. Or it moved.
         </p>
 
         <div className="flex gap-3 flex-wrap justify-center">

@@ -4,12 +4,23 @@ import Credentials from 'next-auth/providers/credentials';
 import dbConnect from '@/lib/db/connect';
 import User from '@/models/User';
 import bcrypt from 'bcryptjs';
+import { rateLimit } from '@/lib/rate-limit';
+
+if (!process.env.NEXTAUTH_SECRET) {
+  throw new Error('NEXTAUTH_SECRET environment variable is not set. The application cannot start without it.');
+}
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   ...authConfig,
   providers: [
     Credentials({
-      async authorize(credentials) {
+      async authorize(credentials, request) {
+        // Rate-limit login attempts per IP — 5 per minute
+        if (request) {
+          const limited = rateLimit(request, 5, 60_000);
+          if (limited) throw new Error('Too many login attempts. Please try again in a minute.');
+        }
+
         if (!credentials?.email || !credentials?.password) return null;
 
         try {

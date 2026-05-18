@@ -30,6 +30,9 @@ export default function MatrixRain({
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
+    // Respect user's motion preference — skip animation entirely
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -66,6 +69,16 @@ export default function MatrixRain({
       const count = Math.max(8, Math.floor((canvas.width / FONT_SIZE) * density * 0.55));
       drops = Array.from({ length: count }, () => newDrop(canvas.width, canvas.height, true));
     };
+
+    // Pause animation when tab is hidden to save CPU
+    const handleVisibility = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(raf);
+      } else {
+        raf = requestAnimationFrame(draw);
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
 
     const draw = () => {
       frame++;
@@ -129,6 +142,7 @@ export default function MatrixRain({
     return () => {
       cancelAnimationFrame(raf);
       ro.disconnect();
+      document.removeEventListener('visibilitychange', handleVisibility);
     };
   }, [opacity, speed, density]);
 

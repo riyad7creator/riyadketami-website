@@ -14,14 +14,14 @@ export default function AboutTeaser({ locale, dict }: AboutTeaserProps) {
 
   return (
     <section className="relative py-24 sm:py-32 px-5 sm:px-8 overflow-hidden">
-      {/* Parallax background image */}
+      {/* Background portrait layer */}
       <ParallaxLayer speed={0.15} className="absolute inset-0 z-0">
         <div className="absolute inset-0">
           <Image
-            src="/images/section-content.png"
+            src="/images/riyad-who-bg.jpg"
             alt=""
             fill
-            className="object-cover opacity-[0.07]"
+            className="object-cover object-center grayscale opacity-[0.10]"
             sizes="100vw"
             aria-hidden
           />

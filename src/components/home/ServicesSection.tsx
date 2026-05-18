@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { Brain, Users, Mic } from 'lucide-react';
 import { ArrowLink, Reveal, ParallaxLayer } from '@/components/ui';
 import MatrixText from '@/components/ui/MatrixText';
 import type { Locale } from '@/i18n/config';
@@ -10,7 +11,7 @@ interface ServicesSectionProps {
   dict: Dictionary;
 }
 
-const SERVICE_ICONS = ['◈', '◉', '◧'] as const;
+const SERVICE_ICONS = [Brain, Users, Mic] as const;
 
 export default function ServicesSection({ locale, dict }: ServicesSectionProps) {
   const t = dict.home.services;
@@ -63,8 +64,11 @@ export default function ServicesSection({ locale, dict }: ServicesSectionProps) 
 
                 {/* Icon + name */}
                 <div className="flex flex-col gap-2">
-                  <span className="font-mono text-3xl text-matrix/30 leading-none select-none" aria-hidden>
-                    {SERVICE_ICONS[i]}
+                  <span className="text-matrix/40 leading-none select-none" aria-hidden>
+                    {(() => {
+                      const Icon = SERVICE_ICONS[i];
+                      return Icon ? <Icon size={28} strokeWidth={1.5} /> : null;
+                    })()}
                   </span>
                   <h3 className="font-display font-semibold text-lg text-text-0 group-hover:text-matrix transition-colors duration-[var(--duration-fast)]">
                     {item.name}

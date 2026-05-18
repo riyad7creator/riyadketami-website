@@ -19,7 +19,7 @@ const styles: Record<PillVariant, string> = {
 export default function Pill({ children, variant = 'neutral', className = '' }: PillProps) {
   return (
     <span
-      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium border ${styles[variant]} ${className}`}
+      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium border w-fit ${styles[variant]} ${className}`}
     >
       {children}
     </span>

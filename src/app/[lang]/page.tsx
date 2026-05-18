@@ -18,6 +18,20 @@ export const metadata: Metadata = {
   description: 'Digital entrepreneur, AI consultant, and content creator. 400K+ community.',
 };
 
+const personJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Riyad Ketami',
+  url: 'https://riyadketami.com',
+  jobTitle: 'Digital Entrepreneur & AI Consultant',
+  description: 'Digital entrepreneur, AI consultant, and content creator with 400K+ community.',
+  sameAs: [
+    'https://tiktok.com/@riyadketami',
+    'https://youtube.com/@riyadketami',
+    'https://instagram.com/riyadketami',
+  ],
+};
+
 export default async function HomePage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
   if (!isValidLocale(lang)) notFound();
@@ -27,11 +41,15 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+      />
       <Hero locale={lang} dict={dict} socials={socials} />
       <FollowerStrip lang={lang} dict={dict} entries={socials} />
       <ServicesSection locale={lang} dict={dict} />
       <AboutTeaser locale={lang} dict={dict} />
-      <NewsletterSection dict={dict} />
+      <NewsletterSection dict={dict} locale={lang} />
       <TestimonialsSection dict={dict} />
       <BlogTeaser locale={lang} dict={dict} posts={posts} />
     </>

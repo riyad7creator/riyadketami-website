@@ -1,5 +1,6 @@
 import { Testimonial, Reveal } from '@/components/ui';
 import MatrixText from '@/components/ui/MatrixText';
+import MatrixRain from '@/components/ui/MatrixRain';
 import type { Dictionary } from '@/lib/dictionaries';
 
 interface TestimonialsSectionProps {
@@ -14,7 +15,8 @@ export default function TestimonialsSection({ dict, eyebrow, title }: Testimonia
   const displayTitle = title ?? t.title;
 
   return (
-    <section className="py-24 sm:py-32 px-5 sm:px-8">
+    <section className="relative py-24 sm:py-32 px-5 sm:px-8 overflow-hidden">
+      <MatrixRain opacity={0.04} />
       <div className="max-w-6xl mx-auto flex flex-col gap-12">
         <div className="flex flex-col gap-3 max-w-2xl">
           <Reveal direction="up">

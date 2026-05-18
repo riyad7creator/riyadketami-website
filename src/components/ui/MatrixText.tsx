@@ -34,40 +34,59 @@ export default function MatrixText({
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: '-10% 0px' });
   const [displayed, setDisplayed] = useState(autoPlay ? scramble(text, 0) : text);
-  const [revealed, setRevealed] = useState(autoPlay ? 0 : text.length);
   const frameRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Always track the latest text so cleanup can resolve to it
+  const textRef = useRef(text);
+  useEffect(() => { textRef.current = text; }, [text]);
 
-  const runScramble = () => {
-    setRevealed(0);
+  const runScramble = (target: string = text) => {
+    // Cancel any running animation before starting a new one
+    if (frameRef.current) {
+      clearTimeout(frameRef.current);
+      frameRef.current = null;
+    }
+
     let count = 0;
     const step = () => {
-      setDisplayed(scramble(text, count));
-      if (count < text.length) {
+      setDisplayed(scramble(target, count));
+      if (count < target.length) {
         count++;
         frameRef.current = setTimeout(step, speed);
       } else {
-        setDisplayed(text);
+        // Hard resolve — always land on the real text
+        setDisplayed(target);
+        frameRef.current = null;
       }
     };
     step();
   };
 
+  // Trigger on scroll-into-view
   useEffect(() => {
-    if (autoPlay && inView) runScramble();
-    return () => { if (frameRef.current) clearTimeout(frameRef.current); };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (autoPlay && inView) runScramble(text);
+
+    return () => {
+      if (frameRef.current) {
+        clearTimeout(frameRef.current);
+        frameRef.current = null;
+      }
+      // Hard fallback: never leave garbled characters on unmount / re-trigger
+      setDisplayed(textRef.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inView]);
 
+  // Sync immediately when the text prop changes
   useEffect(() => {
+    textRef.current = text;
     setDisplayed(text);
-    setRevealed(text.length);
   }, [text]);
 
   return (
     <span
       ref={ref}
       className={`font-mono ${className}`}
-      onMouseEnter={scrambleOnHover ? runScramble : undefined}
+      onMouseEnter={scrambleOnHover ? () => runScramble(text) : undefined}
       aria-label={text}
     >
       {displayed}

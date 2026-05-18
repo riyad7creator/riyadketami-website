@@ -29,3 +29,8 @@ export function serverError(message: string, error: unknown): NextResponse {
 export function generateSlug(title: string): string {
   return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
 }
+
+/** Escape user input before embedding in a MongoDB $regex value */
+export function escapeRegex(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}

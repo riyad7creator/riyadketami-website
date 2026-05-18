@@ -1,24 +1,25 @@
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { interTight, inter, jetbrainsMono, ibmPlexArabic, tajawal, cairo } from '@/lib/fonts';
+import { ClarityScript } from '@/components/ClarityScript';
 import './globals.css';
 
 export const metadata: Metadata = {
   title: {
     default: 'Riyad Ketami',
-    template: '%s — Riyad Ketami',
+    template: '%s | Riyad Ketami',
   },
   description: 'Digital entrepreneur, AI consultant, and content creator with a 400K+ community. Building in public since day one.',
   metadataBase: new URL('https://riyadketami.com'),
   openGraph: {
     type: 'website',
     siteName: 'Riyad Ketami',
-    title: 'Riyad Ketami — Builder. Creator. Entrepreneur.',
+    title: 'Riyad Ketami: Builder. Creator. Entrepreneur.',
     description: 'Digital entrepreneur, AI consultant, and content creator with a 400K+ community.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Riyad Ketami — Builder. Creator. Entrepreneur.',
+    title: 'Riyad Ketami: Builder. Creator. Entrepreneur.',
     description: 'Digital entrepreneur, AI consultant, and content creator with a 400K+ community.',
   },
   icons: {
@@ -46,7 +47,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         cairo.variable,
       ].join(' ')}
     >
-      <body suppressHydrationWarning>{children}</body>
+      <body suppressHydrationWarning>
+        {children}
+        <ClarityScript />
+      </body>
     </html>
   );
 }

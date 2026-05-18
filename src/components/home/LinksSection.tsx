@@ -77,7 +77,7 @@ export default function LinksSection({ links, dict }: LinksSectionProps) {
           <Reveal direction="up" delay={0.08}>
             <div className="flex flex-col gap-3">
               {[
-                { title: 'Newsletter — Weekly AI & Business Insights', icon: 'newsletter' },
+                { title: 'Newsletter: Weekly AI & Business Insights', icon: 'newsletter' },
                 { title: 'AI Business Masterclass', icon: 'star' },
                 { title: 'Book a Strategy Session', icon: 'link' },
               ].map((placeholder, i) => (

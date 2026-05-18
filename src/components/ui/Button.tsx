@@ -16,7 +16,7 @@ interface ButtonProps extends ComponentPropsWithoutRef<'button'> {
 }
 
 const variants: Record<Variant, string> = {
-  primary: 'bg-matrix text-bg-0 hover:bg-matrix/90 font-semibold',
+  primary: 'bg-matrix text-bg-0 hover:bg-matrix/90 font-semibold hover:shadow-[0_0_20px_rgba(0,255,102,0.25)]',
   secondary: 'glass border-border text-text-0 hover:border-border-hover',
   ghost: 'text-text-1 hover:text-text-0 hover:bg-surface',
   danger: 'bg-danger/10 border border-danger/30 text-danger hover:bg-danger/20',

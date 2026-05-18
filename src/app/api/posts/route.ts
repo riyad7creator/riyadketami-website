@@ -3,7 +3,7 @@ import dbConnect from '@/lib/db/connect';
 import Post from '@/models/Post';
 import { postSchema } from '@/lib/validation';
 import DOMPurify from 'isomorphic-dompurify';
-import { requireAdmin, zodFail, serverError, generateSlug } from '@/lib/api-helpers';
+import { requireAdmin, zodFail, serverError, generateSlug, escapeRegex } from '@/lib/api-helpers';
 
 export async function GET(req: Request) {
   try {
@@ -26,17 +26,25 @@ export async function GET(req: Request) {
     const query: Record<string, unknown> = {};
     if (!isAdmin) query['status'] = 'published';
     if (language) query['language'] = language;
-    if (search) query['$or'] = [
-      { title: { $regex: search, $options: 'i' } },
-      { content: { $regex: search, $options: 'i' } },
-    ];
+    if (search) {
+      const safeSearch = escapeRegex(search);
+      query['$or'] = [
+        { title: { $regex: safeSearch, $options: 'i' } },
+        { content: { $regex: safeSearch, $options: 'i' } },
+      ];
+    }
     if (tag) query['tags'] = tag;
     if (category) query['category'] = category;
 
     const skip = (page - 1) * limit;
 
+    // For public requests, strip heavy fields (content, author full doc) to reduce payload
+    const publicSelect = '_id title slug excerpt featuredImage category tags status language views readTime createdAt updatedAt';
+
     const [posts, total] = await Promise.all([
-      Post.find(query).sort({ createdAt: -1 }).skip(skip).limit(limit).populate('author', 'name image'),
+      isAdmin
+        ? Post.find(query).sort({ createdAt: -1 }).skip(skip).limit(limit).populate('author', 'name image').lean()
+        : Post.find(query).sort({ createdAt: -1 }).skip(skip).limit(limit).select(publicSelect).lean(),
       Post.countDocuments(query),
     ]);
 

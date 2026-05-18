@@ -25,7 +25,8 @@ export const postSchema = z.object({
 export const linkSchema = z.object({
   title: z.string().min(1).max(50),
   url: z.string().url(),
-  icon: z.string().min(1),
+  icon: z.string().min(1).optional().default('link'),
+  icon_url: z.string().optional().or(z.literal('')),
   isVisible: z.boolean().optional(),
   order: z.number().optional(),
   description: z.string().max(100).optional(),

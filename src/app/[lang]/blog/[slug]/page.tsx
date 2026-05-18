@@ -8,6 +8,7 @@ import { getDictionary } from '@/lib/dictionaries';
 import { getBlogPost } from '@/lib/blog-data';
 import { Pill, Reveal } from '@/components/ui';
 import { ArrowLeft } from 'lucide-react';
+import ViewTracker from '@/components/blog/ViewTracker';
 
 export const revalidate = 300;
 
@@ -20,10 +21,18 @@ export async function generateMetadata({
   if (!isValidLocale(lang)) return {};
   const post = await getBlogPost(lang, slug);
   if (!post) return { title: 'Post not found' };
+  const APP_URL = process.env.NEXTAUTH_URL ?? 'https://riyadketami.com';
   return {
     title: post.title,
     description: post.excerpt,
-    openGraph: post.featuredImage ? { images: [post.featuredImage] } : undefined,
+    openGraph: {
+      type: 'article',
+      title: post.title,
+      description: post.excerpt,
+      url: `${APP_URL}/${lang}/blog/${slug}`,
+      publishedTime: post.createdAt ? new Date(post.createdAt).toISOString() : undefined,
+      images: post.featuredImage ? [post.featuredImage] : undefined,
+    },
   };
 }
 
@@ -40,6 +49,20 @@ export default async function BlogPostPage({
 
   const cleanHtml = DOMPurify.sanitize(post.content);
 
+  const APP_URL = process.env.NEXTAUTH_URL ?? 'https://riyadketami.com';
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: post.title,
+    description: post.excerpt ?? '',
+    url: `${APP_URL}/${lang}/blog/${post.slug}`,
+    datePublished: post.createdAt ? new Date(post.createdAt).toISOString() : undefined,
+    dateModified: post.updatedAt ? new Date(post.updatedAt).toISOString() : undefined,
+    image: post.featuredImage ?? undefined,
+    author: { '@type': 'Person', name: 'Riyad Ketami', url: APP_URL },
+    publisher: { '@type': 'Person', name: 'Riyad Ketami', url: APP_URL },
+  };
+
   const date = new Date(post.createdAt).toLocaleDateString(
     lang === 'fr' ? 'fr-FR' : lang === 'ar' ? 'ar-MA' : 'en-US',
     { year: 'numeric', month: 'long', day: 'numeric' }
@@ -47,6 +70,13 @@ export default async function BlogPostPage({
 
   return (
     <article className="pt-28 pb-24 px-5 sm:px-8">
+      {/* Article JSON-LD structured data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      {/* Client-side view increment (fires once per page load, bypasses ISR) */}
+      <ViewTracker slug={post.slug} />
       <div className="max-w-3xl mx-auto">
         {/* Back */}
         <Reveal direction="up">

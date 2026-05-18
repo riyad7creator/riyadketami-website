@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Trash2, Eye, EyeOff, Check, X } from 'lucide-react';
+import { Eye, EyeOff, Check, X } from 'lucide-react';
+import InlineDeleteConfirm from '@/components/admin/InlineDeleteConfirm';
 import { SOCIAL_PLATFORMS } from '@/lib/social-platforms';
 
 interface SocialAccount {
@@ -88,8 +89,7 @@ export default function AdminSocialPage() {
     }
   };
 
-  const handleDelete = async (id: string, platform: string) => {
-    if (!confirm(`Remove ${platform}?`)) return;
+  const handleDelete = async (id: string) => {
     const res = await fetch(`/api/social?id=${id}`, { method: 'DELETE' });
     if (res.ok) setAccounts((prev) => prev.filter((a) => a._id !== id));
   };
@@ -101,8 +101,8 @@ export default function AdminSocialPage() {
     <div className="flex flex-col gap-6 max-w-2xl">
       <div className="flex items-center justify-between">
         <div>
-          <span className="font-mono text-xs text-matrix tracking-[0.15em]">// reach</span>
-          <h1 className="font-display font-bold text-2xl text-text-0 mt-1">Social accounts</h1>
+          <span className="font-mono text-xs text-matrix tracking-[0.15em]">// content stats</span>
+          <h1 className="font-display font-bold text-2xl text-text-0 mt-1">Content Stats</h1>
         </div>
         <button
           onClick={() => setAdding((a) => !a)}
@@ -198,9 +198,10 @@ export default function AdminSocialPage() {
               <button onClick={() => toggleVisibility(account)} className="text-text-2 hover:text-text-1 transition-colors duration-[var(--duration-fast)] shrink-0" title={account.visible ? 'Hide' : 'Show'}>
                 {account.visible ? <Eye size={14} /> : <EyeOff size={14} />}
               </button>
-              <button onClick={() => handleDelete(account._id, account.platform)} className="text-text-2 hover:text-danger transition-colors duration-[var(--duration-fast)] shrink-0">
-                <Trash2 size={14} />
-              </button>
+              <InlineDeleteConfirm
+                label={`Remove ${account.platform}`}
+                onConfirm={() => void handleDelete(account._id)}
+              />
             </div>
           ))}
         </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
@@ -31,6 +31,19 @@ export default function ServiceCard({ item, lang, index = 0 }: ServiceCardProps)
   const cardRef = useRef<HTMLDivElement>(null);
   const [sheenPos, setSheenPos] = useState({ x: 50, y: 50 });
   const [hovered, setHovered] = useState(false);
+  // Mobile-only: tap-selected state, distinct from transient hover/touch press.
+  // Workshop card (index 2) only shows its strong CTA when hovered (desktop)
+  // OR selected (mobile). Tap outside any card clears selection.
+  const [selected, setSelected] = useState(false);
+
+  useEffect(() => {
+    if (!selected) return;
+    const handleOutside = (e: PointerEvent) => {
+      if (!cardRef.current?.contains(e.target as Node)) setSelected(false);
+    };
+    document.addEventListener('pointerdown', handleOutside);
+    return () => document.removeEventListener('pointerdown', handleOutside);
+  }, [selected]);
 
   // Framer Motion spring values for tilt
   const rawX = useMotionValue(0);
@@ -74,7 +87,9 @@ export default function ServiceCard({ item, lang, index = 0 }: ServiceCardProps)
     const { xNorm, yNorm } = getRelativePos(touch.clientX, touch.clientY);
     rawX.set(xNorm);
     rawY.set(yNorm);
+    // Toggle the persistent selected state; transient `hovered` follows the press.
     setHovered(true);
+    setSelected((prev) => !prev);
   }
 
   function handleTouchEnd() {
@@ -82,6 +97,8 @@ export default function ServiceCard({ item, lang, index = 0 }: ServiceCardProps)
     rawY.set(0);
     setHovered(false);
   }
+
+  const emphasized = hovered || selected;
 
   return (
     <div style={{ perspective: '1000px' }}>
@@ -99,7 +116,7 @@ export default function ServiceCard({ item, lang, index = 0 }: ServiceCardProps)
         <div
           className="pointer-events-none absolute inset-0 rounded-[var(--radius-lg)] transition-opacity duration-200"
           style={{
-            opacity: hovered ? 1 : 0,
+            opacity: emphasized ? 1 : 0,
             background: `radial-gradient(circle at ${sheenPos.x}% ${sheenPos.y}%, rgba(0,255,136,0.1) 0%, transparent 55%)`,
           }}
           aria-hidden
@@ -149,8 +166,12 @@ export default function ServiceCard({ item, lang, index = 0 }: ServiceCardProps)
               variant="secondary"
               className={`w-full ${
                 index === 2
-                  ? 'hover:bg-matrix hover:text-bg-0 hover:border-matrix hover:shadow-[0_0_20px_rgba(0,255,102,0.25)]'
-                  : 'hover:border-matrix/40 hover:text-matrix'
+                  ? `hover:bg-matrix hover:text-bg-0 hover:border-matrix hover:shadow-[0_0_20px_rgba(0,255,102,0.25)] ${
+                      selected ? 'bg-matrix text-bg-0 border-matrix shadow-[0_0_20px_rgba(0,255,102,0.25)]' : ''
+                    }`
+                  : `hover:border-matrix/40 hover:text-matrix ${
+                      selected ? 'border-matrix/40 text-matrix' : ''
+                    }`
               }`}
             >
               {item.cta}

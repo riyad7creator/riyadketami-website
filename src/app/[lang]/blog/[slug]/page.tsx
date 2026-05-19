@@ -6,9 +6,11 @@ import DOMPurify from 'isomorphic-dompurify';
 import { isValidLocale } from '@/i18n/config';
 import { getDictionary } from '@/lib/dictionaries';
 import { getBlogPost } from '@/lib/blog-data';
+import { localizedAlternates } from '@/lib/seo';
 import { Pill, Reveal } from '@/components/ui';
 import { ArrowLeft } from 'lucide-react';
 import ViewTracker from '@/components/blog/ViewTracker';
+import { jsonLdString } from '@/lib/json-ld';
 
 export const revalidate = 300;
 
@@ -25,6 +27,7 @@ export async function generateMetadata({
   return {
     title: post.title,
     description: post.excerpt,
+    alternates: localizedAlternates(lang, `blog/${slug}`),
     openGraph: {
       type: 'article',
       title: post.title,
@@ -50,16 +53,19 @@ export default async function BlogPostPage({
   const cleanHtml = DOMPurify.sanitize(post.content);
 
   const APP_URL = process.env.NEXTAUTH_URL ?? 'https://riyadketami.com';
+  const articleUrl = `${APP_URL}/${lang}/blog/${post.slug}`;
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: post.title,
     description: post.excerpt ?? '',
-    url: `${APP_URL}/${lang}/blog/${post.slug}`,
+    url: articleUrl,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': articleUrl },
+    inLanguage: lang,
     datePublished: post.createdAt ? new Date(post.createdAt).toISOString() : undefined,
     dateModified: post.updatedAt ? new Date(post.updatedAt).toISOString() : undefined,
     image: post.featuredImage ?? undefined,
-    author: { '@type': 'Person', name: 'Riyad Ketami', url: APP_URL },
+    author: { '@type': 'Person', name: 'Riyad Ketami', url: `${APP_URL}/${lang}/about` },
     publisher: { '@type': 'Person', name: 'Riyad Ketami', url: APP_URL },
   };
 
@@ -73,7 +79,7 @@ export default async function BlogPostPage({
       {/* Article JSON-LD structured data */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdString(jsonLd) }}
       />
       {/* Client-side view increment (fires once per page load, bypasses ISR) */}
       <ViewTracker slug={post.slug} />

@@ -4,7 +4,7 @@ import Subscriber from '@/models/Subscriber';
 
 /** Reproduce the same token used in send/route.ts */
 function unsubToken(email: string): string {
-  const secret = process.env.NEXTAUTH_SECRET ?? '';
+  const secret = process.env.NEWSLETTER_UNSUB_SECRET ?? process.env.NEXTAUTH_SECRET ?? '';
   return createHmac('sha256', secret).update(email.toLowerCase()).digest('hex');
 }
 

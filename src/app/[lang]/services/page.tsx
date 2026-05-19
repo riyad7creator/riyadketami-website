@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { isValidLocale } from '@/i18n/config';
 import { getDictionary } from '@/lib/dictionaries';
+import { localizedAlternates } from '@/lib/seo';
 import { Accordion, Button, Reveal } from '@/components/ui';
 import type { AccordionItem } from '@/components/ui';
 import MatrixText from '@/components/ui/MatrixText';
@@ -21,6 +22,7 @@ export async function generateMetadata({
   return {
     title: dict.services.headline,
     description: dict.services.subheadline,
+    alternates: localizedAlternates(lang, 'services'),
   };
 }
 

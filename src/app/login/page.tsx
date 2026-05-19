@@ -25,7 +25,13 @@ export default function LoginPage() {
 
     setLoading(false);
     if (result?.error) {
-      setError('Invalid credentials.');
+      const raw = String(result.error);
+      const msg = raw.includes('locked')
+        ? 'Account temporarily locked. Try again in 2 hours.'
+        : raw.toLowerCase().includes('too many')
+          ? 'Too many login attempts. Wait a minute and try again.'
+          : 'Invalid credentials.';
+      setError(msg);
     } else {
       router.push('/admin');
     }
@@ -57,16 +63,19 @@ export default function LoginPage() {
             placeholder="••••••••"
           />
 
-          {error && <p className="text-sm text-danger">{error}</p>}
+          {error && (
+            <p role="alert" aria-live="polite" className="text-sm text-danger">
+              {error}
+            </p>
+          )}
 
           <Button
             type="submit"
             variant="primary"
             className="w-full mt-2"
             disabled={loading}
-           
           >
-            {loading ? '...' : 'Sign in'}
+            {loading ? 'Signing in...' : 'Sign in'}
           </Button>
         </form>
       </div>

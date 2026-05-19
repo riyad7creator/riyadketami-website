@@ -17,6 +17,7 @@ import type { Locale } from '@/i18n/config';
 import ServicesSection from './_components/ServicesSection';
 import type { CardProps } from './_components/Card';
 import type { ILinkCard } from '@/models/LinkCard';
+import { DEFAULT_LINKS_PROFILE } from '@/lib/links-defaults';
 
 export const revalidate = 3600;
 
@@ -37,18 +38,7 @@ function toCardProps(c: ILinkCard & { _id: unknown }): CardProps {
   };
 }
 
-const DEFAULT_PROFILE = {
-  name: 'Riyad Ketami',
-  tagline: 'Digital Entrepreneur · AI Consultant · Creator',
-  statusLine: undefined as string | undefined,
-  statusEnabled: false,
-  subscriberCount: 5000,
-  socials: {
-    tiktok: { url: 'https://tiktok.com/@riyadketami', count: '200K+' },
-    youtube: { url: 'https://youtube.com/@riyadketami', count: '50K+' },
-    instagram: { url: 'https://instagram.com/riyadketami', count: '80K+' },
-  },
-};
+const DEFAULT_PROFILE = DEFAULT_LINKS_PROFILE;
 
 export default async function LinksPage() {
   await dbConnect();

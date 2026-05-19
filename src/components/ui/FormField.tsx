@@ -24,13 +24,18 @@ export default function FormField({
   ...props
 }: FormFieldProps) {
   const fieldId = id ?? (label ? label.toLowerCase().replace(/\s+/g, '-') : undefined);
+  const msgId = fieldId ? `${fieldId}-msg` : undefined;
+  const a11y = {
+    'aria-invalid': error ? true : undefined,
+    'aria-describedby': (error || hint) && msgId ? msgId : undefined,
+  };
 
   return (
     <div className="flex flex-col gap-1.5">
       {label && (
         <label htmlFor={fieldId} className="text-sm font-medium text-text-1">
           {label}
-          {props.required && <span className="text-matrix ms-1">*</span>}
+          {props.required && <span className="text-matrix ms-1" aria-hidden>*</span>}
         </label>
       )}
 
@@ -39,12 +44,14 @@ export default function FormField({
           id={fieldId}
           rows={rows}
           className={`${inputBase} resize-none ${error ? 'border-danger/60 focus:border-danger/60 focus:ring-danger/20' : ''} ${className}`}
+          {...a11y}
           {...(props as ComponentPropsWithoutRef<'textarea'>)}
         />
       ) : as === 'select' ? (
         <select
           id={fieldId}
           className={`${inputBase} ${error ? 'border-danger/60' : ''} ${className}`}
+          {...a11y}
           {...(props as ComponentPropsWithoutRef<'select'>)}
         >
           {children}
@@ -53,12 +60,18 @@ export default function FormField({
         <input
           id={fieldId}
           className={`${inputBase} ${error ? 'border-danger/60 focus:border-danger/60 focus:ring-danger/20' : ''} ${className}`}
+          {...a11y}
           {...props}
         />
       )}
 
       {(error || hint) && (
-        <p className={`text-xs ${error ? 'text-danger' : 'text-text-2'}`}>
+        <p
+          id={msgId}
+          role={error ? 'alert' : undefined}
+          aria-live={error ? 'polite' : undefined}
+          className={`text-xs ${error ? 'text-danger' : 'text-text-2'}`}
+        >
           {error ?? hint}
         </p>
       )}

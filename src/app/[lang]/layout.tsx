@@ -1,34 +1,25 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { headers } from 'next/headers';
 import { locales, isValidLocale } from '@/i18n/config';
 import { getDictionary } from '@/lib/dictionaries';
+import { localizedAlternates } from '@/lib/seo';
 import { NavBar, Footer, PageTransition } from '@/components/ui';
 
 export async function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
 }
 
+// Layout-level metadata only provides a default canonical/hreflang for the
+// homepage. Sub-pages (about, blog, services, contact, posts) override this
+// in their own generateMetadata with a path-specific suffix, so every page
+// gets correct alternates regardless of Next.js internal header changes.
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ lang: string }>;
 }): Promise<Metadata> {
   const { lang } = await params;
-  const headersList = await headers();
-  // Extract the path segment after the locale prefix (e.g. /en/services → /services)
-  const nextUrl = headersList.get('next-url') ?? `/${lang}`;
-  const suffix = nextUrl.replace(new RegExp(`^/${lang}`), '') || '';
-
-  return {
-    alternates: {
-      languages: {
-        ...Object.fromEntries(locales.map((l) => [l, `/${l}${suffix}`])),
-        'x-default': `/en${suffix}`,
-      },
-      canonical: `/${lang}${suffix}`,
-    },
-  };
+  return { alternates: localizedAlternates(lang, '') };
 }
 
 export default async function LangLayout({

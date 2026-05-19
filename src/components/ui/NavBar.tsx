@@ -23,6 +23,7 @@ export default function NavBar({ locale, items }: NavBarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
   const menuBtnRef = useRef<HTMLButtonElement>(null);
+  const drawerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 20);
@@ -35,17 +36,56 @@ export default function NavBar({ locale, items }: NavBarProps) {
     setMobileOpen(false);
   }, [pathname]);
 
-  // Close menu on Escape key
+  // Escape to close + Tab focus trap + inert background while open
   useEffect(() => {
     if (!mobileOpen) return;
+
+    // Disable interaction with the rest of the page while drawer is open
+    const main = document.querySelector('main');
+    main?.setAttribute('inert', '');
+
+    // Move focus to the first link in the drawer after open animation
+    const focusTimer = window.setTimeout(() => {
+      const firstLink = drawerRef.current?.querySelector<HTMLElement>('a, button');
+      firstLink?.focus();
+    }, 50);
+
     const handler = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setMobileOpen(false);
         menuBtnRef.current?.focus();
+        return;
+      }
+      if (e.key !== 'Tab') return;
+
+      // Focus trap inside header + drawer
+      const drawer = drawerRef.current;
+      if (!drawer) return;
+      const focusables = Array.from(
+        drawer.querySelectorAll<HTMLElement>('a, button, [tabindex]:not([tabindex="-1"])')
+      ).filter((el) => !el.hasAttribute('disabled'));
+      const all = [menuBtnRef.current, ...focusables].filter(Boolean) as HTMLElement[];
+      if (all.length === 0) return;
+
+      const first = all[0]!;
+      const last = all[all.length - 1]!;
+      const active = document.activeElement as HTMLElement | null;
+
+      if (e.shiftKey && active === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
       }
     };
+
     document.addEventListener('keydown', handler);
-    return () => document.removeEventListener('keydown', handler);
+    return () => {
+      document.removeEventListener('keydown', handler);
+      window.clearTimeout(focusTimer);
+      main?.removeAttribute('inert');
+    };
   }, [mobileOpen]);
 
   return (
@@ -107,6 +147,7 @@ export default function NavBar({ locale, items }: NavBarProps) {
         {mobileOpen && (
           <motion.nav
             id="mobile-nav"
+            ref={drawerRef}
             initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -16 }}

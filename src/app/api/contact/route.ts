@@ -6,7 +6,7 @@ import { zodFail, serverError } from '@/lib/api-helpers';
 
 export async function POST(req: Request) {
   try {
-    const rateLimitRes = rateLimit(req, 5, 60000);
+    const rateLimitRes = await rateLimit(req, 5, 60000, 'contact');
     if (rateLimitRes) return rateLimitRes;
 
     const body = await req.json() as unknown;

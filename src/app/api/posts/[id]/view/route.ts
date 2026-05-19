@@ -15,7 +15,7 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   // Silently pass rate-limited requests — don't reveal the limit to clients
-  const limited = rateLimit(req, 5, 60_000);
+  const limited = await rateLimit(req, 5, 60_000, 'view');
   if (limited) return NextResponse.json({ ok: true });
 
   try {

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db/connect';
 import Post from '@/models/Post';
+import MediaFileModel from '@/models/MediaFile';
 import { postSchema } from '@/lib/validation';
 import DOMPurify from 'isomorphic-dompurify';
 import { requireAdmin, zodFail, serverError } from '@/lib/api-helpers';
@@ -21,9 +22,10 @@ export async function GET(
       return NextResponse.json({ error: 'Post not found' }, { status: 404 });
     }
 
-    if (!isObjectId && post.status === 'published') {
-      Post.findByIdAndUpdate(post._id, { $inc: { views: 1 } }).exec();
-    }
+    // View counting is handled by the client `ViewTracker` hitting
+    // /api/posts/[slug]/view exactly once per page load. Counting again here
+    // would double-count any admin loading the editor or any client that
+    // hydrates the page after this fetch.
 
     return NextResponse.json(post);
   } catch (error) {
@@ -70,6 +72,11 @@ export async function DELETE(
     const post = await Post.findByIdAndDelete(id);
 
     if (!post) return NextResponse.json({ error: 'Post not found' }, { status: 404 });
+
+    // Pull this post's id from every media file's `usedIn` so deletion isn't
+    // blocked later by stale references.
+    await MediaFileModel.updateMany({ usedIn: id }, { $pull: { usedIn: id } });
+
     return NextResponse.json({ message: 'Post deleted' });
   } catch (error) {
     return serverError('Failed to delete post', error);

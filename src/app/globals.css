@@ -32,6 +32,54 @@
   --radius-md: var(--radius-md);
   --radius-lg: var(--radius-lg);
   --radius-xl: var(--radius-xl);
+
+  /* ─────────────────────────────────────────────
+     Type scale — golden ratio (φ = 1.618)
+     Overrides Tailwind defaults. xs/sm preserved.
+     ───────────────────────────────────────────── */
+  --text-xs:   var(--fs-xs);
+  --text-xs--line-height: 1.4;
+  --text-sm:   var(--fs-sm);
+  --text-sm--line-height: 1.5;
+  --text-base: var(--fs-base);
+  --text-base--line-height: var(--lh-prose);
+  --text-lg:   var(--fs-lg);
+  --text-lg--line-height: var(--lh-prose);
+  --text-xl:   var(--fs-xl);
+  --text-xl--line-height: var(--lh-snug);
+  --text-2xl:  var(--fs-2xl);
+  --text-2xl--line-height: var(--lh-snug);
+  --text-3xl:  var(--fs-3xl);
+  --text-3xl--line-height: var(--lh-snug);
+  --text-4xl:  var(--fs-4xl);
+  --text-4xl--line-height: 1.15;
+  --text-5xl:  var(--fs-5xl);
+  --text-5xl--line-height: 1.1;
+  --text-6xl:  var(--fs-6xl);
+  --text-6xl--line-height: 1.05;
+  --text-7xl:  var(--fs-7xl);
+  --text-7xl--line-height: 1;
+  --text-8xl:  var(--fs-8xl);
+  --text-8xl--line-height: 1;
+  --text-9xl:  var(--fs-9xl);
+  --text-9xl--line-height: 1;
+
+  /* Section spacing — Fibonacci (φ-respecting) overrides for large steps */
+  --spacing-16: var(--space-16);
+  --spacing-20: var(--space-20);
+  --spacing-24: var(--space-24);
+  --spacing-28: var(--space-28);
+  --spacing-32: var(--space-32);
+
+  /* Container widths — φ-derived reading measures */
+  --container-prose: var(--measure-prose);
+  --container-measure: var(--measure-prose);
+  --container-measure-narrow: var(--measure-narrow);
+  --container-measure-wide: var(--measure-wide);
+
+  /* Line-height utilities */
+  --leading-prose: var(--lh-prose);
+  --leading-phi: var(--lh-prose);
 }
 
 *,
@@ -84,7 +132,7 @@ body {
 :lang(ar) button:not(.font-mono),
 :lang(ar) label {
   font-family: var(--font-cairo), ui-sans-serif, system-ui, sans-serif;
-  line-height: 1.7;
+  line-height: var(--lh-prose);
   letter-spacing: 0 !important;
   word-spacing: normal;
 }
@@ -155,13 +203,14 @@ body {
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif;
     font-weight: 700;
-    line-height: 1.1;
+    line-height: var(--lh-tight);
     letter-spacing: -0.02em;
     margin: 0;
   }
 
+  /* φ-derived line-height for body copy — 1.618 */
   p {
-    line-height: 1.7;
+    line-height: var(--lh-prose);
     margin: 0;
   }
 }
@@ -197,5 +246,51 @@ body {
 
   .glow-accent {
     box-shadow: var(--glow-accent);
+  }
+
+  /* ─────────────────────────────────────────────
+     Golden ratio layout utilities
+     ───────────────────────────────────────────── */
+
+  /* Two-column φ split (62/38). On mobile collapses to single column. */
+  .grid-phi {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  @media (min-width: 768px) {
+    .grid-phi {
+      grid-template-columns: 1.618fr 1fr;
+      gap: 3.4375rem; /* 55px — Fib */
+    }
+  }
+
+  /* Reverse φ split (38/62) — image-leading, text-trailing */
+  .grid-phi-rev {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  @media (min-width: 768px) {
+    .grid-phi-rev {
+      grid-template-columns: 1fr 1.618fr;
+      gap: 3.4375rem;
+    }
+  }
+
+  /* φ-derived readable measure for body copy */
+  .measure {
+    max-width: var(--measure-prose);
+  }
+  .measure-narrow {
+    max-width: var(--measure-narrow);
+  }
+  .measure-wide {
+    max-width: var(--measure-wide);
+  }
+
+  /* φ line-height for body text */
+  .leading-phi {
+    line-height: var(--lh-prose);
   }
 }

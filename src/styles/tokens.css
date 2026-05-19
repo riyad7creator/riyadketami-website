@@ -50,4 +50,46 @@
   --z-modal: 200;
   --z-toast: 300;
   --z-nav: 50;
+
+  /* ─────────────────────────────────────────────
+     Golden ratio (φ = 1.618) design system
+     ───────────────────────────────────────────── */
+  --phi: 1.618;
+  --phi-inv: 0.618;
+  --phi-sqrt: 1.272;
+
+  /* Type scale — φ steps from 16px base. xs/sm preserved for caption legibility. */
+  --fs-xs:   0.75rem;     /* 12px  — captions/eyebrows */
+  --fs-sm:   0.875rem;    /* 14px  — small body */
+  --fs-base: 1rem;        /* 16px  — body */
+  --fs-lg:   1.272rem;    /* ~20px — base × √φ */
+  --fs-xl:   1.618rem;    /* ~26px — base × φ */
+  --fs-2xl:  2.058rem;    /* ~33px — base × φ√φ */
+  --fs-3xl:  2.618rem;    /* ~42px — base × φ² */
+  --fs-4xl:  3.33rem;     /* ~53px */
+  --fs-5xl:  4.236rem;    /* ~68px — base × φ³ */
+  --fs-6xl:  5.388rem;    /* ~86px */
+  --fs-7xl:  6.854rem;    /* ~110px — base × φ⁴ */
+  --fs-8xl:  8.717rem;    /* ~140px */
+  --fs-9xl:  11.09rem;    /* ~177px — base × φ⁵ */
+
+  /* Section spacing — Fibonacci (φ-respecting) scale in rem.
+     Micro spacing (1–12) intentionally unchanged to preserve component density. */
+  --space-16: 5.5625rem;  /* 89px  — Fib */
+  --space-20: 6.875rem;   /* 110px — φ⁴×base */
+  --space-24: 9rem;       /* 144px — Fib */
+  --space-28: 11.125rem;  /* 178px — φ⁵×base */
+  --space-32: 14.5625rem; /* 233px — Fib */
+
+  /* Line-height — φ-derived rhythm */
+  --lh-tight:   1.1;
+  --lh-snug:    1.272;
+  --lh-normal:  1.5;
+  --lh-prose:   1.618;    /* φ — optimal body reading */
+  --lh-loose:   1.7;
+
+  /* Readable measure — golden ratio-friendly column width */
+  --measure-narrow: 38ch;   /* tight CTA copy */
+  --measure-prose:  62ch;   /* ~φ²×38 — body reading */
+  --measure-wide:   100ch;
 }

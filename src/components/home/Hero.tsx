@@ -30,7 +30,7 @@ export default function Hero({ locale, dict, socials = [] }: HeroProps) {
     <section className="relative min-h-[100dvh] flex items-center pt-24 pb-12 px-5 sm:px-8 overflow-hidden">
       <MatrixRain opacity={0.055} speed={0.6} density={0.55} />
 
-      <div className="relative z-10 max-w-6xl mx-auto w-full grid md:grid-cols-2 gap-10 md:gap-16 items-center">
+      <div className="relative z-10 max-w-6xl mx-auto w-full grid-phi items-center">
         <div className="flex flex-col gap-7 order-2 md:order-1">
           <Reveal direction="up">
             <MatrixText
@@ -46,7 +46,7 @@ export default function Hero({ locale, dict, socials = [] }: HeroProps) {
           </Reveal>
 
           <Reveal direction="up" delay={0.16}>
-            <p className="text-text-1 text-lg sm:text-xl leading-relaxed max-w-md">
+            <p className="text-text-1 text-lg sm:text-xl leading-phi measure">
               {t.subheadline}
             </p>
           </Reveal>

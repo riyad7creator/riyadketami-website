@@ -1,17 +1,12 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { Check } from 'lucide-react';
+import { Check, BrainCircuit, Presentation, Mic2 } from 'lucide-react';
 import { Button } from '@/components/ui';
 
-const SERVICE_ICONS = [
-  '/icons/icon-ai.png',
-  '/icons/icon-workshop.png',
-  '/icons/icon-speaking.png',
-] as const;
+const SERVICE_ICONS = [BrainCircuit, Presentation, Mic2] as const;
 
 interface ServiceItem {
   tag: string;
@@ -84,7 +79,7 @@ export default function ServiceCard({ item, lang, index = 0 }: ServiceCardProps)
   }
 
   return (
-    <div style={{ perspective: '1000px' }}>
+    <div style={{ perspective: '1000px' }} className="h-full">
       <motion.div
         ref={cardRef}
         style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
@@ -93,7 +88,7 @@ export default function ServiceCard({ item, lang, index = 0 }: ServiceCardProps)
         onMouseLeave={handleMouseLeave}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
-        className="relative flex flex-col gap-6 h-full rounded-[var(--radius-lg)] p-8 border border-white/10 bg-white/[0.02] hover:border-matrix/40 hover:bg-matrix/[0.04] hover:shadow-[0_0_60px_rgba(0,255,102,0.06)] transition-colors duration-200 cursor-default select-none"
+        className="relative flex flex-col gap-6 h-full rounded-[var(--radius-lg)] p-8 border border-white/10 bg-white/[0.04] backdrop-blur-xl hover:border-matrix/40 hover:bg-matrix/[0.06] hover:shadow-[0_0_60px_rgba(0,255,102,0.06)] transition-colors duration-200 cursor-default select-none"
       >
         {/* Radial sheen that follows the cursor */}
         <div
@@ -106,18 +101,15 @@ export default function ServiceCard({ item, lang, index = 0 }: ServiceCardProps)
         />
 
         {/* Service icon */}
-        {SERVICE_ICONS[index] && (
-          <div className="w-12 h-12 relative opacity-80">
-            <Image
-              src={SERVICE_ICONS[index]!}
-              alt=""
-              fill
-              className="object-contain"
-              sizes="48px"
-              aria-hidden
-            />
-          </div>
-        )}
+        {(() => {
+          const Icon = SERVICE_ICONS[index];
+          if (!Icon) return null;
+          return (
+            <div className="w-12 h-12 rounded-[var(--radius-md)] border border-matrix/30 bg-matrix/10 flex items-center justify-center text-matrix shadow-[0_0_20px_rgba(0,255,102,0.15)]">
+              <Icon size={22} strokeWidth={1.75} aria-hidden />
+            </div>
+          );
+        })()}
 
         {/* Tag */}
         <span className="font-mono text-[10px] tracking-[0.15em] text-matrix border border-matrix/30 rounded-full px-2.5 py-1 w-fit">
@@ -147,11 +139,7 @@ export default function ServiceCard({ item, lang, index = 0 }: ServiceCardProps)
           <Link href={`/${lang}/contact`}>
             <Button
               variant="secondary"
-              className={`w-full ${
-                index === 2
-                  ? 'hover:bg-matrix hover:text-bg-0 hover:border-matrix hover:shadow-[0_0_20px_rgba(0,255,102,0.25)]'
-                  : 'hover:border-matrix/40 hover:text-matrix'
-              }`}
+              className="w-full hover:bg-matrix hover:text-bg-0 hover:border-matrix hover:shadow-[0_0_20px_rgba(0,255,102,0.25)]"
             >
               {item.cta}
             </Button>

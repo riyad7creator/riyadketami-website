@@ -38,7 +38,7 @@ export default async function AboutPage({
       {/* Hero */}
       <section className="relative pt-32 pb-16 px-5 sm:px-8 overflow-hidden">
         <MatrixRain opacity={0.055} speed={0.6} density={0.55} />
-        <div className="relative z-10 max-w-6xl mx-auto grid md:grid-cols-2 gap-12 md:gap-20 items-center">
+        <div className="relative z-10 max-w-6xl mx-auto grid-phi items-center">
           <div className="flex flex-col gap-6 order-2 md:order-1">
             <Reveal direction="up">
               <MatrixText text={t.eyebrow} className="text-xs tracking-[0.2em] text-matrix" />
@@ -49,7 +49,7 @@ export default async function AboutPage({
               </h1>
             </Reveal>
             <Reveal direction="up" delay={0.16}>
-              <p className="text-text-1 text-lg leading-relaxed max-w-md">{t.subheadline}</p>
+              <p className="text-text-1 text-lg leading-phi measure">{t.subheadline}</p>
             </Reveal>
             <Reveal direction="up" delay={0.24}>
               <Link href={`/${lang}/services`}>
@@ -93,10 +93,10 @@ export default async function AboutPage({
 
       {/* Bio */}
       <section className="py-16 px-5 sm:px-8">
-        <div className="max-w-3xl mx-auto flex flex-col gap-6">
+        <div className="measure mx-auto flex flex-col gap-6">
           {t.bio.map((paragraph, i) => (
             <Reveal key={i} direction="up" delay={i * 0.08}>
-              <p className="text-text-1 text-lg leading-relaxed">{paragraph}</p>
+              <p className="text-text-1 text-lg leading-phi">{paragraph}</p>
             </Reveal>
           ))}
         </div>

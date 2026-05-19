@@ -26,7 +26,7 @@ export default function SectionHeader({
         {title}
       </h2>
       {subtitle && (
-        <p className={`text-text-1 text-lg leading-relaxed ${center ? 'max-w-2xl' : 'max-w-xl'}`}>
+        <p className="text-text-1 text-lg leading-phi measure">
           {subtitle}
         </p>
       )}

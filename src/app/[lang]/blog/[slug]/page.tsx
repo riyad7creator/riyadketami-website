@@ -77,7 +77,7 @@ export default async function BlogPostPage({
       />
       {/* Client-side view increment (fires once per page load, bypasses ISR) */}
       <ViewTracker slug={post.slug} />
-      <div className="max-w-3xl mx-auto">
+      <div className="measure mx-auto">
         {/* Back */}
         <Reveal direction="up">
           <Link

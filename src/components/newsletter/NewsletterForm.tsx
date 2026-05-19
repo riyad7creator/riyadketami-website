@@ -111,7 +111,6 @@ export default function NewsletterForm({
               }}
               placeholder={t.placeholder}
               className="flex-1 h-11 px-4 rounded-[var(--radius-md)] bg-bg-2 border border-border text-text-0 placeholder:text-text-2 text-sm focus:outline-none focus:border-matrix transition-colors duration-[var(--duration-fast)]"
-              autoFocus
             />
             <button
               type="submit"

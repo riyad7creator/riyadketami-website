@@ -16,9 +16,10 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { lang } = await params;
   const headersList = await headers();
-  // Extract the path segment after the locale prefix (e.g. /en/services → /services)
-  const nextUrl = headersList.get('next-url') ?? `/${lang}`;
-  const suffix = nextUrl.replace(new RegExp(`^/${lang}`), '') || '';
+  // Use the pathname set by middleware (`x-pathname`) so hreflang URLs point at
+  // the actual route, not just the locale root.
+  const pathname = headersList.get('x-pathname') ?? `/${lang}`;
+  const suffix = pathname.replace(new RegExp(`^/${lang}`), '') || '';
 
   return {
     alternates: {

@@ -4,20 +4,9 @@ import dbConnect from '@/lib/db/connect';
 import SiteProfileModel from '@/models/SiteProfile';
 import { requireAdmin, serverError, zodFail } from '@/lib/api-helpers';
 import { siteProfileSchema } from '@/lib/links-page-validation';
+import { DEFAULT_LINKS_PROFILE } from '@/lib/links-defaults';
 
-export const DEFAULT_PROFILE = {
-  _id: 'links-profile',
-  name: 'Riyad Ketami',
-  tagline: 'Digital Entrepreneur · AI Consultant · Creator',
-  statusLine: '',
-  statusEnabled: false,
-  subscriberCount: 5000,
-  socials: {
-    tiktok: { url: 'https://tiktok.com/@riyadketami', count: '200K+' },
-    youtube: { url: 'https://youtube.com/@riyadketami', count: '50K+', channelId: '' },
-    instagram: { url: 'https://instagram.com/riyadketami', count: '80K+' },
-  },
-};
+export const DEFAULT_PROFILE = DEFAULT_LINKS_PROFILE;
 
 export async function GET() {
   try {

@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { isValidLocale } from '@/i18n/config';
 import { getDictionary } from '@/lib/dictionaries';
 import { getBlogPosts } from '@/lib/blog-data';
+import { localizedAlternates } from '@/lib/seo';
 import { BlogCard, Reveal } from '@/components/ui';
 import MatrixText from '@/components/ui/MatrixText';
 import CategoryFilter from '@/components/blog/CategoryFilter';
@@ -25,6 +26,7 @@ export async function generateMetadata({
   return {
     title: dict.blog.headline,
     description: dict.blog.subheadline,
+    alternates: localizedAlternates(lang, 'blog'),
   };
 }
 

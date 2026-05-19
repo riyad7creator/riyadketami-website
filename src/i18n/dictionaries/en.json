@@ -55,7 +55,7 @@
       },
       "language_error": "Please choose your preferred newsletter language.",
       "email_error": "Please enter a valid email address.",
-      "step2_label": "One last thing — pick your newsletter language:",
+      "step2_label": "One last thing. Pick your newsletter language:",
       "confirm": "Confirm my language",
       "back": "← Change email",
       "confirmation": {
@@ -142,9 +142,9 @@
     "skills_eyebrow": "// stack",
     "skills_title": "What I bring to the table.",
     "skills": [
-      { "name": "Product strategy", "description": "Translating vision into actionable roadmaps. I help teams identify what to build, for whom, and in what order—balancing user needs with business constraints.", "icon": "lightbulb" },
+      { "name": "Product strategy", "description": "Translating vision into actionable roadmaps. I help teams identify what to build, for whom, and in what order, balancing user needs with business constraints.", "icon": "lightbulb" },
       { "name": "Full-stack development", "description": "From database schema to UI polish. I ship production-grade web applications using Next.js, TypeScript, and modern infrastructure that scales.", "icon": "code" },
-      { "name": "AI implementation", "description": "Integrating LLMs and AI workflows into real products. Not demos—systems that reduce costs, accelerate output, and improve decision-making.", "icon": "brain" },
+      { "name": "AI implementation", "description": "Integrating LLMs and AI workflows into real products. Not demos. Systems that reduce costs, accelerate output, and improve decision-making.", "icon": "brain" },
       { "name": "Content systems", "description": "Building repeatable content engines. I design workflows, templates, and distribution pipelines that turn ideas into consistent audience growth.", "icon": "file-text" },
       { "name": "Growth operations", "description": "Data-driven experimentation across acquisition, activation, and retention. I set up the metrics, tools, and rituals that compound over time.", "icon": "trending-up" },
       { "name": "Team architecture", "description": "Structuring teams for velocity and clarity. I help define roles, workflows, and communication rhythms that let talent thrive.", "icon": "users" }

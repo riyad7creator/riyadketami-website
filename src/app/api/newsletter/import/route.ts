@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@/auth';
 import dbConnect from '@/lib/db/connect';
 import Subscriber from '@/models/Subscriber';
-import { serverError } from '@/lib/api-helpers';
+import { requireAdmin, serverError } from '@/lib/api-helpers';
 import type { Locale } from '@/i18n/config';
 
 interface ImportEntry {
@@ -10,11 +9,11 @@ interface ImportEntry {
   preferredLanguage?: Locale;
 }
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export async function POST(req: Request) {
-  const session = await auth();
-  if (!session || session.user?.role !== 'admin') {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const check = await requireAdmin();
+  if (!check.ok) return check.response;
 
   try {
     const body = await req.json() as { entries?: ImportEntry[]; emails?: string[] };
@@ -27,13 +26,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'No entries provided' }, { status: 400 });
     }
 
-    // Validate and normalise
     const validEntries = entries
       .map((e) => ({
         email: String(e.email).toLowerCase().trim(),
         preferredLanguage: e.preferredLanguage,
       }))
-      .filter((e) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e.email));
+      .filter((e) => EMAIL_RE.test(e.email));
 
     if (validEntries.length === 0) {
       return NextResponse.json({ error: 'No valid email addresses found' }, { status: 400 });
@@ -41,28 +39,23 @@ export async function POST(req: Request) {
 
     await dbConnect();
 
-    let imported = 0;
-    let skipped = 0;
+    // Single bulkWrite — upsert each entry. Avoids N round-trips and the
+    // E11000 try/catch dance, and keeps the connection pool safe on Atlas
+    // free tier even for thousand-email imports.
+    const ops = validEntries.map(({ email, preferredLanguage }) => ({
+      updateOne: {
+        filter: { email },
+        update: {
+          $setOnInsert: { email },
+          ...(preferredLanguage ? { $set: { preferredLanguage } } : {}),
+        },
+        upsert: true,
+      },
+    }));
 
-    await Promise.all(
-      validEntries.map(async ({ email, preferredLanguage }) => {
-        try {
-          await Subscriber.create({ email, preferredLanguage });
-          imported++;
-        } catch (e: unknown) {
-          // Duplicate key error
-          if ((e as { code?: number })?.code === 11000) {
-            // Update language preference if provided
-            if (preferredLanguage) {
-              await Subscriber.updateOne({ email }, { $set: { preferredLanguage } });
-            }
-            skipped++;
-          } else {
-            throw e;
-          }
-        }
-      })
-    );
+    const result = await Subscriber.bulkWrite(ops, { ordered: false });
+    const imported = result.upsertedCount ?? 0;
+    const skipped = validEntries.length - imported;
 
     return NextResponse.json({ imported, skipped, total: validEntries.length });
   } catch (error) {

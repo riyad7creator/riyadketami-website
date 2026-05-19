@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
+import { z } from 'zod';
 import dbConnect from '@/lib/db/connect';
 import Post from '@/models/Post';
-import { requireAdmin, serverError } from '@/lib/api-helpers';
+import { requireAdmin, serverError, zodFail } from '@/lib/api-helpers';
 import { translatePostContent } from '@/lib/translate';
 import DOMPurify from 'isomorphic-dompurify';
 
@@ -9,9 +10,25 @@ type TargetLang = 'fr' | 'ar';
 
 interface TranslationResult {
   id?: string;
-  status: 'ok' | 'error';
+  status: 'ok' | 'error' | 'skipped';
   error?: string;
+  reason?: string;
 }
+
+const preTranslatedSchema = z.object({
+  title: z.string().min(1).max(100),
+  excerpt: z.string().max(300),
+  content: z.string().min(1),
+});
+
+const translatePostSchema = z.object({
+  postId: z.string().regex(/^[0-9a-fA-F]{24}$/, 'Invalid postId'),
+  langs: z.array(z.enum(['fr', 'ar'])).optional(),
+  lang: z.enum(['fr', 'ar']).optional(),
+  data: preTranslatedSchema.optional(),
+  /** Set true to overwrite a manually-edited translation */
+  force: z.boolean().optional(),
+});
 
 /**
  * GET /api/admin/translate-post?postId=xxx
@@ -76,15 +93,9 @@ export async function POST(req: Request) {
 
     await dbConnect();
 
-    const body = await req.json() as {
-      postId?: string;
-      langs?: TargetLang[];
-      lang?: TargetLang;
-      data?: { title: string; excerpt: string; content: string };
-    };
-
-    const { postId, langs, lang, data: preTranslated } = body;
-    if (!postId) return NextResponse.json({ error: 'postId required' }, { status: 400 });
+    const parsed = translatePostSchema.safeParse(await req.json());
+    if (!parsed.success) return zodFail(parsed.error);
+    const { postId, langs, lang, data: preTranslated, force } = parsed.data;
 
     // Fetch the source EN post
     const sourcePost = await Post.findById(postId).lean();
@@ -102,13 +113,26 @@ export async function POST(req: Request) {
     await Promise.all(
       targetLangs.map(async (targetLang) => {
         try {
+          // Skip if a manually-edited translation already exists (unless force=true)
+          const existing = await Post.findOne({
+            translated_from: postId,
+            language: targetLang,
+          }).select('_id slug manually_edited').lean();
+
+          if (existing?.manually_edited && !force) {
+            results[targetLang] = {
+              id: String(existing._id),
+              status: 'skipped',
+              reason: 'manually_edited',
+            };
+            return;
+          }
+
           let translated: { title: string; excerpt: string; content: string };
 
           if (preTranslated) {
-            // Option B: save pre-translated data as-is
             translated = preTranslated;
           } else {
-            // Option A: call AI
             translated = await translatePostContent({
               title: sourcePost.title,
               excerpt: sourcePost.excerpt ?? '',
@@ -118,16 +142,18 @@ export async function POST(req: Request) {
           }
 
           const safeContent = DOMPurify.sanitize(translated.content);
-          const translationSlug = `${sourcePost.slug}-${targetLang}`;
+          // Only set slug on first creation — preserves existing FR/AR URLs when EN slug is edited
+          const slugFields = existing
+            ? {}
+            : { slug: `${sourcePost.slug}-${targetLang}` };
 
-          // Upsert: update existing translation or create new
           const saved = await Post.findOneAndUpdate(
             { translated_from: postId, language: targetLang },
             {
+              ...slugFields,
               title: translated.title,
               excerpt: translated.excerpt,
               content: safeContent,
-              slug: translationSlug,
               language: targetLang,
               status: 'published',
               category: sourcePost.category,
@@ -139,7 +165,7 @@ export async function POST(req: Request) {
               manually_edited: false,
               author: sourcePost.author,
             },
-            { upsert: true, new: true, runValidators: false }
+            { upsert: true, new: true, runValidators: true }
           );
 
           results[targetLang] = { id: String(saved._id), status: 'ok' };

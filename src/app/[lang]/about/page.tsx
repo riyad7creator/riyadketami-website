@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { isValidLocale } from '@/i18n/config';
 import { getDictionary } from '@/lib/dictionaries';
+import { localizedAlternates } from '@/lib/seo';
 import { Button, Reveal } from '@/components/ui';
 import MatrixText from '@/components/ui/MatrixText';
 import MatrixRain from '@/components/ui/MatrixRain';
@@ -20,6 +21,7 @@ export async function generateMetadata({
   return {
     title: dict.about.headline,
     description: dict.about.subheadline,
+    alternates: localizedAlternates(lang, 'about'),
   };
 }
 

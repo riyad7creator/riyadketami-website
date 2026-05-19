@@ -9,11 +9,16 @@ export const authConfig = {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
       const isAdmin = auth?.user?.role === 'admin';
-      if (
-        nextUrl.pathname.startsWith('/admin') ||
-        nextUrl.pathname.startsWith('/api/admin')
-      ) {
-        return isLoggedIn && isAdmin;
+      const ok = isLoggedIn && isAdmin;
+
+      // API admin routes: return JSON 401 instead of redirecting to /login
+      if (nextUrl.pathname.startsWith('/api/admin')) {
+        if (ok) return true;
+        return Response.json({ error: 'Unauthorized' }, { status: 401 });
+      }
+
+      if (nextUrl.pathname.startsWith('/admin')) {
+        return ok;
       }
       return true;
     },

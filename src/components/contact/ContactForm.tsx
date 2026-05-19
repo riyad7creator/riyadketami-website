@@ -70,7 +70,7 @@ export default function ContactForm({ labels }: ContactFormProps) {
           required
           placeholder="Riyad Ketami"
           error={errors.name?.message}
-          {...register('name')}
+          {...register('name', { required: 'Name is required', minLength: { value: 2, message: 'At least 2 characters' }, maxLength: { value: 50, message: 'Max 50 characters' } })}
         />
         <FormField
           label={labels.email}
@@ -78,7 +78,7 @@ export default function ContactForm({ labels }: ContactFormProps) {
           required
           placeholder="you@example.com"
           error={errors.email?.message}
-          {...register('email')}
+          {...register('email', { required: 'Email is required', pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'Invalid email address' } })}
         />
       </div>
       <FormField
@@ -86,7 +86,7 @@ export default function ContactForm({ labels }: ContactFormProps) {
         required
         placeholder="What's this about?"
         error={errors.subject?.message}
-        {...register('subject')}
+        {...register('subject', { required: 'Subject is required', minLength: { value: 5, message: 'At least 5 characters' }, maxLength: { value: 100, message: 'Max 100 characters' } })}
       />
       <FormField
         label={labels.message}
@@ -95,7 +95,7 @@ export default function ContactForm({ labels }: ContactFormProps) {
         required
         placeholder="Tell me what you're working on..."
         error={errors.message?.message}
-        {...register('message')}
+        {...register('message', { required: 'Message is required', minLength: { value: 10, message: 'At least 10 characters' }, maxLength: { value: 1000, message: 'Max 1000 characters' } })}
       />
       <FormField
         label={labels.budget}

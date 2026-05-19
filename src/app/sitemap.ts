@@ -6,13 +6,18 @@ const BASE = 'https://riyadketami.com';
 
 const STATIC_PATHS = ['', '/about', '/services', '/blog', '/contact'];
 
+// Static pages don't change between deploys — bump this when the site copy or
+// layout meaningfully changes so crawlers see a real `lastModified` signal
+// instead of "modified every request".
+const STATIC_LASTMOD = new Date('2026-05-01');
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries: MetadataRoute.Sitemap = [];
 
   // Locale-independent pages
   entries.push({
     url: `${BASE}/links`,
-    lastModified: new Date(),
+    lastModified: STATIC_LASTMOD,
     changeFrequency: 'weekly',
     priority: 0.7,
   });
@@ -22,7 +27,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     for (const path of STATIC_PATHS) {
       entries.push({
         url: `${BASE}/${locale}${path}`,
-        lastModified: new Date(),
+        lastModified: STATIC_LASTMOD,
         changeFrequency: path === '/blog' ? 'daily' : 'weekly',
         priority: path === '' ? 1.0 : path === '/services' ? 0.9 : 0.8,
       });

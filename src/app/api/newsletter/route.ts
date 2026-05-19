@@ -15,7 +15,9 @@ const schema = z.object({
 export async function GET() {
   try {
     await dbConnect();
-    const count = await Subscriber.countDocuments();
+    // Only count active subscribers (exclude those who unsubscribed) so the
+    // public number doesn't drift upward from opt-outs.
+    const count = await Subscriber.countDocuments({ unsubscribed: { $ne: true } });
     return NextResponse.json({ count });
   } catch {
     return NextResponse.json({ count: 0 });
@@ -23,7 +25,7 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const limited = rateLimit(req, 3, 60_000);
+  const limited = await rateLimit(req, 3, 60_000, 'newsletter-signup');
   if (limited) return limited;
 
   try {

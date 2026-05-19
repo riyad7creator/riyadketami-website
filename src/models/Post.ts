@@ -29,7 +29,7 @@ export interface IPost extends Document {
 const PostSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, maxlength: 100 },
-    slug: { type: String, required: true, unique: true, lowercase: true },
+    slug: { type: String, required: true, lowercase: true },
     excerpt: { type: String, maxlength: 300 },
     content: { type: String, required: true },
     featuredImage: { type: String },
@@ -46,6 +46,11 @@ const PostSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+// Slug uniqueness is per-language: same slug allowed across en/fr/ar
+// MIGRATION NOTE: drop the legacy global `slug_1` index in MongoDB first:
+//   db.posts.dropIndex('slug_1')
+PostSchema.index({ slug: 1, language: 1 }, { unique: true });
 
 // Compound query-performance indexes
 PostSchema.index({ language: 1, status: 1, createdAt: -1 });

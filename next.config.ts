@@ -1,9 +1,16 @@
 import type { NextConfig } from 'next';
 
+const isDev = process.env.NODE_ENV === 'development';
+
+// `unsafe-eval` is only needed for React DevTools / Next.js HMR in dev.
+// Prod must not allow eval-class XSS sinks.
+const scriptSrc = isDev
+  ? "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.clarity.ms"
+  : "script-src 'self' 'unsafe-inline' https://www.clarity.ms";
+
 const CSP = [
   "default-src 'self'",
-  // Next.js requires unsafe-inline for its runtime scripts and styles
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.clarity.ms",
+  scriptSrc,
   "style-src 'self' 'unsafe-inline'",
   // data: for base64 images stored in MongoDB; blob: for canvas/object URLs
   "img-src 'self' data: blob: https:",

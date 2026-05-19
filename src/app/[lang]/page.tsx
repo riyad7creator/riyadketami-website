@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import { isValidLocale } from '@/i18n/config';
 import { getDictionary } from '@/lib/dictionaries';
 import { getHomeData } from '@/lib/home-data';
+import { jsonLdString } from '@/lib/json-ld';
+import { localizedAlternates } from '@/lib/seo';
 import Hero from '@/components/home/Hero';
 import FollowerStrip from '@/components/home/FollowerStrip';
 import ServicesSection from '@/components/home/ServicesSection';
@@ -13,10 +15,18 @@ import BlogTeaser from '@/components/home/BlogTeaser';
 
 export const revalidate = 300;
 
-export const metadata: Metadata = {
-  title: 'Builder. Creator. Entrepreneur.',
-  description: 'Digital entrepreneur, AI consultant, and content creator. 400K+ community.',
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}): Promise<Metadata> {
+  const { lang } = await params;
+  return {
+    title: 'Builder. Creator. Entrepreneur.',
+    description: 'Digital entrepreneur, AI consultant, and content creator. 400K+ community.',
+    alternates: localizedAlternates(lang, ''),
+  };
+}
 
 const personJsonLd = {
   '@context': 'https://schema.org',
@@ -43,7 +53,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdString(personJsonLd) }}
       />
       <Hero locale={lang} dict={dict} socials={socials} />
       <FollowerStrip lang={lang} dict={dict} entries={socials} />

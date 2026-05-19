@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { isValidLocale } from '@/i18n/config';
 import { getDictionary } from '@/lib/dictionaries';
+import { localizedAlternates } from '@/lib/seo';
 import { Reveal } from '@/components/ui';
 import MatrixText from '@/components/ui/MatrixText';
 import MatrixRain from '@/components/ui/MatrixRain';
@@ -15,7 +16,10 @@ export async function generateMetadata({
   const { lang } = await params;
   if (!isValidLocale(lang)) return {};
   const dict = getDictionary(lang);
-  return { title: dict.contact.headline };
+  return {
+    title: dict.contact.headline,
+    alternates: localizedAlternates(lang, 'contact'),
+  };
 }
 
 export default async function ContactPage({

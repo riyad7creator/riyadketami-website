@@ -55,7 +55,7 @@
       },
       "language_error": "Veuillez choisir votre langue de réception.",
       "email_error": "Veuillez entrer une adresse email valide.",
-      "step2_label": "Une dernière étape — choisissez votre langue :",
+      "step2_label": "Une dernière étape. Choisissez votre langue :",
       "confirm": "Confirmer ma langue",
       "back": "← Modifier l'email",
       "confirmation": {
@@ -142,9 +142,9 @@
     "skills_eyebrow": "// stack",
     "skills_title": "Ce que j'apporte à la table.",
     "skills": [
-      { "name": "Stratégie produit", "description": "Traduire la vision en feuilles de route actionnables. J'aide les équipes à identifier quoi construire, pour qui, et dans quel ordre—en équilibrant les besoins utilisateurs avec les contraintes business.", "icon": "lightbulb" },
+      { "name": "Stratégie produit", "description": "Traduire la vision en feuilles de route actionnables. J'aide les équipes à identifier quoi construire, pour qui, et dans quel ordre, en équilibrant les besoins utilisateurs avec les contraintes business.", "icon": "lightbulb" },
       { "name": "Développement full-stack", "description": "Du schéma de base de données au polish UI. Je livre des applications web production-ready avec Next.js, TypeScript et une infrastructure moderne qui scale.", "icon": "code" },
-      { "name": "Implémentation IA", "description": "Intégrer les LLM et workflows IA dans de vrais produits. Pas de démos—des systèmes qui réduisent les coûts, accélèrent la production et améliorent la prise de décision.", "icon": "brain" },
+      { "name": "Implémentation IA", "description": "Intégrer les LLM et workflows IA dans de vrais produits. Pas de démos, des systèmes qui réduisent les coûts, accélèrent la production et améliorent la prise de décision.", "icon": "brain" },
       { "name": "Systèmes de contenu", "description": "Construire des moteurs de contenu reproductibles. Je conçois des workflows, templates et pipelines de distribution qui transforment les idées en croissance d'audience consistante.", "icon": "file-text" },
       { "name": "Opérations de croissance", "description": "L'expérimentation data-driven sur l'acquisition, l'activation et la rétention. Je mets en place les métriques, outils et rituels qui se composent avec le temps.", "icon": "trending-up" },
       { "name": "Architecture d'équipe", "description": "Structurer les équipes pour la vélocité et la clarté. J'aide à définir les rôles, workflows et rythmes de communication qui font prospérer les talents.", "icon": "users" }

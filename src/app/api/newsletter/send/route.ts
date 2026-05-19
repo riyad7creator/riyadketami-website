@@ -17,7 +17,8 @@ const APP_URL = process.env.NEXTAUTH_URL ?? 'https://riyadketami.com';
 
 /** Deterministic per-email unsubscribe token (HMAC — no DB storage needed) */
 function unsubToken(email: string): string {
-  const secret = process.env.NEXTAUTH_SECRET ?? '';
+  // Dedicated secret so rotating the auth secret doesn't invalidate old unsubscribe links.
+  const secret = process.env.NEWSLETTER_UNSUB_SECRET ?? process.env.NEXTAUTH_SECRET ?? '';
   return createHmac('sha256', secret).update(email.toLowerCase()).digest('hex');
 }
 

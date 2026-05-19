@@ -49,10 +49,12 @@ function slugify(s: string) {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 }
 
-function calcReadTime(html: string): number {
-  const text = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-  const words = text ? text.split(' ').length : 0;
-  return Math.max(1, Math.round(words / 238));
+function calcReadTime(html: string, lang: string = 'en'): number {
+  const text = html.replace(/<[^>]+>/g, ' ').replace(/\s+/gu, ' ').trim();
+  const words = text ? text.split(/\s+/u).length : 0;
+  // Locale-aware reading speed (words per minute)
+  const wpm = lang === 'ar' ? 180 : lang === 'fr' ? 210 : 238;
+  return Math.max(1, Math.round(words / wpm));
 }
 
 const inputCls = 'w-full bg-bg-1 border border-border rounded-[var(--radius-md)] px-3 py-2 text-sm text-text-0 placeholder:text-text-2 focus:outline-none focus:border-matrix/50 transition-colors duration-[var(--duration-fast)]';
@@ -152,7 +154,7 @@ export default function PostEditorPage({ params }: { params: Promise<{ id: strin
       content: f.content,
       featuredImage: f.featuredImage || undefined,
       tags: f.tags ? f.tags.split(',').map((t) => t.trim()).filter(Boolean) : [],
-      readTime: parseInt(f.readTime) || calcReadTime(f.content),
+      readTime: parseInt(f.readTime) || calcReadTime(f.content, f.language),
     };
   }
 
@@ -258,7 +260,7 @@ export default function PostEditorPage({ params }: { params: Promise<{ id: strin
     };
 
   const setContent = useCallback((html: string) => {
-    setForm((prev) => ({ ...prev, content: html, readTime: String(calcReadTime(html)) }));
+    setForm((prev) => ({ ...prev, content: html, readTime: String(calcReadTime(html, prev.language)) }));
   }, []);
 
   const handleAIInsert = useCallback((html: string) => { setContent(html); }, [setContent]);

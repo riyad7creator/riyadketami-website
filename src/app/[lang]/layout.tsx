@@ -22,7 +22,10 @@ export async function generateMetadata({
 
   return {
     alternates: {
-      languages: Object.fromEntries(locales.map((l) => [l, `/${l}${suffix}`])),
+      languages: {
+        ...Object.fromEntries(locales.map((l) => [l, `/${l}${suffix}`])),
+        'x-default': `/en${suffix}`,
+      },
       canonical: `/${lang}${suffix}`,
     },
   };

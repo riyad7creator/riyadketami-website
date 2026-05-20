@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Reveal } from '@/components/ui';
 import MatrixText from '@/components/ui/MatrixText';
+import MatrixRain from '@/components/ui/MatrixRain';
 import type { Dictionary } from '@/lib/dictionaries';
 
 interface NewsletterSectionProps {
@@ -31,8 +32,9 @@ export default function NewsletterSection({ dict }: NewsletterSectionProps) {
   }
 
   return (
-    <section id="newsletter" className="py-20 sm:py-28 px-5 sm:px-8 bg-bg-1/40 border-y border-border">
-      <div className="max-w-xl mx-auto text-center flex flex-col items-center gap-6">
+    <section id="newsletter" className="relative py-20 sm:py-28 px-5 sm:px-8 bg-bg-1/40 border-y border-border overflow-hidden">
+      <MatrixRain opacity={0.05} />
+      <div className="relative z-10 max-w-xl mx-auto text-center flex flex-col items-center gap-6">
         <Reveal direction="up">
           <MatrixText text={t.eyebrow} className="text-xs tracking-[0.2em] text-matrix" />
         </Reveal>

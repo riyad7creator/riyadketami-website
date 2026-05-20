@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Trash2, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
+import InlineDeleteConfirm from '@/components/admin/InlineDeleteConfirm';
 import { useForm } from 'react-hook-form';
 
 interface Member {
@@ -142,15 +143,10 @@ export default function AdminTeamPage() {
                   <td className="px-4 py-3 text-text-2 text-xs">{m.email}</td>
                   <td className="px-4 py-3">{roleBadge(m.role)}</td>
                   <td className="px-4 py-3">
-                    <button
-                      onClick={() => {
-                        if (!confirm(`Remove ${m.name}?`)) return;
-                        setMembers((prev) => prev.filter((x) => x._id !== m._id));
-                      }}
-                      className="text-text-2 hover:text-danger transition-colors duration-[var(--duration-fast)]"
-                    >
-                      <Trash2 size={13} />
-                    </button>
+                    <InlineDeleteConfirm
+                      label={`Remove ${m.name}`}
+                      onConfirm={() => setMembers((prev) => prev.filter((x) => x._id !== m._id))}
+                    />
                   </td>
                 </tr>
               ))}

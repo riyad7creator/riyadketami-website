@@ -6,6 +6,7 @@ import { isValidLocale } from '@/i18n/config';
 import { getDictionary } from '@/lib/dictionaries';
 import { Button, Reveal } from '@/components/ui';
 import MatrixText from '@/components/ui/MatrixText';
+import MatrixRain from '@/components/ui/MatrixRain';
 import { Check } from 'lucide-react';
 
 export async function generateMetadata({
@@ -35,8 +36,18 @@ export default async function AboutPage({
   return (
     <>
       {/* Hero */}
-      <section className="pt-32 pb-16 px-5 sm:px-8">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 md:gap-20 items-center">
+      <section className="relative pt-32 pb-16 px-5 sm:px-8 overflow-hidden">
+        {/* Static background texture */}
+        <Image
+          src="/images/matrix-bg-about.png"
+          alt=""
+          fill
+          className="object-cover opacity-[0.06]"
+          sizes="100vw"
+          aria-hidden
+        />
+        <MatrixRain opacity={0.04} />
+        <div className="relative z-10 max-w-6xl mx-auto grid md:grid-cols-2 gap-12 md:gap-20 items-center">
           <div className="flex flex-col gap-6 order-2 md:order-1">
             <Reveal direction="up">
               <MatrixText text={t.eyebrow} className="text-xs tracking-[0.2em] text-matrix" />
@@ -59,16 +70,31 @@ export default async function AboutPage({
           </div>
 
           <Reveal direction="up" delay={0.1} className="order-1 md:order-2">
-            <div className="relative aspect-square w-full max-w-[420px] mx-auto rounded-[var(--radius-lg)] overflow-hidden border border-border">
+            <div className="relative aspect-[4/3] w-full max-w-[480px] mx-auto rounded-[var(--radius-lg)] overflow-hidden border border-border">
+              {/* Full-bleed consulting visual background */}
               <Image
-                src="/portraits/portrait-hero.png"
-                alt="Riyad Ketami"
+                src="/images/consulting-visual.png"
+                alt=""
                 fill
                 className="object-cover"
-                priority
-                sizes="(max-width: 768px) 90vw, 420px"
+                sizes="(max-width: 768px) 90vw, 480px"
+                aria-hidden
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-bg-0/60 to-transparent" />
+              {/* Dark overlay */}
+              <div className="absolute inset-0 bg-black/60" />
+              {/* Portrait inset — bottom-left corner */}
+              <div className="absolute bottom-5 left-5 w-24 h-24 rounded-full border-2 border-matrix/60 overflow-hidden shadow-[0_0_24px_rgba(0,255,102,0.25)]">
+                <Image
+                  src="/portraits/portrait-hero.png"
+                  alt="Riyad Ketami"
+                  fill
+                  className="object-cover object-top"
+                  priority
+                  sizes="96px"
+                />
+              </div>
+              {/* Gradient vignette */}
+              <div className="absolute inset-0 bg-gradient-to-t from-bg-0/50 to-transparent" />
             </div>
           </Reveal>
         </div>

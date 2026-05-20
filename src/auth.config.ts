@@ -8,8 +8,12 @@ export const authConfig = {
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
-      if (nextUrl.pathname.startsWith('/admin')) {
-        return isLoggedIn;
+      const isAdmin = auth?.user?.role === 'admin';
+      if (
+        nextUrl.pathname.startsWith('/admin') ||
+        nextUrl.pathname.startsWith('/api/admin')
+      ) {
+        return isLoggedIn && isAdmin;
       }
       return true;
     },

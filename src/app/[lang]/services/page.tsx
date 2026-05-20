@@ -5,8 +5,9 @@ import { isValidLocale } from '@/i18n/config';
 import { getDictionary } from '@/lib/dictionaries';
 import { Accordion, Button, Reveal } from '@/components/ui';
 import type { AccordionItem } from '@/components/ui';
-import { Check } from 'lucide-react';
 import MatrixText from '@/components/ui/MatrixText';
+import MatrixRain from '@/components/ui/MatrixRain';
+import ServiceCard from '@/components/services/ServiceCard';
 import TestimonialsSection from '@/components/home/TestimonialsSection';
 
 export async function generateMetadata({
@@ -22,12 +23,6 @@ export async function generateMetadata({
     description: dict.services.subheadline,
   };
 }
-
-const SERVICE_ACCENT = [
-  'border-matrix/20 hover:border-matrix/40',
-  'bg-matrix/5 border-matrix/40 shadow-[0_0_60px_rgba(0,255,102,0.06)]',
-  'border-matrix/20 hover:border-matrix/40',
-] as const;
 
 export default async function ServicesPage({
   params,
@@ -66,41 +61,10 @@ export default async function ServicesPage({
 
       {/* Service cards */}
       <section className="pb-24 px-5 sm:px-8">
-        <div className="max-w-6xl mx-auto grid sm:grid-cols-3 gap-5">
+        <div className="max-w-6xl mx-auto grid sm:grid-cols-3 gap-5 items-stretch">
           {t.items.map((item, i) => (
-            <Reveal key={i} direction="up" delay={0.05 + i * 0.1}>
-              <div
-                className={`flex flex-col gap-6 h-full rounded-[var(--radius-lg)] p-8 border transition-colors duration-[var(--duration-fast)] ${SERVICE_ACCENT[i]}`}
-              >
-                {/* Tag */}
-                <span className="font-mono text-[10px] tracking-[0.15em] text-matrix border border-matrix/30 rounded-full px-2.5 py-1 w-fit">
-                  {item.tag}
-                </span>
-
-                <div className="flex flex-col gap-2">
-                  <h2 className="font-display font-bold text-2xl text-text-0 leading-tight">
-                    {item.name}
-                  </h2>
-                  <p className="text-text-2 text-sm leading-relaxed">{item.description}</p>
-                </div>
-
-                <ul className="flex flex-col gap-2.5 flex-1">
-                  {item.features.map((f, idx) => (
-                    <li key={idx} className="flex items-start gap-2.5 text-sm text-text-1">
-                      <Check size={13} className="text-matrix shrink-0 mt-0.5" />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-
-                <div className="flex flex-col gap-2 pt-2">
-                  <Link href={`/${lang}/contact`}>
-                    <Button variant={i === 1 ? 'primary' : 'secondary'} className="w-full">
-                      {item.cta}
-                    </Button>
-                  </Link>
-                </div>
-              </div>
+            <Reveal key={i} direction="up" delay={0.05 + i * 0.1} className="h-full">
+              <ServiceCard item={item} lang={lang} index={i} />
             </Reveal>
           ))}
         </div>
@@ -159,8 +123,9 @@ export default async function ServicesPage({
       </section>
 
       {/* CTA */}
-      <section className="py-24 px-5 sm:px-8 border-t border-border">
-        <div className="max-w-3xl mx-auto text-center flex flex-col items-center gap-6">
+      <section className="relative py-24 px-5 sm:px-8 border-t border-border overflow-hidden">
+        <MatrixRain opacity={0.05} />
+        <div className="relative z-10 max-w-3xl mx-auto text-center flex flex-col items-center gap-6">
           <Reveal direction="up">
             <MatrixText text={t.cta_eyebrow} className="text-xs tracking-[0.2em] text-matrix" />
           </Reveal>

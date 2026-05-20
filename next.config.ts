@@ -1,5 +1,20 @@
 import type { NextConfig } from 'next';
 
+const CSP = [
+  "default-src 'self'",
+  // Next.js requires unsafe-inline for its runtime scripts and styles
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.clarity.ms",
+  "style-src 'self' 'unsafe-inline'",
+  // data: for base64 images stored in MongoDB; blob: for canvas/object URLs
+  "img-src 'self' data: blob: https:",
+  "font-src 'self' data:",
+  "connect-src 'self' https://www.clarity.ms https://dc.services.visualstudio.com",
+  "media-src 'self'",
+  "frame-ancestors 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+].join('; ');
+
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [{ protocol: 'https', hostname: '**' }],
@@ -11,8 +26,19 @@ const nextConfig: NextConfig = {
         headers: [
           { key: 'X-Content-Type-Options', value: 'nosniff' },
           { key: 'X-Frame-Options', value: 'DENY' },
-          { key: 'X-XSS-Protection', value: '1; mode=block' },
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+          { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+          { key: 'Content-Security-Policy', value: CSP },
+        ],
+      },
+      {
+        // HSTS only on HTTPS — browsers ignore on HTTP, but be explicit
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=63072000; includeSubDomains; preload',
+          },
         ],
       },
     ];

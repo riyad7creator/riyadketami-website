@@ -52,7 +52,13 @@ export default function ContactForm({ labels }: ContactFormProps) {
 
   if (status === 'success') {
     return (
-      <p className="font-mono text-sm text-matrix tracking-[0.15em] py-8">{labels.success}</p>
+      <p
+        role="status"
+        aria-live="polite"
+        className="font-mono text-sm text-matrix tracking-[0.15em] py-8"
+      >
+        {labels.success}
+      </p>
     );
   }
 

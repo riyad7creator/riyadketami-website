@@ -19,6 +19,9 @@ export interface IPost extends Document {
   views: number;
   author: mongoose.Types.ObjectId;
   readTime?: number;
+  translated_from?: mongoose.Types.ObjectId | null;
+  translated_at?: Date | null;
+  manually_edited?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -37,9 +40,18 @@ const PostSchema = new mongoose.Schema(
     views: { type: Number, default: 0 },
     author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     readTime: { type: Number, default: 1 },
+    translated_from: { type: mongoose.Schema.Types.ObjectId, ref: 'Post', default: null },
+    translated_at: { type: Date, default: null },
+    manually_edited: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
+
+// Compound query-performance indexes
+PostSchema.index({ language: 1, status: 1, createdAt: -1 });
+PostSchema.index({ tags: 1 });
+PostSchema.index({ category: 1, language: 1 });
+PostSchema.index({ translated_from: 1 }); // translation lookup
 
 const Post: Model<IPost> = mongoose.models.Post || mongoose.model<IPost>('Post', PostSchema);
 

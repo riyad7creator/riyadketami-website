@@ -46,12 +46,12 @@
       "subtitle": "Join 50,000+ entrepreneurs getting AI strategies, digital business tactics, and creator insights every week. Free.",
       "placeholder": "your@email.com",
       "cta": "Subscribe free",
-      "success": "// you're in — check your inbox."
+      "success": "// you're in. Check your inbox."
     },
     "speaking": {
       "eyebrow": "// speaking & events",
       "title": "Book me for your next event.",
-      "subtitle": "Keynotes, workshops, and panels — on AI, digital entrepreneurship, and building in public. Available globally.",
+      "subtitle": "Keynotes, workshops, and panels on AI, digital entrepreneurship, and building in public. Available globally.",
       "stat_events": "30+",
       "stat_events_label": "Events",
       "stat_continents": "3",
@@ -101,7 +101,7 @@
           "title": "E-commerce Entrepreneur"
         },
         {
-          "quote": "The most practical AI consulting I've encountered. No fluff — just systems that work in the real world.",
+          "quote": "The most practical AI consulting I've encountered. No fluff, just systems that work in the real world.",
           "author": "Thomas L.",
           "title": "Marketing Director"
         }
@@ -110,16 +110,16 @@
     "services": {
       "eyebrow": "// services",
       "title": "How I can help.",
-      "subtitle": "Strategy, workshops, and keynotes — built around what your team actually needs.",
+      "subtitle": "Strategy, workshops, and keynotes. Built around what your team actually needs.",
       "cta": "See all services"
     }
   },
   "about": {
     "eyebrow": "// digital entrepreneur · ai consultant · content creator",
     "headline": "Builder, creator, entrepreneur.",
-    "subheadline": "I build in the AI era — and share everything along the way with a 400K+ community.",
+    "subheadline": "I build in the AI era and share everything along the way with a 400K+ community.",
     "bio": [
-      "Started in digital marketing. Moved into product and AI. Built in public — and a community of 400K+ people started paying attention.",
+      "Started in digital marketing. Moved into product and AI. Built in public, and a community of 400K+ people started paying attention.",
       "Today I run an independent practice: AI consulting for ambitious teams, content that teaches real skills, and software that solves real problems."
     ],
     "skills_eyebrow": "// stack",
@@ -187,7 +187,7 @@
       {
         "step": "03",
         "title": "Execute",
-        "body": "I deliver. You get clear, usable output — not decks."
+        "body": "I deliver. You get clear, usable output, not decks."
       }
     ],
     "faq_eyebrow": "// questions",
@@ -195,7 +195,7 @@
     "faq": [
       {
         "q": "How quickly can we start?",
-        "a": "For The Signal, usually within a week. Sprint and Stack depend on current capacity — fill out the form and I'll give you a real date."
+        "a": "For The Signal, usually within a week. Sprint and Stack depend on current capacity. Fill out the form and I'll give you a real date."
       },
       {
         "q": "Do you work with early-stage founders?",
@@ -237,8 +237,11 @@
       "budget": "Budget (optional)"
     },
     "submit": "Send message →",
-    "success": "// message received — I'll get back to you within 48h.",
-    "error": "Something went wrong. Try again."
+    "success": "// message received. I'll get back to you within 48h.",
+    "error": "Something went wrong. Try again.",
+    "email_eyebrow": "// prefer email directly?",
+    "email_address": "riyad@ketami.net",
+    "email_response": "I respond within 48 hours."
   },
   "footer": {
     "rights": "All rights reserved."
@@ -257,12 +260,12 @@
   "services": {
     "eyebrow": "// how i can help",
     "headline": "Services",
-    "subheadline": "Strategy, workshops, and keynotes — no fluff, just results.",
+    "subheadline": "Strategy, workshops, and keynotes. No fluff, just results.",
     "items": [
       {
         "tag": "Consulting",
         "name": "AI Strategy Consulting",
-        "description": "I help ambitious teams cut through the noise and build AI workflows that actually work. From audit to full implementation — clear, practical, measurable.",
+        "description": "I help ambitious teams cut through the noise and build AI workflows that actually work. From audit to full implementation, clear, practical, measurable.",
         "features": [
           "AI readiness audit",
           "Custom strategy roadmap",
@@ -286,7 +289,7 @@
       {
         "tag": "Speaking",
         "name": "Keynote Speaking",
-        "description": "Talks on AI, digital entrepreneurship, and building in public — for conferences, summits, and corporate events. Available worldwide.",
+        "description": "Talks on AI, digital entrepreneurship, and building in public, for conferences, summits, and corporate events. Available worldwide.",
         "features": [
           "Keynotes & panel discussions",
           "Conferences & corporate events",
@@ -307,7 +310,7 @@
       {
         "step": "02",
         "title": "Proposal",
-        "body": "You receive a clear, custom proposal — scope, deliverables, and timeline. No surprises."
+        "body": "You receive a clear, custom proposal covering scope, deliverables, and timeline. No surprises."
       },
       {
         "step": "03",
@@ -324,11 +327,11 @@
       },
       {
         "q": "Are sessions available remotely?",
-        "a": "Yes. All services are available remotely or on-site — your preference."
+        "a": "Yes. All services are available remotely or on-site, based on your preference."
       },
       {
         "q": "What languages do you work in?",
-        "a": "English, French, and Arabic — whichever works best for your team."
+        "a": "English, French, and Arabic, whichever works best for your team."
       },
       {
         "q": "How much does it cost?",
@@ -336,7 +339,7 @@
       },
       {
         "q": "Do you work with international clients?",
-        "a": "Yes — I've worked with teams across Europe, the Middle East, and North America."
+        "a": "Yes. I've worked with teams across Europe, the Middle East, and North America."
       }
     ],
     "cta_eyebrow": "// let's talk",

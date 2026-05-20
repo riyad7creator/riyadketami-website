@@ -29,9 +29,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   }
 
-  // Blog posts per locale
-  for (const locale of locales) {
-    const posts = await getBlogPosts(locale);
+  // Blog posts per locale — fetch all locales in parallel
+  const postsByLocale = await Promise.all(locales.map((locale) => getBlogPosts(locale)));
+  for (let i = 0; i < locales.length; i++) {
+    const locale = locales[i]!;
+    const posts = postsByLocale[i]!;
     for (const post of posts) {
       entries.push({
         url: `${BASE}/${locale}/blog/${post.slug}`,

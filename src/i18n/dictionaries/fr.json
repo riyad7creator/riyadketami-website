@@ -46,12 +46,12 @@
       "subtitle": "Rejoignez 50 000+ entrepreneurs qui reçoivent chaque semaine des stratégies IA, des tactiques créateur et des insights business digitaux. Gratuit.",
       "placeholder": "votre@email.com",
       "cta": "S'inscrire gratuitement",
-      "success": "// c'est fait — vérifiez votre boîte mail."
+      "success": "// c'est fait. Vérifiez votre boîte mail."
     },
     "speaking": {
       "eyebrow": "// conférences & événements",
       "title": "Bookez-moi pour votre prochain événement.",
-      "subtitle": "Keynotes, workshops et tables rondes — sur l'IA, l'entrepreneuriat digital et le build en public. Disponible dans le monde entier.",
+      "subtitle": "Keynotes, workshops et tables rondes sur l'IA, l'entrepreneuriat digital et le build en public. Disponible dans le monde entier.",
       "stat_events": "30+",
       "stat_events_label": "Événements",
       "stat_continents": "3",
@@ -101,7 +101,7 @@
           "title": "Entrepreneur E-commerce"
         },
         {
-          "quote": "Le consulting IA le plus pratique que j'aie rencontré. Pas de théorie — juste des systèmes qui fonctionnent dans le monde réel.",
+          "quote": "Le consulting IA le plus pratique que j'aie rencontré. Pas de théorie, juste des systèmes qui fonctionnent dans le monde réel.",
           "author": "Thomas L.",
           "title": "Directeur Marketing"
         }
@@ -110,16 +110,16 @@
     "services": {
       "eyebrow": "// services",
       "title": "Comment je peux vous aider.",
-      "subtitle": "Conseil, ateliers et conférences — pensés pour ce dont votre équipe a vraiment besoin.",
+      "subtitle": "Conseil, ateliers et conférences, pensés pour ce dont votre équipe a vraiment besoin.",
       "cta": "Voir tous les services"
     }
   },
   "about": {
     "eyebrow": "// entrepreneur digital · consultant IA · créateur de contenu",
     "headline": "Bâtisseur, créateur, entrepreneur.",
-    "subheadline": "Je construis dans l'ère de l'IA — et partage tout avec une communauté de 400K+.",
+    "subheadline": "Je construis dans l'ère de l'IA et partage tout avec une communauté de 400K+.",
     "bio": [
-      "Commencé dans le marketing digital. Passé au produit et à l'IA. Construit en public — et une communauté de 400K+ personnes a commencé à suivre.",
+      "Commencé dans le marketing digital. Passé au produit et à l'IA. Construit en public, et une communauté de 400K+ personnes a commencé à suivre.",
       "Aujourd'hui je gère une pratique indépendante : consulting IA pour équipes ambitieuses, contenu qui enseigne des compétences réelles, et logiciels qui résolvent de vrais problèmes."
     ],
     "skills_eyebrow": "// stack",
@@ -187,7 +187,7 @@
       {
         "step": "03",
         "title": "Exécuter",
-        "body": "Je livre. Vous obtenez un résultat clair et utilisable — pas des présentations."
+        "body": "Je livre. Vous obtenez un résultat clair et utilisable, pas des présentations."
       }
     ],
     "faq_eyebrow": "// questions",
@@ -195,7 +195,7 @@
     "faq": [
       {
         "q": "Quand peut-on commencer ?",
-        "a": "Pour The Signal, généralement en moins d'une semaine. Sprint et Stack dépendent de la capacité disponible — remplissez le formulaire et je vous donne une date réelle."
+        "a": "Pour The Signal, généralement en moins d'une semaine. Sprint et Stack dépendent de la capacité disponible. Remplissez le formulaire et je vous donne une date réelle."
       },
       {
         "q": "Travaillez-vous avec des fondateurs en phase initiale ?",
@@ -237,8 +237,11 @@
       "budget": "Budget (optionnel)"
     },
     "submit": "Envoyer le message →",
-    "success": "// message reçu — je reviendrai vers vous sous 48h.",
-    "error": "Quelque chose a mal tourné. Réessayez."
+    "success": "// message reçu. Je reviendrai vers vous sous 48h.",
+    "error": "Quelque chose a mal tourné. Réessayez.",
+    "email_eyebrow": "// vous préférez un email direct ?",
+    "email_address": "riyad@ketami.net",
+    "email_response": "Je réponds sous 48h."
   },
   "footer": {
     "rights": "Tous droits réservés."
@@ -257,12 +260,12 @@
   "services": {
     "eyebrow": "// comment je peux aider",
     "headline": "Services",
-    "subheadline": "Conseil, ateliers et conférences — sans bullshit, avec des résultats.",
+    "subheadline": "Conseil, ateliers et conférences. Sans bullshit, avec des résultats.",
     "items": [
       {
         "tag": "Conseil",
         "name": "Conseil en Stratégie IA",
-        "description": "J'aide les équipes ambitieuses à construire des workflows IA qui fonctionnent vraiment. De l'audit à l'implémentation — clair, pratique, mesurable.",
+        "description": "J'aide les équipes ambitieuses à construire des workflows IA qui fonctionnent vraiment. De l'audit à l'implémentation, clair, pratique, mesurable.",
         "features": [
           "Audit de maturité IA",
           "Feuille de route stratégique",
@@ -286,7 +289,7 @@
       {
         "tag": "Conférence",
         "name": "Keynote & Conférence",
-        "description": "Interventions sur l'IA, l'entrepreneuriat digital et le build en public — pour conférences, sommets et événements corporate. Disponible dans le monde entier.",
+        "description": "Interventions sur l'IA, l'entrepreneuriat digital et le build en public, pour conférences, sommets et événements corporate. Disponible dans le monde entier.",
         "features": [
           "Keynotes & tables rondes",
           "Conférences & événements corporate",
@@ -307,7 +310,7 @@
       {
         "step": "02",
         "title": "Proposition",
-        "body": "Vous recevez une proposition claire et personnalisée — périmètre, livrables et calendrier. Sans surprises."
+        "body": "Vous recevez une proposition claire et personnalisée couvrant périmètre, livrables et calendrier. Sans surprises."
       },
       {
         "step": "03",
@@ -324,11 +327,11 @@
       },
       {
         "q": "Les sessions sont-elles disponibles à distance ?",
-        "a": "Oui. Tous les services sont disponibles à distance ou en présentiel — selon votre préférence."
+        "a": "Oui. Tous les services sont disponibles à distance ou en présentiel, selon votre préférence."
       },
       {
         "q": "Dans quelles langues travaillez-vous ?",
-        "a": "Français, anglais et arabe — selon ce qui convient le mieux à votre équipe."
+        "a": "Français, anglais et arabe, selon ce qui convient le mieux à votre équipe."
       },
       {
         "q": "Combien ça coûte ?",
@@ -336,7 +339,7 @@
       },
       {
         "q": "Travaillez-vous avec des clients internationaux ?",
-        "a": "Oui — j'ai accompagné des équipes en Europe, au Moyen-Orient et en Amérique du Nord."
+        "a": "Oui. J'ai accompagné des équipes en Europe, au Moyen-Orient et en Amérique du Nord."
       }
     ],
     "cta_eyebrow": "// parlons-en",

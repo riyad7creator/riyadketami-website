@@ -7,7 +7,7 @@ export default function AdminNotFound() {
       <h1 className="font-display font-bold text-3xl text-text-0">Page not found</h1>
       <p className="text-text-2 text-sm">This admin page doesn&apos;t exist.</p>
       <Link
-        href="/admin"
+        href="/rk-studio"
         className="inline-flex items-center gap-2 px-4 py-2 bg-matrix text-bg-0 text-sm font-semibold rounded-[var(--radius-md)] hover:bg-matrix/90 transition-colors duration-[var(--duration-fast)]"
       >
         ← Dashboard

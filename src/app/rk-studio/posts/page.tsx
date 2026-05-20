@@ -113,7 +113,7 @@ export default function AdminPostsPage() {
           <h1 className="font-display font-bold text-2xl text-text-0 mt-1">Posts</h1>
         </div>
         <Link
-          href="/admin/posts/new"
+          href="/rk-studio/posts/new"
           className="inline-flex items-center gap-2 px-4 py-2 bg-matrix text-bg-0 text-sm font-semibold rounded-[var(--radius-md)] hover:bg-matrix/90 transition-colors duration-[var(--duration-fast)]"
         >
           <Plus size={14} /> New post

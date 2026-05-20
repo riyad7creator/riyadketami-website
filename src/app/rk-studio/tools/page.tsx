@@ -394,7 +394,7 @@ export default function AIToolsPage() {
       {hasKey === false && (
         <div className="glass border border-warning/30 rounded-[var(--radius-lg)] px-4 py-3 text-sm text-warning flex items-center gap-2">
           ⚠ OpenRouter key not configured.{' '}
-          <Link href="/admin/settings/ai" className="underline hover:text-warning/80">Set it in AI Settings →</Link>
+          <Link href="/rk-studio/settings/ai" className="underline hover:text-warning/80">Set it in AI Settings →</Link>
         </div>
       )}
 

@@ -28,7 +28,7 @@ export default function AnalyticsPage() {
 
       {/* Post Analytics link */}
       <Link
-        href="/admin/analytics/posts"
+        href="/rk-studio/analytics/posts"
         className="glass border border-matrix/30 rounded-[var(--radius-lg)] p-4 flex items-center gap-3 hover:border-matrix/60 transition-colors group"
       >
         <BarChart2 size={18} className="text-matrix shrink-0" />

@@ -33,7 +33,7 @@ export default function LoginPage() {
           : 'Invalid credentials.';
       setError(msg);
     } else {
-      router.push('/admin');
+      router.push('/rk-studio');
     }
   };
 

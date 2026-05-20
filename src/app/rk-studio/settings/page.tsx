@@ -153,7 +153,7 @@ export default function AdminSettingsPage() {
       {/* Sub-section nav cards */}
       <div className="grid sm:grid-cols-2 gap-3">
         <Link
-          href="/admin/settings"
+          href="/rk-studio/settings"
           className="glass border border-matrix/30 bg-matrix/[0.03] rounded-[var(--radius-lg)] p-4 flex items-center gap-3 group"
         >
           <div className="p-2 bg-matrix/10 rounded-[var(--radius-md)] shrink-0">
@@ -167,7 +167,7 @@ export default function AdminSettingsPage() {
         </Link>
 
         <Link
-          href="/admin/settings/ai"
+          href="/rk-studio/settings/ai"
           className="glass border border-border rounded-[var(--radius-lg)] p-4 flex items-center gap-3 hover:border-matrix/30 transition-colors group"
         >
           <div className="p-2 bg-surface rounded-[var(--radius-md)] shrink-0 group-hover:bg-matrix/10 transition-colors">

@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /rk-studio
+Disallow: /api/
+
+Allow: /
+
+Sitemap: https://riyadketami.com/sitemap.xml

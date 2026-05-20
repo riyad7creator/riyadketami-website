@@ -22,8 +22,7 @@ export default auth(function middleware(request) {
     PUBLIC_FILE.test(pathname) ||
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
-    pathname.startsWith('/login') ||
-    pathname.startsWith('/admin') ||
+    pathname.startsWith('/rk-studio') ||
     pathname.startsWith('/links') ||
     pathname.startsWith('/design-system')
   ) {

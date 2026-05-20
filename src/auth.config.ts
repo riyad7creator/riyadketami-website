@@ -3,7 +3,7 @@ import type { UserRole } from '@/models/User';
 
 export const authConfig = {
   pages: {
-    signIn: '/login',
+    signIn: '/rk-studio/auth',
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
@@ -11,13 +11,13 @@ export const authConfig = {
       const isAdmin = auth?.user?.role === 'admin';
       const ok = isLoggedIn && isAdmin;
 
-      // API admin routes: return JSON 401 instead of redirecting to /login
+      // API admin routes: return JSON 401 instead of redirecting
       if (nextUrl.pathname.startsWith('/api/admin')) {
         if (ok) return true;
         return Response.json({ error: 'Unauthorized' }, { status: 401 });
       }
 
-      if (nextUrl.pathname.startsWith('/admin')) {
+      if (nextUrl.pathname.startsWith('/rk-studio') && !nextUrl.pathname.startsWith('/rk-studio/auth')) {
         return ok;
       }
       return true;

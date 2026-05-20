@@ -32,16 +32,16 @@ interface Notification {
 }
 
 const NAV = [
-  { href: '/admin', label: 'Dashboard', icon: LayoutDashboard, exact: true },
-  { href: '/admin/analytics', label: 'Analytics', icon: Activity, exact: false },
-  { href: '/admin/posts', label: 'Posts', icon: FileText, exact: false },
-  { href: '/admin/links', label: 'Links', icon: Link2, exact: false },
-  { href: '/admin/media', label: 'Media', icon: ImageIcon, exact: false },
-  { href: '/admin/newsletter', label: 'Newsletter', icon: Mail, exact: false },
-  { href: '/admin/tools', label: 'AI Tools', icon: Wand2, exact: false },
-  { href: '/admin/social', label: 'Content Stats', icon: BarChart2, exact: false },
-  { href: '/admin/team', label: 'Team', icon: Users, exact: false },
-  { href: '/admin/settings', label: 'Settings', icon: Settings, exact: false },
+  { href: '/rk-studio', label: 'Dashboard', icon: LayoutDashboard, exact: true },
+  { href: '/rk-studio/analytics', label: 'Analytics', icon: Activity, exact: false },
+  { href: '/rk-studio/posts', label: 'Posts', icon: FileText, exact: false },
+  { href: '/rk-studio/links', label: 'Links', icon: Link2, exact: false },
+  { href: '/rk-studio/media', label: 'Media', icon: ImageIcon, exact: false },
+  { href: '/rk-studio/newsletter', label: 'Newsletter', icon: Mail, exact: false },
+  { href: '/rk-studio/tools', label: 'AI Tools', icon: Wand2, exact: false },
+  { href: '/rk-studio/social', label: 'Content Stats', icon: BarChart2, exact: false },
+  { href: '/rk-studio/team', label: 'Team', icon: Users, exact: false },
+  { href: '/rk-studio/settings', label: 'Settings', icon: Settings, exact: false },
 ];
 
 const TYPE_ICON: Record<string, string> = {
@@ -236,7 +236,7 @@ export default function AdminShell({ user, children }: AdminShellProps) {
                   {notifications.length > 0 && (
                     <div className="px-4 py-2 border-t border-border">
                       <Link
-                        href="/admin/notifications"
+                        href="/rk-studio/notifications"
                         onClick={() => setBellOpen(false)}
                         className="text-[11px] text-matrix hover:text-matrix/80 transition-colors"
                       >

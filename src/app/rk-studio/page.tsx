@@ -269,7 +269,7 @@ export default function AdminDashboard() {
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <h2 className="font-medium text-text-0">Recent posts</h2>
-          <Link href="/admin/posts" className="flex items-center gap-1.5 text-xs font-mono text-matrix hover:gap-2.5 transition-all duration-[var(--duration-fast)]">
+          <Link href="/rk-studio/posts" className="flex items-center gap-1.5 text-xs font-mono text-matrix hover:gap-2.5 transition-all duration-[var(--duration-fast)]">
             All posts <ArrowRight size={12} />
           </Link>
         </div>
@@ -318,19 +318,19 @@ export default function AdminDashboard() {
       <div className="flex flex-col gap-3">
         <h2 className="font-medium text-text-0">Quick actions</h2>
         <div className="flex flex-wrap gap-3">
-          <Link href="/admin/posts/new" className="inline-flex items-center gap-2 px-4 py-2 bg-matrix text-bg-0 text-sm font-semibold rounded-[var(--radius-md)] hover:bg-matrix/90 transition-colors duration-[var(--duration-fast)]">
+          <Link href="/rk-studio/posts/new" className="inline-flex items-center gap-2 px-4 py-2 bg-matrix text-bg-0 text-sm font-semibold rounded-[var(--radius-md)] hover:bg-matrix/90 transition-colors duration-[var(--duration-fast)]">
             <PenLine size={13} /> New post
           </Link>
-          <Link href="/admin/links" className="inline-flex items-center gap-2 px-4 py-2 glass border border-border text-text-1 text-sm rounded-[var(--radius-md)] hover:border-border-hover transition-colors duration-[var(--duration-fast)]">
+          <Link href="/rk-studio/links" className="inline-flex items-center gap-2 px-4 py-2 glass border border-border text-text-1 text-sm rounded-[var(--radius-md)] hover:border-border-hover transition-colors duration-[var(--duration-fast)]">
             <Link2 size={13} /> Manage links
           </Link>
-          <Link href="/admin/newsletter" className="inline-flex items-center gap-2 px-4 py-2 glass border border-border text-text-1 text-sm rounded-[var(--radius-md)] hover:border-border-hover transition-colors duration-[var(--duration-fast)]">
+          <Link href="/rk-studio/newsletter" className="inline-flex items-center gap-2 px-4 py-2 glass border border-border text-text-1 text-sm rounded-[var(--radius-md)] hover:border-border-hover transition-colors duration-[var(--duration-fast)]">
             <Mail size={13} /> Newsletter
           </Link>
-          <Link href="/admin/tools" className="inline-flex items-center gap-2 px-4 py-2 glass border border-border text-text-1 text-sm rounded-[var(--radius-md)] hover:border-border-hover transition-colors duration-[var(--duration-fast)]">
+          <Link href="/rk-studio/tools" className="inline-flex items-center gap-2 px-4 py-2 glass border border-border text-text-1 text-sm rounded-[var(--radius-md)] hover:border-border-hover transition-colors duration-[var(--duration-fast)]">
             <Wand2 size={13} /> AI Tools
           </Link>
-          <Link href="/admin/social" className="inline-flex items-center gap-2 px-4 py-2 glass border border-border text-text-1 text-sm rounded-[var(--radius-md)] hover:border-border-hover transition-colors duration-[var(--duration-fast)]">
+          <Link href="/rk-studio/social" className="inline-flex items-center gap-2 px-4 py-2 glass border border-border text-text-1 text-sm rounded-[var(--radius-md)] hover:border-border-hover transition-colors duration-[var(--duration-fast)]">
             <Users size={13} /> Content stats
           </Link>
         </div>

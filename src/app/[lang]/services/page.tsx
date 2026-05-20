@@ -44,31 +44,32 @@ export default async function ServicesPage({
 
   return (
     <>
-      {/* Hero */}
-      <section className="pt-32 pb-20 px-5 sm:px-8">
-        <div className="max-w-3xl mx-auto flex flex-col gap-5">
-          <Reveal direction="up">
-            <MatrixText text={t.eyebrow} className="text-xs tracking-[0.2em] text-matrix" />
-          </Reveal>
-          <Reveal direction="up" delay={0.08}>
-            <h1 className="font-display font-bold text-[clamp(2.5rem,6vw,4rem)] tracking-[-0.02em] text-text-0 leading-[1.05]">
-              {t.headline}
-            </h1>
-          </Reveal>
-          <Reveal direction="up" delay={0.16}>
-            <p className="text-text-1 text-xl leading-relaxed">{t.subheadline}</p>
-          </Reveal>
-        </div>
-      </section>
+      {/* Hero + Service cards — shared matrix backdrop */}
+      <section className="relative pt-32 pb-24 px-5 sm:px-8 overflow-hidden">
+        <MatrixRain opacity={0.055} speed={0.6} density={0.55} />
 
-      {/* Service cards */}
-      <section className="pb-24 px-5 sm:px-8">
-        <div className="max-w-6xl mx-auto grid sm:grid-cols-3 gap-5 items-stretch">
-          {t.items.map((item, i) => (
-            <Reveal key={i} direction="up" delay={0.05 + i * 0.1} className="h-full">
-              <ServiceCard item={item} lang={lang} index={i} />
+        <div className="relative z-10 max-w-6xl mx-auto flex flex-col gap-16">
+          <div className="flex flex-col gap-5">
+            <Reveal direction="up">
+              <MatrixText text={t.eyebrow} className="text-xs tracking-[0.2em] text-matrix" />
             </Reveal>
-          ))}
+            <Reveal direction="up" delay={0.08}>
+              <h1 className="font-display font-bold text-[clamp(2.5rem,6vw,4rem)] tracking-[-0.02em] text-text-0 leading-[1.05]">
+                {t.headline}
+              </h1>
+            </Reveal>
+            <Reveal direction="up" delay={0.16}>
+              <p className="text-text-1 text-xl leading-relaxed max-w-[62ch]">{t.subheadline}</p>
+            </Reveal>
+          </div>
+
+          <div className="grid sm:grid-cols-3 gap-5 items-stretch">
+            {t.items.map((item, i) => (
+              <Reveal key={i} direction="up" delay={0.05 + i * 0.1} className="h-full">
+                <ServiceCard item={item} lang={lang} index={i} />
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 

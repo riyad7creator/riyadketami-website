@@ -1,6 +1,6 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
@@ -26,13 +26,15 @@ interface LangSwitcherProps {
 export default function LangSwitcher({ currentLocale }: LangSwitcherProps) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
-  const router = useRouter();
 
   const switchTo = (locale: Locale) => {
     setOpen(false);
+    if (locale === currentLocale) return;
     const segments = pathname.split('/');
     segments[1] = locale;
-    router.push(segments.join('/') || '/');
+    // Full navigation so the server re-renders <html lang> and <html dir>,
+    // which control Arabic fonts (`:lang(ar)`) and RTL (`[dir="rtl"]`).
+    window.location.href = segments.join('/') || '/';
   };
 
   return (

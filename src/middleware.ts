@@ -34,6 +34,7 @@ export default auth(function middleware(request) {
   if (pathnameLocale && isValidLocale(pathnameLocale)) {
     const requestHeaders = new Headers(request.headers);
     requestHeaders.set('x-locale', pathnameLocale);
+    requestHeaders.set('x-pathname', pathname);
     return NextResponse.next({ request: { headers: requestHeaders } });
   }
 

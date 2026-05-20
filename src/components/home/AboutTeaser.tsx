@@ -18,7 +18,7 @@ export default function AboutTeaser({ locale, dict }: AboutTeaserProps) {
       <ParallaxLayer speed={0.15} className="absolute inset-0 z-0">
         <div className="absolute inset-0">
           <Image
-            src="/images/riyad-who-bg.jpg"
+            src="/images/matrix-bg-about.png"
             alt=""
             fill
             className="object-cover object-center grayscale opacity-[0.10]"

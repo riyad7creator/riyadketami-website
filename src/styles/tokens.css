@@ -50,4 +50,45 @@
   --z-modal: 200;
   --z-toast: 300;
   --z-nav: 50;
+
+  /* ─────────────────────────────────────────────
+     Golden ratio (φ = 1.618) design system
+     ───────────────────────────────────────────── */
+  --phi: 1.618;
+  --phi-inv: 0.618;
+  --phi-sqrt: 1.272;
+
+  /* Type scale — φ steps from 16px base. xs/sm preserved for caption legibility. */
+  --fs-xs:   0.75rem;
+  --fs-sm:   0.875rem;
+  --fs-base: 1rem;
+  --fs-lg:   1.272rem;
+  --fs-xl:   1.618rem;
+  --fs-2xl:  2.058rem;
+  --fs-3xl:  2.618rem;
+  --fs-4xl:  3.33rem;
+  --fs-5xl:  4.236rem;
+  --fs-6xl:  5.388rem;
+  --fs-7xl:  6.854rem;
+  --fs-8xl:  8.717rem;
+  --fs-9xl:  11.09rem;
+
+  /* Section spacing — Fibonacci (φ-respecting) scale in rem. */
+  --space-16: 5.5625rem;
+  --space-20: 6.875rem;
+  --space-24: 9rem;
+  --space-28: 11.125rem;
+  --space-32: 14.5625rem;
+
+  /* Line-height — φ-derived rhythm */
+  --lh-tight:   1.1;
+  --lh-snug:    1.272;
+  --lh-normal:  1.5;
+  --lh-prose:   1.618;
+  --lh-loose:   1.7;
+
+  /* Readable measure — golden ratio-friendly column width */
+  --measure-narrow: 38ch;
+  --measure-prose:  62ch;
+  --measure-wide:   100ch;
 }

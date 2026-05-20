@@ -1,6 +1,8 @@
 import mongoose, { Document, Model } from 'mongoose';
 import type { MediaFolder } from '@/types/media';
 
+export type MediaType = 'image' | 'video' | 'lottie';
+
 export interface IMediaFile extends Document {
   filename: string;
   originalName: string;
@@ -13,6 +15,7 @@ export interface IMediaFile extends Document {
   folder: MediaFolder;
   altText: string;
   usedIn: string[];
+  mediaType: MediaType;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -32,6 +35,7 @@ const MediaFileSchema = new mongoose.Schema<IMediaFile>(
     folder: { type: String, enum: FOLDERS, default: 'uncategorized' },
     altText: { type: String, default: '' },
     usedIn: [{ type: String }],
+    mediaType: { type: String, enum: ['image', 'video', 'lottie'], default: 'image' },
   },
   { timestamps: true }
 );

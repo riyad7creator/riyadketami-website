@@ -1,4 +1,5 @@
 export type MediaFolder = 'blog' | 'hero' | 'links' | 'icons' | 'og' | 'uncategorized';
+export type MediaType = 'image' | 'video' | 'lottie';
 
 export interface MediaFile {
   _id: string;
@@ -14,6 +15,7 @@ export interface MediaFile {
   height?: number;
   folder: MediaFolder;
   altText: string;
+  mediaType: MediaType;
   /** IDs of posts/links that reference this file */
   usedIn: string[];
   createdAt: string;

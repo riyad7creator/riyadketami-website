@@ -5,8 +5,11 @@ export interface ISubscriber extends Document {
   preferredLanguage?: 'ar' | 'en' | 'fr';
   unsubscribed: boolean;
   unsubscribedAt?: Date;
+  source?: string;
   createdAt: Date;
 }
+
+const SOURCES = ['homepage', 'blog-cta', 'links-page', 'import', 'other'] as const;
 
 const SubscriberSchema = new mongoose.Schema(
   {
@@ -14,6 +17,7 @@ const SubscriberSchema = new mongoose.Schema(
     preferredLanguage: { type: String, enum: ['ar', 'en', 'fr'] },
     unsubscribed: { type: Boolean, default: false },
     unsubscribedAt: { type: Date },
+    source: { type: String, enum: SOURCES },
   },
   { timestamps: true }
 );

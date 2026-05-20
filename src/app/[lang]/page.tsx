@@ -22,8 +22,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { lang } = await params;
   return {
-    title: 'Builder. Creator. Entrepreneur.',
-    description: 'Digital entrepreneur, AI consultant, and content creator. 400K+ community.',
+    title: 'Built in Algeria. Built for the world.',
+    description: 'AI educator and digital strategist. I help global AI companies reach the MENA market, and I help MENA founders build with AI before everyone else does.',
     alternates: localizedAlternates(lang, ''),
   };
 }
@@ -33,8 +33,8 @@ const personJsonLd = {
   '@type': 'Person',
   name: 'Riyad Ketami',
   url: 'https://riyadketami.com',
-  jobTitle: 'Digital Entrepreneur & AI Consultant',
-  description: 'Digital entrepreneur, AI consultant, and content creator with 400K+ community.',
+  jobTitle: 'AI Educator & Digital Strategist',
+  description: 'AI educator, digital strategist, and content creator from Algeria. 470K+ followers across platforms.',
   sameAs: [
     'https://tiktok.com/@riyadketami',
     'https://youtube.com/@riyadketami',

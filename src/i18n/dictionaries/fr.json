@@ -7,24 +7,24 @@
     "services": "Services"
   },
   "home": {
-    "eyebrow": "// entrepreneur digital · consultant IA · créateur de contenu",
-    "headline": "Bâtisseur. Créateur. Entrepreneur.",
-    "subheadline": "Communauté de 400K+. Consulting IA. Contenu qui s'accumule.",
+    "eyebrow": "// éducateur ia · stratège digital · région mena",
+    "headline": "Construit en Algérie. Construit pour le monde.",
+    "subheadline": "J'aide les entreprises d'IA internationales à atteindre le marché MENA, et j'aide les fondateurs du MENA à construire avec l'IA avant tout le monde.",
     "cta_consulting": "Travailler ensemble",
-    "cta_blog": "Lire le blog",
+    "cta_blog": "Voir le travail",
     "links": {
       "eyebrow": "// me trouver",
       "title": "Tous mes liens au même endroit."
     },
     "audience": {
-      "eyebrow": "// audience",
-      "title": "Quelques millions de personnes écoutent.",
-      "subtitle": "Sur toutes les plateformes, le travail s'accumule."
+      "eyebrow": "// la portée",
+      "title": "Les chiffres, pas le bruit.",
+      "subtitle": "Performance multi-plateformes — janvier–mars 2025."
     },
     "about_teaser": {
       "eyebrow": "// qui",
-      "title": "Entrepreneur digital dans l'ère de l'IA.",
-      "body": "Je crée du contenu pour 400K+ personnes, j'accompagne des équipes ambitieuses sur l'IA et le produit, et je code les outils dont j'ai besoin. Construit en public dès le premier jour.",
+      "title": "Éducateur IA. Stratège digital. Construit depuis l'Algérie.",
+      "body": "J'apprends à 470K+ followers comment utiliser l'IA pour bâtir des business plus intelligents — en darija algérienne, français et anglais. J'accompagne des équipes ambitieuses, je code les outils dont j'ai besoin, et je construis pour un marché que le monde ignore : l'économie des créateurs et entrepreneurs du Maghreb et du MENA.",
       "cta": "Lire la version longue"
     },
     "consulting_teaser": {
@@ -41,9 +41,9 @@
       "empty": "Les articles arrivent. Reviens bientôt."
     },
     "newsletter": {
-      "eyebrow": "// insights hebdomadaires",
-      "title": "Prenez de l'avance.",
-      "subtitle": "Rejoignez 50 000+ entrepreneurs qui reçoivent chaque semaine des stratégies IA, des tactiques créateur et des insights business digitaux. Gratuit.",
+      "eyebrow": "// the digital rebel",
+      "title": "Outils IA, tactiques, avantages déloyaux.",
+      "subtitle": "Chaque semaine. Les outils qui méritent leur abonnement, les tactiques qui marchent vraiment, et les avantages déloyaux de construire depuis l'Algérie. Sans bullshit. Sans théorie.",
       "placeholder": "votre@email.com",
       "cta": "S'inscrire gratuitement",
       "success": "// c'est fait. Vérifiez votre boîte mail.",
@@ -68,7 +68,7 @@
     "speaking": {
       "eyebrow": "// conférences & événements",
       "title": "Bookez-moi pour votre prochain événement.",
-      "subtitle": "Keynotes, workshops et tables rondes sur l'IA, l'entrepreneuriat digital et le build en public. Disponible dans le monde entier.",
+      "subtitle": "Keynotes et workshops sur l'IA, l'économie des créateurs MENA, et construire un business à haute cadence depuis l'Algérie. Français, anglais et darija algérienne.",
       "stat_events": "30+",
       "stat_events_label": "Événements",
       "stat_continents": "3",
@@ -80,19 +80,19 @@
     },
     "products": {
       "eyebrow": "// ce que j'offre",
-      "title": "Tout ce qu'il faut pour construire et croître.",
-      "subtitle": "Ressources, systèmes et stratégies issus d'une expérience réelle avec une communauté de 400K+.",
+      "title": "Tout pour construire, croître et monétiser.",
+      "subtitle": "Outils, systèmes et stratégie issus de la gestion d'un des plus grands business de contenu IA du MENA.",
       "items": [
         {
           "tag": "Gratuit",
-          "name": "La Newsletter",
-          "description": "Stratégies IA, tactiques créateur et insights business digital chaque semaine. 50 000+ lecteurs déjà à l'intérieur.",
+          "name": "The Digital Rebel",
+          "description": "Chaque semaine, les outils IA, tactiques et stratégies de contenu — depuis l'Algérie, pour les builders. Gratuit.",
           "cta": "S'inscrire gratuitement"
         },
         {
           "tag": "Formation",
-          "name": "Masterclass IA Business",
-          "description": "Les systèmes et workflows IA que j'utilise pour gérer un business digital high-output à une fraction du coût habituel.",
+          "name": "The AI Operator System",
+          "description": "La stack IA exacte, les prompts et les workflows que j'utilise pour faire tourner un business de contenu 470K+ en solo. Pas de théorie — les outils, les fichiers, les SOP.",
           "cta": "Accéder"
         },
         {
@@ -132,23 +132,40 @@
     }
   },
   "about": {
-    "eyebrow": "// entrepreneur digital · consultant IA · créateur de contenu",
-    "headline": "Bâtisseur, créateur, entrepreneur.",
-    "subheadline": "Je construis dans l'ère de l'IA et partage tout avec une communauté de 400K+.",
-    "bio": [
-      "Commencé dans le marketing digital. Passé au produit et à l'IA. Construit en public, et une communauté de 400K+ personnes a commencé à suivre.",
-      "Aujourd'hui je gère une pratique indépendante : consulting IA pour équipes ambitieuses, contenu qui enseigne des compétences réelles, et logiciels qui résolvent de vrais problèmes."
+    "eyebrow": "// 01 / à propos",
+    "headline": "À propos de Riyad Ketami",
+    "subheadline": "Éducateur IA, stratège digital et créateur de contenu — construire le pont entre l'IA mondiale et l'économie des créateurs du MENA.",
+    "identity_eyebrow": "// 02 / qui je suis",
+    "identity_title": "Je travaille là où la culture, la technologie et l'exécution se rencontrent.",
+    "identity": [
+      "Je suis Riyad Ketami. J'aide les gens à utiliser l'IA pour construire quelque chose de réel.",
+      "Je le fais sur scène, dans des salles avec des marques internationales, dans des ateliers avec des fondateurs, et chaque jour sur mes canaux — devant une communauté qui s'est élargie à des millions de personnes en Afrique du Nord, dans le monde arabe et dans la diaspora francophone.",
+      "J'ai commencé comme designer. Je suis devenu stratège. Maintenant, je suis un opérateur — je ship du contenu, je ship des partenariats, je ship des produits. L'IA est le levier. Le MENA est le marché que le reste du monde continue de sous-estimer. Faire le pont entre les deux, c'est le travail."
     ],
-    "skills_eyebrow": "// stack",
-    "skills_title": "Ce que j'apporte à la table.",
-    "skills": [
-      { "name": "Stratégie produit", "description": "Traduire la vision en feuilles de route actionnables. J'aide les équipes à identifier quoi construire, pour qui, et dans quel ordre, en équilibrant les besoins utilisateurs avec les contraintes business.", "icon": "lightbulb" },
-      { "name": "Développement full-stack", "description": "Du schéma de base de données au polish UI. Je livre des applications web production-ready avec Next.js, TypeScript et une infrastructure moderne qui scale.", "icon": "code" },
-      { "name": "Implémentation IA", "description": "Intégrer les LLM et workflows IA dans de vrais produits. Pas de démos, des systèmes qui réduisent les coûts, accélèrent la production et améliorent la prise de décision.", "icon": "brain" },
-      { "name": "Systèmes de contenu", "description": "Construire des moteurs de contenu reproductibles. Je conçois des workflows, templates et pipelines de distribution qui transforment les idées en croissance d'audience consistante.", "icon": "file-text" },
-      { "name": "Opérations de croissance", "description": "L'expérimentation data-driven sur l'acquisition, l'activation et la rétention. Je mets en place les métriques, outils et rituels qui se composent avec le temps.", "icon": "trending-up" },
-      { "name": "Architecture d'équipe", "description": "Structurer les équipes pour la vélocité et la clarté. J'aide à définir les rôles, workflows et rythmes de communication qui font prospérer les talents.", "icon": "users" }
+    "principles_eyebrow": "// 03 / ce que je crois",
+    "principles_title": "Ce que je crois.",
+    "principles": [
+      { "tag": "// 01", "name": "Direct plutôt que diplomatique", "description": "Bref, spécifique, prêt à la décision. Toujours." },
+      { "tag": "// 02", "name": "Chiffres plutôt que récits", "description": "Si ça peut être mesuré, c'est mesuré. Le reste, c'est juste du discours." },
+      { "tag": "// 03", "name": "Systèmes plutôt que hustle", "description": "Construit une fois, tourne pour toujours. L'IA est une infrastructure, pas de la magie." },
+      { "tag": "// 04", "name": "Contexte local, standard global", "description": "Maîtrise du MENA. Exécution internationale. Les deux, ou rien." },
+      { "tag": "// 05", "name": "Builder, pas commentateur", "description": "Je ship des produits. Je n'en parle pas seulement." },
+      { "tag": "// 06", "name": "Sans bullshit. Sans théorie. Que des résultats.", "description": "La promesse fondamentale. Elle est dans le brand book pour une raison." }
     ],
+    "building_eyebrow": "// 04 / ce que je construis",
+    "building_title": "Ce qui arrive.",
+    "building_subtitle": "Plusieurs projets sont en développement actif. Lancements publics à partir de 2026.",
+    "building_status": "EN CONSTRUCTION",
+    "building": [
+      { "name": "AnimaOS", "description": "Un système d'exploitation IA pour les professionnels du digital." },
+      { "name": "Eyela.ai", "description": "Plateforme SaaS co-fondée." },
+      { "name": "Algeria Business Bay", "description": "Une practice de consulting et une communauté pour les fondateurs qui construisent dans — ou s'étendent vers — la région." }
+    ],
+    "cta_eyebrow": "// 05 / travaillons ensemble",
+    "cta_title": "Envie de collaborer ?",
+    "cta_body": "Partenariat, consulting ou campagne — je réponds sous 48 heures.",
+    "cta_email": "riyad@ketami.net",
+    "cta_secondary": "Réserver un appel",
     "cta": "Travailler ensemble"
   },
   "consulting": {
@@ -261,11 +278,12 @@
     "email_response": "Je réponds sous 48h."
   },
   "footer": {
+    "tagline": "Construit depuis l'Algérie. Livré au monde entier.",
     "rights": "Tous droits réservés."
   },
   "links_page": {
-    "bio": "Entrepreneur Digital · Consultant IA · Créateur de Contenu",
-    "tagline": "Communauté de 400K+ sur toutes les plateformes.",
+    "bio": "Éducateur IA · Stratège Digital · Algérie",
+    "tagline": "470K+ followers sur TikTok, Instagram, Facebook et YouTube.",
     "cta_home": "Visiter le site",
     "cta_contact": "Me contacter",
     "newsletter_eyebrow": "// insights hebdomadaires",
@@ -275,45 +293,45 @@
     "newsletter_success": "// c'est parti"
   },
   "services": {
-    "eyebrow": "// comment je peux aider",
-    "headline": "Services",
-    "subheadline": "Conseil, ateliers et conférences. Sans bullshit, avec des résultats.",
+    "eyebrow": "// travailler avec moi",
+    "headline": "Trois façons de collaborer.",
+    "subheadline": "Consulting, partenariats et prise de parole — pour les équipes et les marques prêtes à shipper de l'IA qui fait bouger les chiffres.",
     "items": [
       {
-        "tag": "Conseil",
-        "name": "Conseil en Stratégie IA",
-        "description": "J'aide les équipes ambitieuses à construire des workflows IA qui fonctionnent vraiment. De l'audit à l'implémentation, clair, pratique, mesurable.",
+        "tag": "Consulting",
+        "name": "Consulting & Coaching IA",
+        "description": "Engagements individuels et équipes pour entreprises, fondateurs et créateurs. Je conçois des systèmes IA et des workflows qui économisent de vraies heures par semaine — pas un abonnement de plus, une vraie infrastructure.",
         "features": [
-          "Audit de maturité IA",
-          "Feuille de route stratégique",
-          "Formation et accompagnement",
-          "Distanciel ou présentiel"
+          "Audit & roadmap de la stack IA",
+          "Workflows sur mesure (n8n, Make, agents)",
+          "Accompagnement d'équipe & SOP",
+          "À distance ou sur site"
         ],
-        "cta": "Réserver une session"
+        "cta": "Demander un devis"
       },
       {
-        "tag": "Atelier",
-        "name": "Animation d'Ateliers",
-        "description": "Ateliers demi-journée ou journée entière pour aligner votre équipe et passer à l'action. Concret, pratique, zéro bullshit corporate.",
+        "tag": "Partenariats",
+        "name": "Partenariats de Marque MENA",
+        "description": "Campagnes sur mesure pour les entreprises IA et SaaS qui entrent ou s'étendent dans le MENA. Création multi-plateforme, distribution régionale, conversion mesurable — pas des vues vanité.",
         "features": [
-          "Programme sur mesure",
-          "Formats demi-journée ou journée",
-          "Distanciel ou présentiel",
-          "Livrable de synthèse inclus"
+          "Ambassadorats régionaux",
+          "Vidéo & créa sur mesure",
+          "Arabe, français & anglais",
+          "Suivi de performance"
         ],
-        "cta": "Réserver un atelier"
+        "cta": "Proposer une campagne"
       },
       {
-        "tag": "Conférence",
-        "name": "Keynote & Conférence",
-        "description": "Interventions sur l'IA, l'entrepreneuriat digital et le build en public, pour conférences, sommets et événements corporate. Disponible dans le monde entier.",
+        "tag": "Speaking",
+        "name": "Conférences & Workshops",
+        "description": "Keynotes et workshops d'équipe sur l'IA, l'économie des créateurs et le build en public. Formats demi-journée, journée complète ou scène. Pour conférences, sommets et équipes internes.",
         "features": [
           "Keynotes & tables rondes",
-          "Conférences & événements corporate",
-          "Disponible partout dans le monde",
+          "Workshops demi-journée ou journée",
+          "Programme sur mesure",
           "Français, anglais & arabe"
         ],
-        "cta": "Réserver une conférence"
+        "cta": "Réserver Riyad"
       }
     ],
     "process_eyebrow": "// comment ça marche",

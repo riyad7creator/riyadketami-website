@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
-export const alt = 'Riyad Ketami: Builder. Creator. Entrepreneur.';
+export const alt = 'Riyad Ketami — Built in Algeria. Built for the world.';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -65,7 +65,7 @@ export default function OgImage() {
               textTransform: 'uppercase',
             }}
           >
-            // builder · creator · entrepreneur
+            // ai educator · digital strategist · mena region
           </div>
           <div
             style={{
@@ -79,8 +79,7 @@ export default function OgImage() {
             Riyad Ketami
           </div>
           <div style={{ fontSize: 22, color: '#9ca3af', lineHeight: 1.4, maxWidth: 560 }}>
-            AI consulting, content creation, and digital entrepreneurship.
-            400K+ community across platforms.
+            Built in Algeria. Built for the world. 36.4M+ impressions a quarter across MENA.
           </div>
         </div>
 

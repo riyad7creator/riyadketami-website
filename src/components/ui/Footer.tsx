@@ -33,6 +33,13 @@ export default function Footer({ locale, links = [] }: FooterProps) {
 
   const allLinks = links.length > 0 ? links : defaultLinks;
 
+  const tagline =
+    locale === 'fr'
+      ? "Construit depuis l'Algérie. Livré au monde entier."
+      : locale === 'ar'
+        ? 'مبنيّ من الجزائر. مُرسَل إلى العالم.'
+        : 'Built from Algeria. Shipped to the world.';
+
   return (
     <footer className="border-t border-border mt-32">
       <div className="max-w-6xl mx-auto px-5 sm:px-8 py-10 flex flex-col gap-8">
@@ -76,9 +83,12 @@ export default function Footer({ locale, links = [] }: FooterProps) {
               </a>
             ))}
           </div>
-          <p className="text-xs text-text-2 font-mono">
-            &copy; {year} Riyad Ketami
-          </p>
+          <div className="flex flex-col sm:items-end gap-1">
+            <p className="text-xs text-text-1 font-mono tracking-wide">{tagline}</p>
+            <p className="text-xs text-text-2 font-mono">
+              &copy; {year} Riyad Ketami
+            </p>
+          </div>
         </div>
       </div>
     </footer>

@@ -1,17 +1,12 @@
 'use client';
 
-import { useRef, useState, useEffect } from 'react';
-import Image from 'next/image';
+import { useRef, useState, useEffect, type ComponentType } from 'react';
 import Link from 'next/link';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { Check } from 'lucide-react';
+import { Brain, Handshake, Mic, Check, type LucideProps } from 'lucide-react';
 import { Button } from '@/components/ui';
 
-const SERVICE_ICONS = [
-  '/icons/icon-ai.png',
-  '/icons/icon-workshop.png',
-  '/icons/icon-speaking.png',
-] as const;
+const SERVICE_ICONS: ComponentType<LucideProps>[] = [Brain, Handshake, Mic];
 
 interface ServiceItem {
   tag: string;
@@ -99,9 +94,10 @@ export default function ServiceCard({ item, lang, index = 0 }: ServiceCardProps)
   }
 
   const emphasized = hovered || selected;
+  const Icon = SERVICE_ICONS[index] ?? Brain;
 
   return (
-    <div style={{ perspective: '1000px' }}>
+    <div className="h-full" style={{ perspective: '1000px' }}>
       <motion.div
         ref={cardRef}
         style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
@@ -123,34 +119,25 @@ export default function ServiceCard({ item, lang, index = 0 }: ServiceCardProps)
         />
 
         {/* Service icon */}
-        {SERVICE_ICONS[index] && (
-          <div className="w-12 h-12 relative opacity-80">
-            <Image
-              src={SERVICE_ICONS[index]!}
-              alt=""
-              fill
-              className="object-contain"
-              sizes="48px"
-              aria-hidden
-            />
-          </div>
-        )}
+        <div className="w-12 h-12 flex items-center justify-center text-matrix/80">
+          <Icon strokeWidth={1.5} className="w-full h-full" aria-hidden />
+        </div>
 
         {/* Tag */}
         <span className="font-mono text-[10px] tracking-[0.15em] text-matrix border border-matrix/30 rounded-full px-2.5 py-1 w-fit">
           {item.tag}
         </span>
 
-        {/* Name + description */}
+        {/* Name + description — fixed min-heights keep cards aligned across languages */}
         <div className="flex flex-col gap-2">
-          <h2 className="font-display font-bold text-2xl text-text-0 leading-tight">
+          <h2 className="font-display font-bold text-2xl text-text-0 leading-tight min-h-[3.75rem]">
             {item.name}
           </h2>
-          <p className="text-text-2 text-sm leading-relaxed">{item.description}</p>
+          <p className="text-text-2 text-sm leading-relaxed min-h-[7rem]">{item.description}</p>
         </div>
 
-        {/* Features */}
-        <ul className="flex flex-col gap-2.5 flex-1">
+        {/* Features — flex-1 absorbs vertical slack so CTAs align */}
+        <ul className="flex flex-col gap-2.5 flex-1 min-h-[7rem]">
           {item.features.map((f, idx) => (
             <li key={idx} className="flex items-start gap-2.5 text-sm text-text-1">
               <Check size={13} className="text-matrix shrink-0 mt-0.5" />
@@ -164,14 +151,8 @@ export default function ServiceCard({ item, lang, index = 0 }: ServiceCardProps)
           <Link href={`/${lang}/contact`}>
             <Button
               variant="secondary"
-              className={`w-full ${
-                index === 2
-                  ? `hover:bg-matrix hover:text-bg-0 hover:border-matrix hover:shadow-[0_0_20px_rgba(0,255,102,0.25)] ${
-                      selected ? 'bg-matrix text-bg-0 border-matrix shadow-[0_0_20px_rgba(0,255,102,0.25)]' : ''
-                    }`
-                  : `hover:border-matrix/40 hover:text-matrix ${
-                      selected ? 'border-matrix/40 text-matrix' : ''
-                    }`
+              className={`w-full hover:bg-matrix hover:text-bg-0 hover:border-matrix hover:shadow-[0_0_20px_rgba(0,255,102,0.25)] ${
+                selected ? 'bg-matrix text-bg-0 border-matrix shadow-[0_0_20px_rgba(0,255,102,0.25)]' : ''
               }`}
             >
               {item.cta}

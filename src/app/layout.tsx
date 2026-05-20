@@ -9,23 +9,23 @@ export const metadata: Metadata = {
     default: 'Riyad Ketami',
     template: '%s | Riyad Ketami',
   },
-  description: 'Digital entrepreneur, AI consultant, and content creator with a 400K+ community. Building in public since day one.',
+  description: 'AI educator, digital strategist, and content creator. 36.4M+ impressions a quarter across MENA. Bridging global AI and the MENA creator economy.',
   metadataBase: new URL('https://riyadketami.com'),
   openGraph: {
     type: 'website',
     siteName: 'Riyad Ketami',
-    title: 'Riyad Ketami: Builder. Creator. Entrepreneur.',
-    description: 'Digital entrepreneur, AI consultant, and content creator with a 400K+ community.',
+    title: 'Riyad Ketami — Built in Algeria. Built for the world.',
+    description: 'AI educator and digital strategist. 36.4M+ impressions, 1.4M+ engagements. Bridging global AI and the MENA creator economy.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Riyad Ketami: Builder. Creator. Entrepreneur.',
-    description: 'Digital entrepreneur, AI consultant, and content creator with a 400K+ community.',
+    title: 'Riyad Ketami — Built in Algeria. Built for the world.',
+    description: 'AI educator and digital strategist. 36.4M+ impressions, 1.4M+ engagements. Bridging global AI and the MENA creator economy.',
   },
   icons: {
     icon: '/favicon.ico',
   },
-  keywords: ['Riyad Ketami', 'AI consultant', 'digital entrepreneur', 'content creator', 'consulting', 'TikTok', 'newsletter'],
+  keywords: ['Riyad Ketami', 'AI educator', 'digital strategist', 'AI consultant Algeria', 'AI MENA', 'Darija AI', 'content creator Algeria', 'TikTok', 'newsletter'],
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

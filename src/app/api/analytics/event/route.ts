@@ -13,7 +13,7 @@ const schema = z.object({
 
 /** POST /api/analytics/event — public, rate-limited event ingestion */
 export async function POST(req: Request) {
-  const limited = rateLimit(req, 10, 60_000);
+  const limited = await rateLimit(req, 10, 60_000);
   if (limited) return limited;
 
   try {

@@ -1,16 +1,14 @@
 import { requireAdmin, serverError } from '@/lib/api-helpers';
-
-const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
-const MODEL = 'anthropic/claude-3.5-sonnet';
+import { getOpenRouterKey, getModel, OPENROUTER_URL } from '@/lib/ai-config';
 
 export async function POST(req: Request) {
   try {
     const check = await requireAdmin();
     if (!check.ok) return check.response;
 
-    const apiKey = process.env.OPENROUTER_API_KEY;
+    const apiKey = await getOpenRouterKey();
     if (!apiKey) {
-      return new Response(JSON.stringify({ error: 'OPENROUTER_API_KEY is not configured' }), {
+      return new Response(JSON.stringify({ error: 'OpenRouter API key is not configured. Set it in Admin → Settings → AI.' }), {
         status: 500,
         headers: { 'Content-Type': 'application/json' },
       });
@@ -18,6 +16,8 @@ export async function POST(req: Request) {
 
     const body = await req.json() as { title?: string; prompt?: string; language?: string };
     const { title, prompt, language = 'en' } = body;
+
+    const model = await getModel('writing');
 
     const systemPrompt = `You are an expert content writer. Write a high-quality, engaging blog post in ${language === 'fr' ? 'French' : language === 'ar' ? 'Arabic' : 'English'}.
 Format the output as clean HTML using only: <h2>, <h3>, <p>, <ul>, <ol>, <li>, <strong>, <em>, <blockquote>, <code>, <pre>.
@@ -37,7 +37,7 @@ Write in a clear, authoritative, and practical style. Aim for 600-1000 words.`;
         'X-Title': 'Riyad Ketami Admin',
       },
       body: JSON.stringify({
-        model: MODEL,
+        model,
         stream: true,
         messages: [
           { role: 'system', content: systemPrompt },
@@ -54,7 +54,6 @@ Write in a clear, authoritative, and practical style. Aim for 600-1000 words.`;
       });
     }
 
-    // Stream the response back to the client
     return new Response(upstream.body, {
       headers: {
         'Content-Type': 'text/event-stream',

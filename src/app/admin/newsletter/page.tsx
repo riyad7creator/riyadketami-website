@@ -1,8 +1,20 @@
 'use client';
 
 import { useEffect, useState, useRef, useCallback } from 'react';
-import { Download, Upload, Send, Search, X, ChevronDown, Check, AlertCircle } from 'lucide-react';
+import { Download, Upload, Send, Search, X, ChevronDown, Check, AlertCircle, BarChart2, TrendingUp } from 'lucide-react';
 import InlineDeleteConfirm from '@/components/admin/InlineDeleteConfirm';
+
+interface Campaign {
+  _id: string;
+  subject: string;
+  sentAt: string;
+  recipientCount: number;
+  openCount: number;
+  clickCount: number;
+}
+
+interface GrowthDay { _id: string; count: number }
+interface SourceRow { _id: string | null; count: number }
 
 interface Subscriber {
   _id: string;
@@ -518,6 +530,128 @@ export default function AdminNewsletterPage() {
               >
                 Next →
               </button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Campaigns history */}
+      <CampaignsSection />
+    </div>
+  );
+}
+
+function CampaignsSection() {
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [growth, setGrowth] = useState<GrowthDay[]>([]);
+  const [sourceSplit, setSourceSplit] = useState<SourceRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [tab, setTab] = useState<'campaigns' | 'growth'>('campaigns');
+
+  useEffect(() => {
+    Promise.all([
+      fetch('/api/admin/campaigns').then(r => r.json() as Promise<{ campaigns: Campaign[] }>),
+      fetch('/api/admin/campaigns?mode=growth').then(r => r.json() as Promise<{ growth: GrowthDay[]; sourceSplit: SourceRow[] }>),
+    ]).then(([c, g]) => {
+      setCampaigns(c.campaigns ?? []);
+      setGrowth(g.growth ?? []);
+      setSourceSplit(g.sourceSplit ?? []);
+    }).catch(() => {}).finally(() => setLoading(false));
+  }, []);
+
+  const maxGrowth = Math.max(...growth.map(d => d.count), 1);
+
+  return (
+    <div className="space-y-4 pt-2 border-t border-border">
+      <div className="flex items-center gap-3">
+        <h2 className="text-sm font-semibold text-text-0 flex items-center gap-2">
+          <BarChart2 size={14} className="text-matrix" /> Campaign Analytics
+        </h2>
+        <div className="flex gap-1">
+          {(['campaigns', 'growth'] as const).map(t => (
+            <button
+              key={t}
+              onClick={() => setTab(t)}
+              className={`px-2.5 py-1 text-xs rounded-full transition-colors ${tab === t ? 'bg-matrix text-bg-0' : 'text-text-2 hover:text-text-1'}`}
+            >
+              {t === 'campaigns' ? 'Campaigns' : 'Growth'}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {loading ? (
+        <p className="text-xs text-text-2 py-4">Loading...</p>
+      ) : tab === 'campaigns' ? (
+        campaigns.length === 0 ? (
+          <p className="text-xs text-text-2 py-4">No campaigns sent yet. Click Send to send your first newsletter.</p>
+        ) : (
+          <div className="flex flex-col divide-y divide-border border border-border rounded-[var(--radius-lg)] overflow-hidden">
+            {campaigns.map(c => {
+              const openRate = c.recipientCount > 0 ? ((c.openCount / c.recipientCount) * 100).toFixed(1) : '—';
+              const clickRate = c.recipientCount > 0 ? ((c.clickCount / c.recipientCount) * 100).toFixed(1) : '—';
+              return (
+                <div key={c._id} className="px-4 py-3 flex flex-wrap gap-x-4 gap-y-1 items-center">
+                  <span className="flex-1 text-sm text-text-0 min-w-0 truncate">{c.subject}</span>
+                  <span className="text-xs text-text-2 shrink-0">
+                    {new Date(c.sentAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                  </span>
+                  <span className="font-mono text-xs text-text-2 shrink-0">{c.recipientCount} sent</span>
+                  <span className={`font-mono text-xs shrink-0 ${parseFloat(openRate) > 20 ? 'text-matrix' : 'text-text-2'}`}>
+                    📧 {openRate}% open
+                  </span>
+                  <span className="font-mono text-xs text-text-2 shrink-0">
+                    🔗 {clickRate}% click
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        )
+      ) : (
+        <div className="space-y-4">
+          {/* Growth sparkline */}
+          {growth.length > 0 ? (
+            <div className="glass border border-border rounded-[var(--radius-lg)] p-4">
+              <p className="text-xs text-text-2 mb-3 flex items-center gap-1.5">
+                <TrendingUp size={12} /> New subscribers per day (last 30 days)
+              </p>
+              <div className="flex items-end gap-0.5 h-16">
+                {growth.map(d => (
+                  <div
+                    key={d._id}
+                    className="flex-1 bg-matrix/60 rounded-t min-h-[2px] hover:bg-matrix transition-colors"
+                    style={{ height: `${Math.max(4, (d.count / maxGrowth) * 100)}%` }}
+                    title={`${d._id}: ${d.count} new`}
+                  />
+                ))}
+              </div>
+              <div className="flex justify-between text-[10px] text-text-2 mt-1">
+                <span>{growth[0]?._id}</span>
+                <span>{growth[growth.length - 1]?._id}</span>
+              </div>
+            </div>
+          ) : (
+            <p className="text-xs text-text-2 py-2">No new subscribers in the last 30 days.</p>
+          )}
+
+          {/* Source split */}
+          {sourceSplit.length > 0 && (
+            <div className="glass border border-border rounded-[var(--radius-lg)] p-4 space-y-2">
+              <p className="text-xs font-semibold text-text-0">Subscriber sources</p>
+              {sourceSplit.map(s => {
+                const total = sourceSplit.reduce((acc, r) => acc + r.count, 0);
+                const pct = total > 0 ? Math.round((s.count / total) * 100) : 0;
+                return (
+                  <div key={s._id ?? 'unknown'} className="flex items-center gap-3">
+                    <span className="w-24 text-xs text-text-2 font-mono truncate shrink-0">{s._id ?? 'unknown'}</span>
+                    <div className="flex-1 bg-bg-1 rounded-full h-1.5 overflow-hidden">
+                      <div className="h-full bg-matrix rounded-full" style={{ width: `${pct}%` }} />
+                    </div>
+                    <span className="text-xs text-text-1 w-14 text-right font-mono shrink-0">{s.count} ({pct}%)</span>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>

@@ -7,9 +7,12 @@ import { syncToKit } from '@/lib/kit';
 import { rateLimit } from '@/lib/rate-limit';
 import type { Locale } from '@/i18n/config';
 
+const SOURCES = ['homepage', 'blog-cta', 'links-page', 'import', 'other'] as const;
+
 const schema = z.object({
   email: z.string().email(),
   preferredLanguage: z.enum(['ar', 'en', 'fr']).optional(),
+  source: z.enum(SOURCES).optional(),
 });
 
 export async function GET() {
@@ -30,27 +33,44 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json();
-    const { email, preferredLanguage } = schema.parse(body);
+    const { email, preferredLanguage, source } = schema.parse(body);
 
     await dbConnect();
 
     // Atomic upsert — prevents TOCTOU race where two concurrent signups both pass findOne
+    const setFields: Record<string, string> = {};
+    if (preferredLanguage) setFields.preferredLanguage = preferredLanguage;
+
     const result = await Subscriber.updateOne(
       { email },
       {
-        $setOnInsert: { email },
-        ...(preferredLanguage ? { $set: { preferredLanguage } } : {}),
+        $setOnInsert: { email, ...(source ? { source } : {}) },
+        ...(Object.keys(setFields).length ? { $set: setFields } : {}),
       },
       { upsert: true }
     );
 
     // If no new doc was created, the email was already subscribed — update language if provided
     if (result.upsertedCount === 0 && preferredLanguage) {
-      await Subscriber.updateOne({ email }, { $set: { preferredLanguage } });
+      await Subscriber.updateOne({ email }, { $set: setFields });
     }
 
     // Fire-and-forget Kit.com sync — non-fatal, must not block the 201 response
     syncToKit({ email_address: email, first_name: '' }).catch(() => {});
+
+    // Fire-and-forget admin notification for new subscriber
+    if (result.upsertedCount > 0) {
+      fetch(`${process.env.NEXTAUTH_URL ?? 'http://localhost:3000'}/api/admin/notifications`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'subscriber_new',
+          title: 'New subscriber',
+          body: `${email} just joined${preferredLanguage ? ` (${preferredLanguage.toUpperCase()})` : ''}.`,
+          link: '/admin/newsletter',
+        }),
+      }).catch(() => {});
+    }
 
     // Fire-and-forget welcome email — non-fatal, must not block the 201 response
     const resend = getResend();

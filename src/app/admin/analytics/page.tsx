@@ -1,6 +1,7 @@
 'use client';
 
-import { Activity, Clock, TrendingUp, ExternalLink } from 'lucide-react';
+import Link from 'next/link';
+import { Activity, Clock, TrendingUp, ExternalLink, BarChart2 } from 'lucide-react';
 
 function StatCard({ label, value, hint, icon: Icon }: { label: string; value: string; hint: string; icon: React.ElementType }) {
   return (
@@ -24,6 +25,18 @@ export default function AnalyticsPage() {
         <span className="font-mono text-xs text-matrix tracking-[0.15em]">// analytics</span>
         <h1 className="font-display font-bold text-2xl text-text-0 mt-1">Analytics</h1>
       </div>
+
+      {/* Post Analytics link */}
+      <Link
+        href="/admin/analytics/posts"
+        className="glass border border-matrix/30 rounded-[var(--radius-lg)] p-4 flex items-center gap-3 hover:border-matrix/60 transition-colors group"
+      >
+        <BarChart2 size={18} className="text-matrix shrink-0" />
+        <div className="flex-1">
+          <p className="text-sm font-semibold text-text-0">Post Analytics →</p>
+          <p className="text-xs text-text-2">Top posts, view trends, language split, translation gaps</p>
+        </div>
+      </Link>
 
       {/* Quick stats */}
       <div className="grid sm:grid-cols-3 gap-4">

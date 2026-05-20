@@ -43,6 +43,18 @@ export async function POST(req: Request) {
       });
     }
 
+    // Fire-and-forget admin notification for new contact
+    fetch(`${process.env.NEXTAUTH_URL ?? 'http://localhost:3000'}/api/admin/notifications`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'contact_new',
+        title: `New message: ${result.data.subject}`,
+        body: `From ${result.data.name} <${result.data.email}>${result.data.budget ? ` — Budget: ${result.data.budget}` : ''}`,
+        link: '/admin',
+      }),
+    }).catch(() => {});
+
     return NextResponse.json({ message: 'Message received' });
   } catch (error) {
     return serverError('Failed to process submission', error);

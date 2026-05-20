@@ -10,7 +10,9 @@ export async function GET() {
   try {
     await dbConnect();
 
-    const [total, byLanguage] = await Promise.all([
+    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 3600 * 1000);
+
+    const [total, byLanguage, recentCount] = await Promise.all([
       Subscriber.countDocuments(),
       Subscriber.aggregate([
         {
@@ -20,6 +22,7 @@ export async function GET() {
           },
         },
       ]),
+      Subscriber.countDocuments({ createdAt: { $gte: sevenDaysAgo } }),
     ]);
 
     const languageCounts: Record<string, number> = {};
@@ -31,6 +34,7 @@ export async function GET() {
 
     return NextResponse.json({
       total,
+      recentCount,
       byLanguage: {
         ar: languageCounts.ar ?? 0,
         en: languageCounts.en ?? 0,

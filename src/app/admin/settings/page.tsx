@@ -1,13 +1,10 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Loader2, Save, ImageIcon } from 'lucide-react';
+import Link from 'next/link';
+import { Loader2, Save, ImageIcon, Zap, ChevronRight } from 'lucide-react';
 import { useToast } from '@/components/ui/Toast';
 import MediaPickerModal from '@/components/admin/MediaPickerModal';
-
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
 
 interface SettingEntry {
   key: string;
@@ -34,10 +31,6 @@ const SETTINGS: SettingEntry[] = [
   },
 ];
 
-// ---------------------------------------------------------------------------
-// SettingImageCard
-// ---------------------------------------------------------------------------
-
 interface SettingImageCardProps {
   entry: SettingEntry;
   currentUrl: string | null;
@@ -61,7 +54,6 @@ function SettingImageCard({ entry, currentUrl, onSave }: SettingImageCardProps) 
         <p className="text-xs text-text-2 mt-0.5">{entry.description}</p>
       </div>
 
-      {/* Preview */}
       <div
         className={`relative bg-bg-1 border border-border flex items-center justify-center overflow-hidden ${
           entry.shape === 'circle'
@@ -71,11 +63,7 @@ function SettingImageCard({ entry, currentUrl, onSave }: SettingImageCardProps) 
       >
         {currentUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={currentUrl}
-            alt={entry.label}
-            className="w-full h-full object-cover"
-          />
+          <img src={currentUrl} alt={entry.label} className="w-full h-full object-cover" />
         ) : (
           <div className="flex flex-col items-center gap-2 text-text-2/40">
             <ImageIcon size={entry.shape === 'circle' ? 24 : 32} />
@@ -84,7 +72,6 @@ function SettingImageCard({ entry, currentUrl, onSave }: SettingImageCardProps) 
         )}
       </div>
 
-      {/* Actions */}
       <div className="flex gap-2">
         <button
           type="button"
@@ -97,7 +84,6 @@ function SettingImageCard({ entry, currentUrl, onSave }: SettingImageCardProps) 
             : <><Save size={13} /> Change image</>
           }
         </button>
-
         {currentUrl && (
           <button
             type="button"
@@ -119,10 +105,6 @@ function SettingImageCard({ entry, currentUrl, onSave }: SettingImageCardProps) 
     </div>
   );
 }
-
-// ---------------------------------------------------------------------------
-// Page
-// ---------------------------------------------------------------------------
 
 export default function AdminSettingsPage() {
   const { toast } = useToast();
@@ -162,32 +144,68 @@ export default function AdminSettingsPage() {
 
   return (
     <div className="flex flex-col gap-6 max-w-2xl">
-      {/* Header */}
       <div>
         <span className="font-mono text-xs text-matrix tracking-[0.15em]">// settings</span>
-        <h1 className="font-display font-bold text-2xl text-text-0 mt-1">Site Settings</h1>
-        <p className="text-sm text-text-2 mt-1">
-          Configure sitewide images and appearance.
-        </p>
+        <h1 className="font-display font-bold text-2xl text-text-0 mt-1">Settings</h1>
+        <p className="text-sm text-text-2 mt-1">Configure sitewide images, AI, and appearance.</p>
       </div>
 
-      {loading ? (
-        <div className="flex items-center gap-2 py-8 text-text-2">
-          <Loader2 size={16} className="animate-spin text-matrix" />
-          <span className="font-mono text-xs">Loading settings...</span>
+      {/* Sub-section nav cards */}
+      <div className="grid sm:grid-cols-2 gap-3">
+        <Link
+          href="/admin/settings"
+          className="glass border border-matrix/30 bg-matrix/[0.03] rounded-[var(--radius-lg)] p-4 flex items-center gap-3 group"
+        >
+          <div className="p-2 bg-matrix/10 rounded-[var(--radius-md)] shrink-0">
+            <ImageIcon size={15} className="text-matrix" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold text-text-0">Site Images</p>
+            <p className="text-xs text-text-2 mt-0.5">Hero, profile, and media settings</p>
+          </div>
+          <ChevronRight size={14} className="text-text-2 shrink-0" />
+        </Link>
+
+        <Link
+          href="/admin/settings/ai"
+          className="glass border border-border rounded-[var(--radius-lg)] p-4 flex items-center gap-3 hover:border-matrix/30 transition-colors group"
+        >
+          <div className="p-2 bg-surface rounded-[var(--radius-md)] shrink-0 group-hover:bg-matrix/10 transition-colors">
+            <Zap size={15} className="text-text-2 group-hover:text-matrix transition-colors" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold text-text-0">AI Settings</p>
+            <p className="text-xs text-text-2 mt-0.5">OpenRouter key, models, usage</p>
+          </div>
+          <ChevronRight size={14} className="text-text-2 shrink-0" />
+        </Link>
+      </div>
+
+      {/* Images section */}
+      <div>
+        <div className="flex items-center gap-2 mb-4">
+          <ImageIcon size={14} className="text-matrix/60" />
+          <h2 className="text-sm font-semibold text-text-1">Site Images</h2>
         </div>
-      ) : (
-        <div className="flex flex-col gap-4">
-          {SETTINGS.map((entry) => (
-            <SettingImageCard
-              key={entry.key}
-              entry={entry}
-              currentUrl={values[entry.key] ?? null}
-              onSave={handleSave}
-            />
-          ))}
-        </div>
-      )}
+
+        {loading ? (
+          <div className="flex items-center gap-2 py-8 text-text-2">
+            <Loader2 size={16} className="animate-spin text-matrix" />
+            <span className="font-mono text-xs">Loading settings...</span>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-4">
+            {SETTINGS.map((entry) => (
+              <SettingImageCard
+                key={entry.key}
+                entry={entry}
+                currentUrl={values[entry.key] ?? null}
+                onSave={handleSave}
+              />
+            ))}
+          </div>
+        )}
+      </div>
 
       <div className="pt-4 border-t border-border">
         <p className="font-mono text-[10px] text-text-2">

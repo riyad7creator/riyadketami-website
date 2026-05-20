@@ -2,10 +2,33 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db/connect';
 import MediaFileModel from '@/models/MediaFile';
 import { requireAdmin, serverError, escapeRegex } from '@/lib/api-helpers';
-import type { MediaFolder } from '@/types/media';
+import type { MediaFolder, MediaType } from '@/types/media';
 
-const MAX_FILE_SIZE = 4 * 1024 * 1024; // 4 MB — BSON doc limit safety margin
-const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'];
+const MAX_IMAGE_SIZE = 4 * 1024 * 1024;   // 4 MB for images
+const MAX_BINARY_SIZE = 50 * 1024 * 1024; // 50 MB for video/Lottie
+
+const IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'];
+const VIDEO_TYPES = ['video/mp4', 'video/webm'];
+const LOTTIE_TYPE = 'application/json';
+
+const ALLOWED_TYPES = [...IMAGE_TYPES, ...VIDEO_TYPES, LOTTIE_TYPE];
+
+function detectMediaType(mimeType: string): MediaType {
+  if (VIDEO_TYPES.includes(mimeType)) return 'video';
+  if (mimeType === LOTTIE_TYPE) return 'lottie';
+  return 'image';
+}
+
+async function isLottieJson(buffer: Buffer): Promise<boolean> {
+  try {
+    const text = buffer.toString('utf8', 0, Math.min(buffer.length, 2048));
+    const parsed = JSON.parse(text) as Record<string, unknown>;
+    // Lottie files have a version field "v" and a "layers" array
+    return typeof parsed.v !== 'undefined' && Array.isArray(parsed.layers);
+  } catch {
+    return false;
+  }
+}
 
 /** GET /api/admin/media — paginated list OR ?stats=true for aggregated counts */
 export async function GET(req: Request) {
@@ -76,9 +99,13 @@ export async function POST(req: Request) {
     if (!ALLOWED_TYPES.includes(file.type)) {
       return NextResponse.json({ error: `Unsupported file type: ${file.type}` }, { status: 400 });
     }
-    if (file.size > MAX_FILE_SIZE) {
+
+    const isVideoOrJson = VIDEO_TYPES.includes(file.type) || file.type === LOTTIE_TYPE;
+    const maxSize = isVideoOrJson ? MAX_BINARY_SIZE : MAX_IMAGE_SIZE;
+
+    if (file.size > maxSize) {
       return NextResponse.json(
-        { error: `File too large (${(file.size / 1024 / 1024).toFixed(1)} MB). Max 4 MB.` },
+        { error: `File too large (${(file.size / 1024 / 1024).toFixed(1)} MB). Max ${(maxSize / 1024 / 1024).toFixed(0)} MB.` },
         { status: 400 }
       );
     }
@@ -89,6 +116,13 @@ export async function POST(req: Request) {
     const height = formData.get('height') ? parseInt(formData.get('height') as string, 10) : undefined;
 
     const buffer = Buffer.from(await file.arrayBuffer());
+
+    // For application/json, verify it's actually a Lottie file
+    if (file.type === LOTTIE_TYPE && !(await isLottieJson(buffer))) {
+      return NextResponse.json({ error: 'JSON file does not appear to be a valid Lottie animation' }, { status: 400 });
+    }
+
+    const mediaType = detectMediaType(file.type);
     const url = `data:${file.type};base64,${buffer.toString('base64')}`;
 
     const timestamp = Date.now();
@@ -110,6 +144,7 @@ export async function POST(req: Request) {
       folder,
       altText,
       usedIn: [],
+      mediaType,
     });
 
     return NextResponse.json(doc.toObject(), { status: 201 });

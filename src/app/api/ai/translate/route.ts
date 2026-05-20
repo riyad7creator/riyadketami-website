@@ -1,7 +1,5 @@
 import { requireAdmin, serverError } from '@/lib/api-helpers';
-
-const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
-const MODEL = 'anthropic/claude-3.5-sonnet';
+import { getOpenRouterKey, getModel, logUsage, OPENROUTER_URL } from '@/lib/ai-config';
 
 const LANG_LABELS: Record<string, string> = {
   fr: 'French',
@@ -14,9 +12,9 @@ export async function POST(req: Request) {
     const check = await requireAdmin();
     if (!check.ok) return check.response;
 
-    const apiKey = process.env.OPENROUTER_API_KEY;
+    const apiKey = await getOpenRouterKey();
     if (!apiKey) {
-      return new Response(JSON.stringify({ error: 'OPENROUTER_API_KEY is not configured' }), {
+      return new Response(JSON.stringify({ error: 'OpenRouter API key is not configured. Set it in Admin → Settings → AI.' }), {
         status: 500,
         headers: { 'Content-Type': 'application/json' },
       });
@@ -33,6 +31,7 @@ export async function POST(req: Request) {
     }
 
     const langLabel = LANG_LABELS[targetLanguage] ?? targetLanguage;
+    const model = await getModel('translation');
 
     const systemPrompt = `You are a professional translator specializing in blog content.
 Translate the provided HTML blog post content into ${langLabel}.
@@ -61,7 +60,7 @@ ${content}`;
         'X-Title': 'Riyad Ketami Admin',
       },
       body: JSON.stringify({
-        model: MODEL,
+        model,
         stream: false,
         response_format: { type: 'json_object' },
         messages: [
@@ -79,8 +78,18 @@ ${content}`;
       });
     }
 
-    const data = await upstream.json() as { choices?: { message?: { content?: string } }[] };
+    const data = await upstream.json() as {
+      choices?: { message?: { content?: string } }[];
+      usage?: { prompt_tokens?: number; completion_tokens?: number };
+    };
     const raw = data.choices?.[0]?.message?.content ?? '{}';
+
+    logUsage({
+      model,
+      promptTokens: data.usage?.prompt_tokens ?? 0,
+      completionTokens: data.usage?.completion_tokens ?? 0,
+      route: 'translate',
+    });
 
     return new Response(raw, {
       headers: { 'Content-Type': 'application/json' },

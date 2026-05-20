@@ -19,12 +19,12 @@
     "audience": {
       "eyebrow": "// la portée",
       "title": "Les chiffres, pas le bruit.",
-      "subtitle": "Performance multi-plateformes — janvier–mars 2025."
+      "subtitle": "Performance multi-plateformes, janvier–mars 2025."
     },
     "about_teaser": {
       "eyebrow": "// qui",
       "title": "Éducateur IA. Stratège digital. Construit depuis l'Algérie.",
-      "body": "J'apprends à 470K+ followers comment utiliser l'IA pour bâtir des business plus intelligents — en darija algérienne, français et anglais. J'accompagne des équipes ambitieuses, je code les outils dont j'ai besoin, et je construis pour un marché que le monde ignore : l'économie des créateurs et entrepreneurs du Maghreb et du MENA.",
+      "body": "J'apprends à 470K+ followers comment utiliser l'IA pour bâtir des business plus intelligents, en darija algérienne, français et anglais. J'accompagne des équipes ambitieuses, je code les outils dont j'ai besoin, et je construis pour un marché que le monde ignore : l'économie des créateurs et entrepreneurs du Maghreb et du MENA.",
       "cta": "Lire la version longue"
     },
     "consulting_teaser": {
@@ -86,13 +86,13 @@
         {
           "tag": "Gratuit",
           "name": "The Digital Rebel",
-          "description": "Chaque semaine, les outils IA, tactiques et stratégies de contenu — depuis l'Algérie, pour les builders. Gratuit.",
+          "description": "Chaque semaine, les outils IA, tactiques et stratégies de contenu depuis l'Algérie, pour les builders. Gratuit.",
           "cta": "S'inscrire gratuitement"
         },
         {
           "tag": "Formation",
           "name": "The AI Operator System",
-          "description": "La stack IA exacte, les prompts et les workflows que j'utilise pour faire tourner un business de contenu 470K+ en solo. Pas de théorie — les outils, les fichiers, les SOP.",
+          "description": "La stack IA exacte, les prompts et les workflows que j'utilise pour faire tourner un business de contenu 470K+ en solo. Pas de théorie : les outils, les fichiers, les SOP.",
           "cta": "Accéder"
         },
         {
@@ -134,13 +134,13 @@
   "about": {
     "eyebrow": "// 01 / à propos",
     "headline": "À propos de Riyad Ketami",
-    "subheadline": "Éducateur IA, stratège digital et créateur de contenu — construire le pont entre l'IA mondiale et l'économie des créateurs du MENA.",
+    "subheadline": "Éducateur IA, stratège digital et créateur de contenu. Construisant le pont entre l'IA mondiale et l'économie des créateurs du MENA.",
     "identity_eyebrow": "// 02 / qui je suis",
     "identity_title": "Je travaille là où la culture, la technologie et l'exécution se rencontrent.",
     "identity": [
       "Je suis Riyad Ketami. J'aide les gens à utiliser l'IA pour construire quelque chose de réel.",
-      "Je le fais sur scène, dans des salles avec des marques internationales, dans des ateliers avec des fondateurs, et chaque jour sur mes canaux — devant une communauté qui s'est élargie à des millions de personnes en Afrique du Nord, dans le monde arabe et dans la diaspora francophone.",
-      "J'ai commencé comme designer. Je suis devenu stratège. Maintenant, je suis un opérateur — je ship du contenu, je ship des partenariats, je ship des produits. L'IA est le levier. Le MENA est le marché que le reste du monde continue de sous-estimer. Faire le pont entre les deux, c'est le travail."
+      "Je le fais sur scène, dans des salles avec des marques internationales, dans des ateliers avec des fondateurs, et chaque jour sur mes canaux, devant une communauté qui s'est élargie à des millions de personnes en Afrique du Nord, dans le monde arabe et dans la diaspora francophone.",
+      "J'ai commencé comme designer. Je suis devenu stratège. Maintenant, je suis un opérateur : je ship du contenu, je ship des partenariats, je ship des produits. L'IA est le levier. Le MENA est le marché que le reste du monde continue de sous-estimer. Faire le pont entre les deux, c'est le travail."
     ],
     "principles_eyebrow": "// 03 / ce que je crois",
     "principles_title": "Ce que je crois.",
@@ -159,11 +159,11 @@
     "building": [
       { "name": "AnimaOS", "description": "Un système d'exploitation IA pour les professionnels du digital." },
       { "name": "Eyela.ai", "description": "Plateforme SaaS co-fondée." },
-      { "name": "Algeria Business Bay", "description": "Une practice de consulting et une communauté pour les fondateurs qui construisent dans — ou s'étendent vers — la région." }
+      { "name": "Algeria Business Bay", "description": "Une practice de consulting et une communauté pour les fondateurs qui construisent dans la région ou s'y étendent." }
     ],
     "cta_eyebrow": "// 05 / travaillons ensemble",
     "cta_title": "Envie de collaborer ?",
-    "cta_body": "Partenariat, consulting ou campagne — je réponds sous 48 heures.",
+    "cta_body": "Partenariat, consulting ou campagne. Je réponds sous 48 heures.",
     "cta_email": "riyad@ketami.net",
     "cta_secondary": "Réserver un appel",
     "cta": "Travailler ensemble"
@@ -295,12 +295,12 @@
   "services": {
     "eyebrow": "// travailler avec moi",
     "headline": "Trois façons de collaborer.",
-    "subheadline": "Consulting, partenariats et prise de parole — pour les équipes et les marques prêtes à shipper de l'IA qui fait bouger les chiffres.",
+    "subheadline": "Consulting, partenariats et prise de parole pour les équipes et les marques prêtes à shipper de l'IA qui fait bouger les chiffres.",
     "items": [
       {
         "tag": "Consulting",
         "name": "Consulting & Coaching IA",
-        "description": "Engagements individuels et équipes pour entreprises, fondateurs et créateurs. Je conçois des systèmes IA et des workflows qui économisent de vraies heures par semaine — pas un abonnement de plus, une vraie infrastructure.",
+        "description": "Engagements individuels et équipes pour entreprises, fondateurs et créateurs. Je conçois des systèmes IA et des workflows qui économisent de vraies heures par semaine. Pas un abonnement de plus, une vraie infrastructure.",
         "features": [
           "Audit & roadmap de la stack IA",
           "Workflows sur mesure (n8n, Make, agents)",
@@ -312,7 +312,7 @@
       {
         "tag": "Partenariats",
         "name": "Partenariats de Marque MENA",
-        "description": "Campagnes sur mesure pour les entreprises IA et SaaS qui entrent ou s'étendent dans le MENA. Création multi-plateforme, distribution régionale, conversion mesurable — pas des vues vanité.",
+        "description": "Campagnes sur mesure pour les entreprises IA et SaaS qui entrent ou s'étendent dans le MENA. Création multi-plateforme, distribution régionale, conversion mesurable. Pas de vues vanité.",
         "features": [
           "Ambassadorats régionaux",
           "Vidéo & créa sur mesure",

@@ -19,7 +19,7 @@
     "audience": {
       "eyebrow": "// the reach",
       "title": "The numbers, not the noise.",
-      "subtitle": "Cross-channel performance — Jan–Mar 2025."
+      "subtitle": "Cross-channel performance, Jan–Mar 2025."
     },
     "about_teaser": {
       "eyebrow": "// who",
@@ -86,13 +86,13 @@
         {
           "tag": "Free",
           "name": "The Digital Rebel",
-          "description": "Weekly AI tools, tactics, and content strategy — from Algeria, for builders. Free.",
+          "description": "Weekly AI tools, tactics, and content strategy from Algeria, for builders. Free.",
           "cta": "Subscribe free"
         },
         {
           "tag": "Course",
           "name": "The AI Operator System",
-          "description": "The exact AI stack, prompts, and workflows I use to run a 470K+ content business solo. Not theory — the tools, files, and SOPs.",
+          "description": "The exact AI stack, prompts, and workflows I use to run a 470K+ content business solo. Not theory: the tools, files, and SOPs.",
           "cta": "Get access"
         },
         {
@@ -134,13 +134,13 @@
   "about": {
     "eyebrow": "// 01 / about",
     "headline": "About Riyad Ketami",
-    "subheadline": "AI educator, digital strategist, and content creator — building the bridge between global AI and the MENA creator economy.",
+    "subheadline": "AI educator, digital strategist, and content creator. Building the bridge between global AI and the MENA creator economy.",
     "identity_eyebrow": "// 02 / who i am",
     "identity_title": "I work where culture, technology, and execution meet.",
     "identity": [
       "I'm Riyad Ketami. I help people use AI to build something real.",
       "I do that on stage, in rooms with global brands, in workshops with founders, and every day on my channels — in front of a community that's grown into the millions across North Africa, the Arab world, and the Francophone diaspora.",
-      "I started as a designer. I became a strategist. Now I'm an operator — shipping content, shipping partnerships, shipping products. AI is the lever. MENA is the market the rest of the world keeps underestimating. Bridging both is the work."
+      "I started as a designer. I became a strategist. Now I'm an operator: shipping content, shipping partnerships, shipping products. AI is the lever. MENA is the market the rest of the world keeps underestimating. Bridging both is the work."
     ],
     "principles_eyebrow": "// 03 / what i believe",
     "principles_title": "What I believe.",
@@ -159,11 +159,11 @@
     "building": [
       { "name": "AnimaOS", "description": "An AI operating system for digital professionals." },
       { "name": "Eyela.ai", "description": "Co-founded SaaS platform." },
-      { "name": "Algeria Business Bay", "description": "A consulting practice and community for founders building in — or expanding into — the region." }
+      { "name": "Algeria Business Bay", "description": "A consulting practice and community for founders building in or expanding into the region." }
     ],
     "cta_eyebrow": "// 05 / let's work",
     "cta_title": "Want to work together?",
-    "cta_body": "Partnership, consulting, or campaign inquiries — I respond within 48 hours.",
+    "cta_body": "Partnership, consulting, or campaign inquiries. I respond within 48 hours.",
     "cta_email": "riyad@ketami.net",
     "cta_secondary": "Book a call",
     "cta": "Work with me"
@@ -295,12 +295,12 @@
   "services": {
     "eyebrow": "// work with me",
     "headline": "Three ways to work together.",
-    "subheadline": "Consulting, partnerships, and stage time — for teams and brands ready to ship AI that actually moves numbers.",
+    "subheadline": "Consulting, partnerships, and stage time for teams and brands ready to ship AI that actually moves numbers.",
     "items": [
       {
         "tag": "Consulting",
         "name": "AI Consulting & Coaching",
-        "description": "One-to-one and team engagements for businesses, founders, and creators. I design AI systems and workflows that save real hours per week — not another subscription, real infrastructure.",
+        "description": "One-to-one and team engagements for businesses, founders, and creators. I design AI systems and workflows that save real hours per week. Not another subscription, real infrastructure.",
         "features": [
           "AI stack audit & roadmap",
           "Custom workflows (n8n, Make, agents)",
@@ -312,7 +312,7 @@
       {
         "tag": "Partnerships",
         "name": "MENA Brand Partnerships",
-        "description": "Custom-built campaigns for AI and SaaS companies entering or expanding in MENA. Multi-platform creative, regional distribution, measurable conversion — not vanity views.",
+        "description": "Custom-built campaigns for AI and SaaS companies entering or expanding in MENA. Multi-platform creative, regional distribution, measurable conversion. Not vanity views.",
         "features": [
           "Regional ambassadorships",
           "Custom video & creative",

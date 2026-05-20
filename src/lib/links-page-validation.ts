@@ -15,53 +15,53 @@ const optionalUrl = z.string().url().optional().or(z.literal(''));
 // LinkCard
 // ---------------------------------------------------------------------------
 
-export const linkCardSchema = z
-  .object({
-    section: z.enum(['sponsored', 'resource', 'service', 'fallback']),
-    title: z.string().min(1, 'Title is required').max(80),
-    description: z.string().max(200).optional(),
-    href: safeHref,
-    icon: z.string().max(50).optional(),
-    thumbnail: optionalUrl,
-    pillLabel: z.string().max(20).optional(),
-    pillVariant: z.enum(['sponsored', 'new', 'free', 'booking', 'affiliate', 'custom']).optional(),
-    pillColor: z.string().max(20).optional(),
-    order: z.number().int().min(0).optional(),
-    active: z.boolean().optional(),
-    startsAt: z.string().datetime().nullable().optional(),
-    endsAt: z.string().datetime().nullable().optional(),
-  })
-  .refine(
-    (d) => {
-      if (d.startsAt && d.endsAt) return new Date(d.startsAt) < new Date(d.endsAt);
-      return true;
-    },
-    { message: 'Start date must be before end date', path: ['endsAt'] }
-  );
+const linkCardBaseSchema = z.object({
+  section: z.enum(['sponsored', 'resource', 'service', 'fallback']),
+  title: z.string().min(1, 'Title is required').max(80),
+  description: z.string().max(200).optional(),
+  href: safeHref,
+  icon: z.string().max(50).optional(),
+  thumbnail: optionalUrl,
+  pillLabel: z.string().max(20).optional(),
+  pillVariant: z.enum(['sponsored', 'new', 'free', 'booking', 'affiliate', 'custom']).optional(),
+  pillColor: z.string().max(20).optional(),
+  order: z.number().int().min(0).optional(),
+  active: z.boolean().optional(),
+  startsAt: z.string().datetime().nullable().optional(),
+  endsAt: z.string().datetime().nullable().optional(),
+});
 
-export const linkCardPatchSchema = linkCardSchema.partial().omit({ section: true });
+export const linkCardSchema = linkCardBaseSchema.refine(
+  (d) => {
+    if (d.startsAt && d.endsAt) return new Date(d.startsAt) < new Date(d.endsAt);
+    return true;
+  },
+  { message: 'Start date must be before end date', path: ['endsAt'] }
+);
+
+export const linkCardPatchSchema = linkCardBaseSchema.partial().omit({ section: true });
 
 // ---------------------------------------------------------------------------
 // LatestSource
 // ---------------------------------------------------------------------------
 
-export const latestSourceSchema = z
-  .object({
-    type: z.enum(['youtube', 'blog', 'tiktok', 'instagram']),
-    label: z.string().min(1).max(50),
-    rssUrl: optionalUrl,
-    manualUrl: optionalUrl,
-    manualTitle: z.string().max(200).optional(),
-    manualThumb: optionalUrl,
-    active: z.boolean().optional(),
-    order: z.number().int().min(0).optional(),
-  })
-  .refine(
-    (d) => (d.rssUrl && d.rssUrl.length > 0) || (d.manualUrl && d.manualTitle),
-    { message: 'Either rssUrl or both manualUrl and manualTitle are required' }
-  );
+const latestSourceBaseSchema = z.object({
+  type: z.enum(['youtube', 'blog', 'tiktok', 'instagram']),
+  label: z.string().min(1).max(50),
+  rssUrl: optionalUrl,
+  manualUrl: optionalUrl,
+  manualTitle: z.string().max(200).optional(),
+  manualThumb: optionalUrl,
+  active: z.boolean().optional(),
+  order: z.number().int().min(0).optional(),
+});
 
-export const latestSourcePatchSchema = latestSourceSchema.partial();
+export const latestSourceSchema = latestSourceBaseSchema.refine(
+  (d) => (d.rssUrl && d.rssUrl.length > 0) || (d.manualUrl && d.manualTitle),
+  { message: 'Either rssUrl or both manualUrl and manualTitle are required' }
+);
+
+export const latestSourcePatchSchema = latestSourceBaseSchema.partial();
 
 // ---------------------------------------------------------------------------
 // SiteProfile

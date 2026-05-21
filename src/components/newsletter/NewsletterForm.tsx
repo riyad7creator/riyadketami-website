@@ -110,12 +110,12 @@ export default function NewsletterForm({
                 if (error) setError('');
               }}
               placeholder={t.placeholder}
-              className="flex-1 h-11 px-4 rounded-[var(--radius-md)] bg-bg-2 border border-border text-text-0 placeholder:text-text-2 text-sm focus:outline-none focus:border-matrix transition-colors duration-[var(--duration-fast)]"
+              className={`flex-1 px-4 rounded-[var(--radius-md)] bg-bg-2 border border-border text-text-0 placeholder:text-text-2 text-sm focus:outline-none focus:border-matrix transition-colors duration-[var(--duration-fast)] ${isInline ? 'h-11' : 'h-14'}`}
             />
             <button
               type="submit"
               disabled={status === 'loading'}
-              className="h-11 px-6 rounded-[var(--radius-md)] bg-matrix text-bg-0 text-sm font-semibold hover:bg-matrix/90 disabled:opacity-50 transition-colors duration-[var(--duration-fast)] shrink-0 cursor-pointer hover:shadow-[0_0_20px_rgba(0,255,102,0.25)]"
+              className={`px-6 rounded-[var(--radius-md)] bg-matrix text-bg-0 text-sm font-semibold hover:bg-matrix/90 disabled:opacity-50 transition-colors duration-[var(--duration-fast)] shrink-0 cursor-pointer hover:shadow-[0_0_20px_rgba(0,255,102,0.25)] ${isInline ? 'h-11' : 'h-14'}`}
             >
               {t.cta}
             </button>

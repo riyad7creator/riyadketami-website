@@ -1,7 +1,9 @@
 import Image from 'next/image';
 import MatrixText from '@/components/ui/MatrixText';
 
-interface SocialEntry {
+export interface SocialDisplayEntry {
+  key: string;
+  label: string;
   url: string;
   count: string;
 }
@@ -12,19 +14,9 @@ interface ProfileHeaderProps {
   statusLine?: string | null;
   statusEnabled: boolean;
   subscriberCount: number;
-  socials: {
-    tiktok?: SocialEntry;
-    youtube?: SocialEntry;
-    instagram?: SocialEntry;
-  };
+  socials: SocialDisplayEntry[];
   profileImage: string;
 }
-
-const SOCIAL_LABEL: Record<string, string> = {
-  tiktok: 'TikTok',
-  youtube: 'YouTube',
-  instagram: 'Instagram',
-};
 
 export default function ProfileHeader({
   name,
@@ -34,11 +26,7 @@ export default function ProfileHeader({
   socials,
   profileImage,
 }: ProfileHeaderProps) {
-  const socialEntries = (
-    Object.entries(socials) as [string, SocialEntry | undefined][]
-  )
-    .filter((entry): entry is [string, SocialEntry] => !!entry[1]?.url && !!entry[1]?.count)
-    .map(([key, social]) => ({ key, label: SOCIAL_LABEL[key] ?? key, ...social }));
+  const entries = socials.filter((s) => s.url && s.count);
 
   return (
     <div className="flex flex-col items-center gap-4 text-center">
@@ -83,16 +71,16 @@ export default function ProfileHeader({
       </div>
 
       {/* Social stats row */}
-      {socialEntries.length > 0 && (
-        <div className="flex items-center gap-0 mt-1">
-          {socialEntries.map((s, i) => (
+      {entries.length > 0 && (
+        <div className="flex items-center gap-0 mt-1 flex-wrap justify-center">
+          {entries.map((s, i) => (
             <a
               key={s.key}
               href={s.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex flex-col items-center px-4 hover:text-matrix transition-colors group"
-              style={i < socialEntries.length - 1 ? { borderRight: '1px solid var(--border)' } : {}}
+              className="flex flex-col items-center px-4 py-1 hover:text-matrix transition-colors group"
+              style={i < entries.length - 1 ? { borderRight: '1px solid var(--border)' } : {}}
             >
               <span className="font-display font-bold text-sm text-text-0 group-hover:text-matrix transition-colors">
                 {s.count}

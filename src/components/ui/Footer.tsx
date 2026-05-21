@@ -15,6 +15,7 @@ interface FooterProps {
 const SOCIAL_LINKS = [
   { label: 'TikTok', abbr: 'TK', href: 'https://tiktok.com/@riyadketami' },
   { label: 'Instagram', abbr: 'IG', href: 'https://instagram.com/riyadketami' },
+  { label: 'Facebook', abbr: 'FB', href: 'https://www.facebook.com/riyadketami' },
   { label: 'YouTube', abbr: 'YT', href: 'https://youtube.com/@riyadketami' },
   { label: 'LinkedIn', abbr: 'LI', href: 'https://linkedin.com/in/riyadketami' },
   { label: 'X', abbr: 'X', href: 'https://x.com/riyadketami' },

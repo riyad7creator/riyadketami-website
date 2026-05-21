@@ -5,10 +5,13 @@ import dbConnect from '@/lib/db/connect';
 import LinkCardModel from '@/models/LinkCard';
 import LatestSourceModel from '@/models/LatestSource';
 import SiteProfileModel from '@/models/SiteProfile';
+import SocialAccount from '@/models/SocialAccount';
+import type { ISocialAccount } from '@/models/SocialAccount';
 import { getSetting } from '@/models/SiteSettings';
 import { getCachedFeed, youtubeRssUrl } from '@/lib/rss-fetcher';
 import { getDictionary } from '@/lib/dictionaries';
 import ProfileHeader from './_components/ProfileHeader';
+import type { SocialDisplayEntry } from './_components/ProfileHeader';
 import SponsoredSection from './_components/SponsoredSection';
 import LatestSection from './_components/LatestSection';
 import ResourcesSection from './_components/ResourcesSection';
@@ -18,6 +21,23 @@ import ServicesSection from './_components/ServicesSection';
 import type { CardProps } from './_components/Card';
 import type { ILinkCard } from '@/models/LinkCard';
 import { DEFAULT_LINKS_PROFILE } from '@/lib/links-defaults';
+
+const SOCIAL_LABELS: Record<string, string> = {
+  tiktok: 'TikTok',
+  instagram: 'Instagram',
+  facebook: 'Facebook',
+  youtube: 'YouTube',
+  x: 'X',
+  linkedin: 'LinkedIn',
+  github: 'GitHub',
+  other: 'Web',
+};
+
+function formatSocialCount(n: number): string {
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1).replace(/\.0$/, '')}M`;
+  if (n >= 1_000) return `${(n / 1_000).toFixed(1).replace(/\.0$/, '')}K`;
+  return String(n);
+}
 
 export const revalidate = 3600;
 
@@ -46,12 +66,20 @@ export default async function LinksPage() {
   const dict = getDictionary('en');
   const locale: Locale = 'en';
 
-  const [profileDoc, cardsRaw, sourcesRaw, profileImage] = await Promise.all([
+  const [profileDoc, cardsRaw, sourcesRaw, profileImage, socialAccountsRaw] = await Promise.all([
     SiteProfileModel.findById('links-profile').lean(),
     LinkCardModel.find({ active: true }).sort({ section: 1, order: 1 }).lean(),
     LatestSourceModel.find({ active: true }).sort({ order: 1 }).lean(),
     getSetting<string>('profile_image'),
+    SocialAccount.find({ visible: true }).sort({ order: 1, follower_count: -1 }).lean<Array<Pick<ISocialAccount, 'platform' | 'handle' | 'url' | 'follower_count'>>>(),
   ]);
+
+  const socialEntries: SocialDisplayEntry[] = socialAccountsRaw.map((s) => ({
+    key: s.platform,
+    label: SOCIAL_LABELS[s.platform] ?? s.platform,
+    url: s.url,
+    count: formatSocialCount(s.follower_count),
+  }));
 
   const profile = profileDoc ?? DEFAULT_PROFILE;
   const now = new Date();
@@ -134,7 +162,7 @@ export default async function LinksPage() {
           statusLine={profile.statusLine}
           statusEnabled={profile.statusEnabled}
           subscriberCount={profile.subscriberCount}
-          socials={profile.socials ?? {}}
+          socials={socialEntries}
           profileImage={imgSrc}
         />
 

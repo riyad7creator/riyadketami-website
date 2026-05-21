@@ -83,11 +83,6 @@ interface SiteProfileData {
   statusLine?: string;
   statusEnabled: boolean;
   subscriberCount: number;
-  socials: {
-    tiktok?: { url: string; count: string };
-    youtube?: { url: string; count: string; channelId?: string };
-    instagram?: { url: string; count: string };
-  };
 }
 
 // ---------------------------------------------------------------------------
@@ -916,11 +911,6 @@ const DEFAULT_PROFILE: SiteProfileData = {
   statusLine: '',
   statusEnabled: false,
   subscriberCount: 5000,
-  socials: {
-    tiktok: { url: 'https://tiktok.com/@riyadketami', count: '200K+' },
-    youtube: { url: 'https://youtube.com/@riyadketami', count: '50K+', channelId: '' },
-    instagram: { url: 'https://instagram.com/riyadketami', count: '80K+' },
-  },
 };
 
 function ProfileTab() {
@@ -946,19 +936,6 @@ function ProfileTab() {
     toast(res.ok ? 'Profile saved' : 'Failed to save', res.ok ? 'success' : 'error');
     setSaving(false);
   };
-
-  const setSocial = (
-    platform: 'tiktok' | 'youtube' | 'instagram',
-    key: string,
-    value: string
-  ) =>
-    setProfile((p) => ({
-      ...p,
-      socials: {
-        ...p.socials,
-        [platform]: { ...(p.socials[platform] ?? { url: '', count: '' }), [key]: value },
-      },
-    }));
 
   if (loading) return <p className="font-mono text-xs text-text-2 py-8">Loading...</p>;
 
@@ -1024,48 +1001,15 @@ function ProfileTab() {
       </div>
 
       {/* Socials */}
-      <div className="flex flex-col gap-4">
-        <h3 className="text-sm font-semibold text-text-0">Social links</h3>
-        {(['tiktok', 'youtube', 'instagram'] as const).map((platform) => (
-          <div
-            key={platform}
-            className="p-4 rounded-[var(--radius-md)] bg-bg-1 border border-border flex flex-col gap-3"
-          >
-            <p className="text-xs font-semibold text-text-1 uppercase font-mono">{platform}</p>
-            <div className="grid sm:grid-cols-2 gap-3">
-              <div>
-                <label className={labelCls}>Profile URL</label>
-                <input
-                  value={profile.socials[platform]?.url ?? ''}
-                  onChange={(e) => setSocial(platform, 'url', e.target.value)}
-                  placeholder={`https://${platform}.com/@...`}
-                  className={inputCls}
-                />
-              </div>
-              <div>
-                <label className={labelCls}>Follower count (display)</label>
-                <input
-                  value={profile.socials[platform]?.count ?? ''}
-                  onChange={(e) => setSocial(platform, 'count', e.target.value)}
-                  placeholder="200K+"
-                  className={inputCls}
-                  maxLength={20}
-                />
-              </div>
-              {platform === 'youtube' && (
-                <div className="sm:col-span-2">
-                  <label className={labelCls}>Channel ID (for RSS — starts with UC…)</label>
-                  <input
-                    value={profile.socials.youtube?.channelId ?? ''}
-                    onChange={(e) => setSocial('youtube', 'channelId', e.target.value)}
-                    placeholder="UCxxxxxxxxxxxxxxxxxxxxxxxx"
-                    className={inputCls}
-                  />
-                </div>
-              )}
-            </div>
-          </div>
-        ))}
+      <div className="p-4 rounded-[var(--radius-md)] bg-bg-1 border border-border flex flex-col gap-2">
+        <p className="text-xs font-semibold text-text-1 font-mono">Social follower counts</p>
+        <p className="text-xs text-text-2">
+          Follower counts shown on the links page are now managed centrally in{' '}
+          <a href="/rk-studio/social" className="text-matrix hover:underline">
+            Content Stats
+          </a>
+          . Update them there and they will appear on both the home page and the links page.
+        </p>
       </div>
 
       <button onClick={() => void handleSave()} disabled={saving} className={`${btnPrimary} flex items-center gap-2 w-fit`}>

@@ -115,7 +115,7 @@ export default function NewsletterForm({
             <button
               type="submit"
               disabled={status === 'loading'}
-              className={`px-6 rounded-[var(--radius-md)] bg-matrix text-bg-0 text-sm font-semibold hover:bg-matrix/90 disabled:opacity-50 transition-colors duration-[var(--duration-fast)] shrink-0 cursor-pointer hover:shadow-[0_0_20px_rgba(0,255,102,0.25)] ${isInline ? 'h-11' : 'h-14'}`}
+              className="h-11 px-6 rounded-[var(--radius-md)] bg-matrix text-bg-0 text-sm font-semibold hover:bg-matrix/90 disabled:opacity-50 transition-colors duration-[var(--duration-fast)] shrink-0 cursor-pointer hover:shadow-[0_0_20px_rgba(0,255,102,0.25)]"
             >
               {t.cta}
             </button>

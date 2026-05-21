@@ -35,10 +35,10 @@ export default function NewsletterCard({
             text="// weekly insights"
             className="text-[9px] tracking-[0.18em] text-matrix"
           />
-          <p className="font-display font-semibold text-text-0 text-sm mt-0.5">
+          <p className="font-display font-semibold text-text-0 text-sm mt-0.5 leading-tight">
             AI &amp; business insights, every week.
           </p>
-          <p className="text-xs text-text-2">
+          <p className="text-xs text-text-2 -mt-0.5">
             Free. Join {countLabel} readers. Unsubscribe anytime.
           </p>
         </div>

@@ -110,7 +110,7 @@ export default function NewsletterForm({
                 if (error) setError('');
               }}
               placeholder={t.placeholder}
-              className={`w-full px-4 rounded-[var(--radius-md)] bg-bg-2 border border-border text-text-0 placeholder:text-text-2 text-sm focus:outline-none focus:border-matrix transition-colors duration-[var(--duration-fast)] ${isInline ? 'h-11' : 'h-14'}`}
+              className={`w-full px-4 rounded-[var(--radius-md)] bg-bg-2 border border-border text-text-0 placeholder:text-text-2 text-sm focus:outline-none focus:border-matrix transition-colors duration-[var(--duration-fast)] ${isInline ? 'h-11' : 'h-12'}`}
             />
             <button
               type="submit"

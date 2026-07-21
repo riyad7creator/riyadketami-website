@@ -8,9 +8,9 @@ import { Check } from 'lucide-react';
 import { Button } from '@/components/ui';
 
 const SERVICE_ICONS = [
-  '/icons/icon-ai.png',
-  '/icons/icon-workshop.png',
-  '/icons/icon-speaking.png',
+  '/icons/icon-ai.webp',
+  '/icons/icon-workshop.webp',
+  '/icons/icon-speaking.webp',
 ] as const;
 
 interface ServiceItem {

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { SITE_URL } from '@/lib/constants';
 
 export const metadata: Metadata = {
   title: 'Riyad Ketami | Links',
@@ -8,12 +9,12 @@ export const metadata: Metadata = {
     type: 'website',
     title: 'Riyad Ketami | Links',
     description: 'Digital Entrepreneur · AI Consultant · Creator. 400K+ community.',
-    url: 'https://riyadketami.com/links',
+    url: `${SITE_URL}/links`,
     images: [
       {
-        url: 'https://riyadketami.com/portraits/portrait-hero.png',
-        width: 800,
-        height: 800,
+        url: `${SITE_URL}/portraits/portrait-hero.webp`,
+        width: 1600,
+        height: 2814,
         alt: 'Riyad Ketami',
       },
     ],
@@ -22,7 +23,7 @@ export const metadata: Metadata = {
     card: 'summary',
     title: 'Riyad Ketami | Links',
     description: 'Newsletter, resources, consulting, and social channels.',
-    images: ['https://riyadketami.com/portraits/portrait-hero.png'],
+    images: [`${SITE_URL}/portraits/portrait-hero.webp`],
   },
 };
 

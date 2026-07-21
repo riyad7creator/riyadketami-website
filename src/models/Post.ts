@@ -52,6 +52,8 @@ PostSchema.index({ language: 1, status: 1, createdAt: -1 });
 PostSchema.index({ tags: 1 });
 PostSchema.index({ category: 1, language: 1 });
 PostSchema.index({ translated_from: 1 }); // translation lookup
+PostSchema.index({ slug: 1, language: 1, status: 1 }); // getBlogPost() lookup path
+PostSchema.index({ status: 1, createdAt: -1 }); // admin listing filter
 
 const Post: Model<IPost> = mongoose.models.Post || mongoose.model<IPost>('Post', PostSchema);
 

@@ -22,7 +22,7 @@ export default function ServicesSection({ locale, dict }: ServicesSectionProps) 
       <ParallaxLayer speed={0.18} className="absolute inset-0 z-0">
         <div className="absolute inset-0">
           <Image
-            src="/images/section-consulting.png"
+            src="/images/section-consulting.webp"
             alt=""
             fill
             className="object-cover opacity-[0.06]"

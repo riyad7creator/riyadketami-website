@@ -87,7 +87,7 @@ export default function OgImage() {
         {/* Footer */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <span style={{ fontSize: 14, color: '#4b5563', fontFamily: 'monospace', letterSpacing: '0.1em' }}>
-            riyadketami.com
+            ketami.net
           </span>
           <div style={{ display: 'flex', gap: 16 }}>
             {['TikTok', 'YouTube', 'Instagram'].map((s) => (

@@ -1,16 +1,17 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import dbConnect from '@/lib/db/connect';
 import Post from '@/models/Post';
 import { postSchema } from '@/lib/validation';
 import DOMPurify from 'isomorphic-dompurify';
-import { requireAdmin, zodFail, serverError, generateSlug } from '@/lib/api-helpers';
+import { requireAdmin, zodFail, serverError, generateSlug, escapeRegex } from '@/lib/api-helpers';
 
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const isAdmin = searchParams.get('admin') === 'true';
-    const page = parseInt(searchParams.get('page') ?? '1');
-    const limit = parseInt(searchParams.get('limit') ?? '12');
+    const page = Math.max(1, parseInt(searchParams.get('page') ?? '1') || 1);
+    const limit = Math.min(50, Math.max(1, parseInt(searchParams.get('limit') ?? '12') || 12));
     const search = searchParams.get('search') ?? '';
     const tag = searchParams.get('tag') ?? '';
     const category = searchParams.get('category') ?? '';
@@ -26,17 +27,25 @@ export async function GET(req: Request) {
     const query: Record<string, unknown> = {};
     if (!isAdmin) query['status'] = 'published';
     if (language) query['language'] = language;
-    if (search) query['$or'] = [
-      { title: { $regex: search, $options: 'i' } },
-      { content: { $regex: search, $options: 'i' } },
-    ];
+    if (search) {
+      const safeSearch = escapeRegex(search);
+      query['$or'] = [
+        { title: { $regex: safeSearch, $options: 'i' } },
+        { content: { $regex: safeSearch, $options: 'i' } },
+      ];
+    }
     if (tag) query['tags'] = tag;
     if (category) query['category'] = category;
 
     const skip = (page - 1) * limit;
 
+    // For public requests, strip heavy fields (content, author full doc) to reduce payload
+    const publicSelect = '_id title slug excerpt featuredImage category tags status language views readTime createdAt updatedAt';
+
     const [posts, total] = await Promise.all([
-      Post.find(query).sort({ createdAt: -1 }).skip(skip).limit(limit).populate('author', 'name image'),
+      isAdmin
+        ? Post.find(query).sort({ createdAt: -1 }).skip(skip).limit(limit).populate('author', 'name image').lean()
+        : Post.find(query).sort({ createdAt: -1 }).skip(skip).limit(limit).select(publicSelect).lean(),
       Post.countDocuments(query),
     ]);
 
@@ -61,6 +70,15 @@ export async function POST(req: Request) {
     if (!data.slug && data.title) data.slug = generateSlug(data.title);
 
     const post = await Post.create({ ...data, author: check.session.user.id });
+
+    // Post reads go through Mongoose directly (not tagged fetch/unstable_cache), so
+    // ISR needs an explicit path revalidation to pick up a newly published post
+    // before its 300s window elapses — otherwise the homepage/blog list are stale.
+    if (post.status === 'published') {
+      revalidatePath(`/${post.language}`);
+      revalidatePath(`/${post.language}/blog`);
+    }
+
     return NextResponse.json(post, { status: 201 });
   } catch (error) {
     if ((error as { code?: number })?.code === 11000) {

@@ -19,7 +19,7 @@
     "audience": {
       "eyebrow": "// audience",
       "title": "A few million people are listening.",
-      "subtitle": "Across platforms, the work compounds."
+      "subtitle": "400K+ followers. Millions of views. The work compounds."
     },
     "about_teaser": {
       "eyebrow": "// who",
@@ -42,8 +42,8 @@
     },
     "newsletter": {
       "eyebrow": "// weekly insights",
-      "title": "Stay ahead of the curve.",
-      "subtitle": "Join 50,000+ entrepreneurs getting AI strategies, digital business tactics, and creator insights every week. Free.",
+      "title": "Signal, not noise.",
+      "subtitle": "Join 50,000+ founders and builders getting AI strategies, business tactics, and creator insights every week. Free.",
       "placeholder": "your@email.com",
       "cta": "Subscribe free",
       "success": "// you're in. Check your inbox."
@@ -63,7 +63,7 @@
     },
     "products": {
       "eyebrow": "// what i offer",
-      "title": "Everything you need to build and grow.",
+      "title": "Start free. Go deeper when ready.",
       "subtitle": "Resources, systems, and strategies built from real experience with a 400K+ community.",
       "items": [
         {
@@ -120,10 +120,10 @@
     "subheadline": "I build in the AI era and share everything along the way with a 400K+ community.",
     "bio": [
       "Started in digital marketing. Moved into product and AI. Built in public, and a community of 400K+ people started paying attention.",
-      "Today I run an independent practice: AI consulting for ambitious teams, content that teaches real skills, and software that solves real problems."
+      "Today I run an independent practice: AI consulting for ambitious teams across MENA and beyond, content that teaches real skills, and software that solves real problems."
     ],
     "skills_eyebrow": "// stack",
-    "skills_title": "What I bring to the table.",
+    "skills_title": "The operating stack.",
     "skills": [
       "Product strategy",
       "Full-stack development",
@@ -260,7 +260,7 @@
   "services": {
     "eyebrow": "// how i can help",
     "headline": "Services",
-    "subheadline": "Strategy, workshops, and keynotes. No fluff, just results.",
+    "subheadline": "Strategy, workshops, and keynotes — in English, French, or Arabic.",
     "items": [
       {
         "tag": "Consulting",

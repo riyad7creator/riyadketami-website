@@ -45,7 +45,7 @@ const FOLDER_TABS: { value: MediaFolder | 'all'; label: string }[] = [
 type ProcessResult = { blob: Blob; width?: number; height?: number; mimeType: string };
 
 async function processForFolder(file: File, folder: MediaFolder | 'all'): Promise<ProcessResult> {
-  if (file.type === 'image/svg+xml' || file.type === 'image/gif') {
+  if (file.type === 'image/gif') {
     return { blob: file, mimeType: file.type };
   }
   switch (folder) {
@@ -299,7 +299,7 @@ export default function MediaPickerModal({
                           <p className="text-sm text-text-1">
                             Drop image or <span className="text-matrix">click to browse</span>
                           </p>
-                          <p className="text-xs text-text-2 mt-1">JPG · PNG · GIF · SVG · WebP · max 10 MB</p>
+                          <p className="text-xs text-text-2 mt-1">JPG · PNG · GIF · WebP · max 10 MB</p>
                           {propFolder && (
                             <p className="text-xs font-mono text-matrix/50 mt-1">→ saves to /{propFolder}</p>
                           )}
@@ -315,7 +315,7 @@ export default function MediaPickerModal({
                   <input
                     ref={fileInputRef}
                     type="file"
-                    accept="image/jpeg,image/png,image/webp,image/gif,image/svg+xml"
+                    accept="image/jpeg,image/png,image/webp,image/gif"
                     className="hidden"
                     onChange={handleFileInput}
                   />

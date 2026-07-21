@@ -1,5 +1,6 @@
 import { createHmac } from 'crypto';
 import { NextResponse } from 'next/server';
+import DOMPurify from 'isomorphic-dompurify';
 import dbConnect from '@/lib/db/connect';
 import Subscriber from '@/models/Subscriber';
 import { requireAdmin, serverError } from '@/lib/api-helpers';
@@ -13,7 +14,7 @@ interface SendBody {
 
 const BATCH_SIZE = 100; // Resend batch API limit
 
-const APP_URL = process.env.NEXTAUTH_URL ?? 'https://riyadketami.com';
+const APP_URL = process.env.NEXTAUTH_URL ?? 'https://ketami.net';
 
 /** Deterministic per-email unsubscribe token (HMAC — no DB storage needed) */
 function unsubToken(email: string): string {
@@ -37,6 +38,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'subject and body are required' }, { status: 400 });
     }
 
+    const safeContent = DOMPurify.sanitize(content);
+
     const resend = getResend();
     if (!resend) {
       return NextResponse.json({ error: 'RESEND_API_KEY is not configured' }, { status: 500 });
@@ -57,10 +60,10 @@ export async function POST(req: Request) {
         '// newsletter',
         `<h2 style="font-size:22px;font-weight:700;color:#f9fafb;margin:0 0 16px;">${escHtml(subject)}</h2>
          ${preview ? `<p style="color:#9ca3af;font-size:13px;margin:0 0 24px;">${escHtml(preview)}</p>` : ''}
-         <div style="color:#d1d5db;font-size:15px;line-height:1.7;">${content}</div>
+         <div style="color:#d1d5db;font-size:15px;line-height:1.7;">${safeContent}</div>
          <hr style="border:none;border-top:1px solid #1f2937;margin:32px 0;" />
          <p style="color:#6b7280;font-size:12px;">
-           You received this because you subscribed at riyadketami.com.&nbsp;
+           You received this because you subscribed at ketami.net.&nbsp;
            <a href="${unsub}" style="color:#6b7280;text-decoration:underline;">Unsubscribe</a>
          </p>`
       );

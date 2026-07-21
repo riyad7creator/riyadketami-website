@@ -19,7 +19,7 @@ export default function BlogTeaser({ locale, dict, posts }: BlogTeaserProps) {
       <ParallaxLayer speed={0.12} className="absolute inset-0 z-0">
         <div className="absolute inset-0">
           <Image
-            src="/images/section-blog.png"
+            src="/images/section-blog.webp"
             alt=""
             fill
             className="object-cover opacity-[0.05]"

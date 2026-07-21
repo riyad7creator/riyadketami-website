@@ -19,7 +19,7 @@
     "audience": {
       "eyebrow": "// audience",
       "title": "Quelques millions de personnes écoutent.",
-      "subtitle": "Sur toutes les plateformes, le travail s'accumule."
+      "subtitle": "400K+ abonnés. Des millions de vues. Le travail s'accumule."
     },
     "about_teaser": {
       "eyebrow": "// qui",
@@ -38,20 +38,20 @@
       "title": "Notes de chantier.",
       "subtitle": "Ce qui marche. Ce qui ne marche pas. Ce que je cherche encore.",
       "cta": "Parcourir les archives",
-      "empty": "Les articles arrivent. Reviens bientôt."
+      "empty": "Les articles arrivent. Revenez bientôt."
     },
     "newsletter": {
       "eyebrow": "// insights hebdomadaires",
-      "title": "Prenez de l'avance.",
-      "subtitle": "Rejoignez 50 000+ entrepreneurs qui reçoivent chaque semaine des stratégies IA, des tactiques créateur et des insights business digitaux. Gratuit.",
+      "title": "Du signal, pas du bruit.",
+      "subtitle": "Rejoignez 50 000+ fondateurs et créateurs qui reçoivent chaque semaine des stratégies IA, des tactiques business et des insights créateur. Gratuit.",
       "placeholder": "votre@email.com",
       "cta": "S'inscrire gratuitement",
       "success": "// c'est fait. Vérifiez votre boîte mail."
     },
     "speaking": {
       "eyebrow": "// conférences & événements",
-      "title": "Bookez-moi pour votre prochain événement.",
-      "subtitle": "Keynotes, workshops et tables rondes sur l'IA, l'entrepreneuriat digital et le build en public. Disponible dans le monde entier.",
+      "title": "Invitez-moi à votre prochain événement.",
+      "subtitle": "Keynotes, workshops et tables rondes sur l'IA, l'entrepreneuriat digital et la construction en public. Disponible dans le monde entier.",
       "stat_events": "30+",
       "stat_events_label": "Événements",
       "stat_continents": "3",
@@ -63,19 +63,19 @@
     },
     "products": {
       "eyebrow": "// ce que j'offre",
-      "title": "Tout ce qu'il faut pour construire et croître.",
+      "title": "Commencez gratuitement. Allez plus loin quand vous êtes prêt.",
       "subtitle": "Ressources, systèmes et stratégies issus d'une expérience réelle avec une communauté de 400K+.",
       "items": [
         {
           "tag": "Gratuit",
           "name": "La Newsletter",
-          "description": "Stratégies IA, tactiques créateur et insights business digital chaque semaine. 50 000+ lecteurs déjà à l'intérieur.",
+          "description": "Stratégies IA, tactiques créateur et insights business digital chaque semaine. Déjà 50 000+ lecteurs abonnés.",
           "cta": "S'inscrire gratuitement"
         },
         {
           "tag": "Formation",
           "name": "Masterclass IA Business",
-          "description": "Les systèmes et workflows IA que j'utilise pour gérer un business digital high-output à une fraction du coût habituel.",
+          "description": "Les systèmes et workflows IA que j'utilise pour gérer un business digital à haut rendement, à une fraction du coût habituel.",
           "cta": "Accéder"
         },
         {
@@ -120,10 +120,10 @@
     "subheadline": "Je construis dans l'ère de l'IA et partage tout avec une communauté de 400K+.",
     "bio": [
       "Commencé dans le marketing digital. Passé au produit et à l'IA. Construit en public, et une communauté de 400K+ personnes a commencé à suivre.",
-      "Aujourd'hui je gère une pratique indépendante : consulting IA pour équipes ambitieuses, contenu qui enseigne des compétences réelles, et logiciels qui résolvent de vrais problèmes."
+      "Aujourd'hui je gère une pratique indépendante : consulting IA pour des équipes ambitieuses de la région MENA et d'ailleurs, contenu qui enseigne des compétences réelles, et logiciels qui résolvent de vrais problèmes."
     ],
     "skills_eyebrow": "// stack",
-    "skills_title": "Ce que j'apporte à la table.",
+    "skills_title": "La stack opérationnelle.",
     "skills": [
       "Stratégie produit",
       "Développement full-stack",
@@ -199,7 +199,7 @@
       },
       {
         "q": "Travaillez-vous avec des fondateurs en phase initiale ?",
-        "a": "Oui, si le problème est bien défini. Je fonctionne mieux quand la direction existe et que l'exécution est le manque."
+        "a": "Oui, si le problème est bien défini. Je fonctionne mieux quand la direction existe et que l'exécution est le maillon manquant."
       },
       {
         "q": "Quelle est la politique d'annulation ?",
@@ -255,12 +255,12 @@
     "newsletter_title": "IA & business, chaque semaine.",
     "newsletter_cta": "S'inscrire gratuitement",
     "newsletter_placeholder": "votre@email.com",
-    "newsletter_success": "// c'est parti"
+    "newsletter_success": "// c'est fait"
   },
   "services": {
     "eyebrow": "// comment je peux aider",
     "headline": "Services",
-    "subheadline": "Conseil, ateliers et conférences. Sans bullshit, avec des résultats.",
+    "subheadline": "Conseil, ateliers et conférences — en français, en anglais ou en arabe.",
     "items": [
       {
         "tag": "Conseil",
@@ -277,7 +277,7 @@
       {
         "tag": "Atelier",
         "name": "Animation d'Ateliers",
-        "description": "Ateliers demi-journée ou journée entière pour aligner votre équipe et passer à l'action. Concret, pratique, zéro bullshit corporate.",
+        "description": "Ateliers demi-journée ou journée entière pour aligner votre équipe et passer à l'action. Concret, pratique, zéro jargon corporate.",
         "features": [
           "Programme sur mesure",
           "Formats demi-journée ou journée",
@@ -289,7 +289,7 @@
       {
         "tag": "Conférence",
         "name": "Keynote & Conférence",
-        "description": "Interventions sur l'IA, l'entrepreneuriat digital et le build en public, pour conférences, sommets et événements corporate. Disponible dans le monde entier.",
+        "description": "Interventions sur l'IA, l'entrepreneuriat digital et la construction en public, pour conférences, sommets et événements corporate. Disponible dans le monde entier.",
         "features": [
           "Keynotes & tables rondes",
           "Conférences & événements corporate",

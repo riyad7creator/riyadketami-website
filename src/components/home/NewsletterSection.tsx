@@ -56,13 +56,15 @@ export default function NewsletterSection({ dict }: NewsletterSectionProps) {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 w-full">
+              <label htmlFor="newsletter-email" className="sr-only">{dict.contact.fields.email}</label>
               <input
+                id="newsletter-email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder={t.placeholder}
                 required
-                className="flex-1 h-11 px-4 rounded-[var(--radius-md)] bg-bg-2 border border-border text-text-0 placeholder:text-text-2 text-sm focus:outline-none focus:border-matrix transition-colors duration-[var(--duration-fast)]"
+                className="flex-1 h-11 px-4 rounded-[var(--radius-md)] bg-bg-2 border border-border text-text-0 placeholder:text-text-1 text-sm focus:outline-none focus:border-matrix transition-colors duration-[var(--duration-fast)]"
               />
               <button
                 type="submit"

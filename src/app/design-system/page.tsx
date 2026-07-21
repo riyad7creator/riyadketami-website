@@ -1,4 +1,6 @@
 import { Suspense } from 'react';
+import { notFound } from 'next/navigation';
+import { auth } from '@/auth';
 import {
   Button,
   Pill,
@@ -32,7 +34,10 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
-export default function DesignSystemPage() {
+export default async function DesignSystemPage() {
+  const session = await auth();
+  if (session?.user?.role !== 'admin') notFound();
+
   return (
     <div className="max-w-4xl mx-auto px-5 py-16 flex flex-col gap-16">
       <div>

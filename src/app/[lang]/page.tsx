@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { isValidLocale } from '@/i18n/config';
 import { getDictionary } from '@/lib/dictionaries';
 import { getHomeData } from '@/lib/home-data';
+import { SITE_URL } from '@/lib/constants';
 import Hero from '@/components/home/Hero';
 import FollowerStrip from '@/components/home/FollowerStrip';
 import ServicesSection from '@/components/home/ServicesSection';
@@ -22,7 +23,7 @@ const personJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: 'Riyad Ketami',
-  url: 'https://riyadketami.com',
+  url: SITE_URL,
   jobTitle: 'Digital Entrepreneur & AI Consultant',
   description: 'Digital entrepreneur, AI consultant, and content creator with 400K+ community.',
   sameAs: [
@@ -48,9 +49,9 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
       <Hero locale={lang} dict={dict} socials={socials} />
       <FollowerStrip lang={lang} dict={dict} entries={socials} />
       <ServicesSection locale={lang} dict={dict} />
+      <TestimonialsSection dict={dict} />
       <AboutTeaser locale={lang} dict={dict} />
       <NewsletterSection dict={dict} />
-      <TestimonialsSection dict={dict} />
       <BlogTeaser locale={lang} dict={dict} posts={posts} />
     </>
   );

@@ -105,7 +105,7 @@ export default async function LinksPage() {
     )
   ).filter((x): x is NonNullable<typeof x> => x !== null);
 
-  const imgSrc = profileImage ?? '/portraits/portrait-hero.png';
+  const imgSrc = profileImage ?? '/portraits/portrait-hero.webp';
 
   return (
     <main className="relative min-h-[100dvh] flex flex-col items-center justify-start bg-bg-0 overflow-hidden px-5 py-12 sm:py-20">

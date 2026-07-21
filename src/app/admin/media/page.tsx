@@ -53,7 +53,7 @@ function fmtBytes(n: number) {
 type ProcessResult = { blob: Blob; width?: number; height?: number; mimeType: string };
 
 async function processForFolder(file: File, folder: MediaFolder | 'all'): Promise<ProcessResult> {
-  if (file.type === 'image/svg+xml' || file.type === 'image/gif') {
+  if (file.type === 'image/gif') {
     return { blob: file, mimeType: file.type };
   }
   switch (folder) {
@@ -333,7 +333,7 @@ function DropzoneCard({ activeFolder, onUploaded }: DropzoneCardProps) {
           <Upload size={16} className="text-text-2" />
           <div className="text-center px-2">
             <p className="text-xs text-text-1">Drop or click</p>
-            <p className="text-[9px] font-mono text-text-2 mt-0.5">JPG PNG SVG WebP</p>
+            <p className="text-[9px] font-mono text-text-2 mt-0.5">JPG PNG GIF WebP</p>
           </div>
           {error && <p className="text-[9px] text-danger px-2 text-center leading-tight">{error}</p>}
         </>
@@ -341,7 +341,7 @@ function DropzoneCard({ activeFolder, onUploaded }: DropzoneCardProps) {
       <input
         ref={fileInputRef}
         type="file"
-        accept="image/jpeg,image/png,image/webp,image/gif,image/svg+xml"
+        accept="image/jpeg,image/png,image/webp,image/gif"
         className="hidden"
         onChange={(e) => { const f = e.target.files?.[0]; if (f) void handleUpload(f); e.target.value = ''; }}
       />
@@ -466,7 +466,7 @@ export default function AdminMediaPage() {
         <input
           ref={fileInputRef}
           type="file"
-          accept="image/jpeg,image/png,image/webp,image/gif,image/svg+xml"
+          accept="image/jpeg,image/png,image/webp,image/gif"
           className="hidden"
           onChange={(e) => {
             const f = e.target.files?.[0];

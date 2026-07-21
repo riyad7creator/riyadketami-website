@@ -1,7 +1,7 @@
 import { Resend } from 'resend';
 
 export const RESEND_API_KEY = process.env.RESEND_API_KEY;
-export const FROM_EMAIL = process.env.FROM_EMAIL ?? 'noreply@riyadketami.com';
+export const FROM_EMAIL = process.env.FROM_EMAIL ?? 'noreply@ketami.net';
 export const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? 'riyad@ketami.net';
 
 // Module-level singleton — created once, reused across requests

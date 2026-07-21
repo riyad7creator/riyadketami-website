@@ -18,7 +18,7 @@ export default function AboutTeaser({ locale, dict }: AboutTeaserProps) {
       <ParallaxLayer speed={0.15} className="absolute inset-0 z-0">
         <div className="absolute inset-0">
           <Image
-            src="/images/workspace-bg.png"
+            src="/images/workspace-bg.webp"
             alt=""
             fill
             className="object-cover opacity-[0.08]"

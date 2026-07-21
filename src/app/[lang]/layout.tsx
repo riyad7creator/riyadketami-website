@@ -52,7 +52,10 @@ export default async function LangLayout({
 
   return (
     <>
-      <link rel="preload" as="image" href="/portraits/portrait-hero.png" fetchPriority="high" />
+      {/* No manual preload here: next/image's `priority` prop on HeroPortrait/About
+          already emits its own optimized preload link where the image is actually
+          rendered. This layout wraps every locale route, so a blanket preload here
+          forced an 8MB raw-file download even on pages that never show the portrait. */}
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[var(--z-toast)] focus:px-4 focus:py-2 focus:bg-matrix focus:text-bg-0 focus:text-sm focus:font-medium focus:rounded-[var(--radius-md)]"

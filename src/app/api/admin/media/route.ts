@@ -5,7 +5,21 @@ import { requireAdmin, serverError, escapeRegex } from '@/lib/api-helpers';
 import type { MediaFolder } from '@/types/media';
 
 const MAX_FILE_SIZE = 4 * 1024 * 1024; // 4 MB — BSON doc limit safety margin
-const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'];
+// SVG intentionally excluded — arbitrary <script> inside an SVG stored as a
+// data: URL is a stored-XSS vector, and nothing on this site currently uses SVG uploads.
+const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+
+/** Validate file magic bytes so a renamed/relabeled file can't spoof its declared MIME type */
+function detectMimeType(buf: Buffer): string | null {
+  if (buf[0] === 0xFF && buf[1] === 0xD8 && buf[2] === 0xFF) return 'image/jpeg';
+  if (buf[0] === 0x89 && buf[1] === 0x50 && buf[2] === 0x4E && buf[3] === 0x47) return 'image/png';
+  if (buf[0] === 0x47 && buf[1] === 0x49 && buf[2] === 0x46) return 'image/gif';
+  if (
+    buf[0] === 0x52 && buf[1] === 0x49 && buf[2] === 0x46 && buf[3] === 0x46 &&
+    buf[8] === 0x57 && buf[9] === 0x45 && buf[10] === 0x42 && buf[11] === 0x50
+  ) return 'image/webp';
+  return null;
+}
 
 /** GET /api/admin/media — paginated list OR ?stats=true for aggregated counts */
 export async function GET(req: Request) {
@@ -89,7 +103,13 @@ export async function POST(req: Request) {
     const height = formData.get('height') ? parseInt(formData.get('height') as string, 10) : undefined;
 
     const buffer = Buffer.from(await file.arrayBuffer());
-    const url = `data:${file.type};base64,${buffer.toString('base64')}`;
+
+    const detectedType = detectMimeType(buffer);
+    if (!detectedType || !ALLOWED_TYPES.includes(detectedType)) {
+      return NextResponse.json({ error: 'File content does not match its declared type.' }, { status: 400 });
+    }
+
+    const url = `data:${detectedType};base64,${buffer.toString('base64')}`;
 
     const timestamp = Date.now();
     const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_').toLowerCase();
@@ -103,7 +123,7 @@ export async function POST(req: Request) {
       originalName: file.name,
       url,
       storagePath,
-      mimeType: file.type,
+      mimeType: detectedType,
       sizeBytes: file.size,
       width,
       height,

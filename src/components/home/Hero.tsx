@@ -87,7 +87,7 @@ export default function Hero({ locale, dict, socials = [] }: HeroProps) {
         </div>
 
         <div className="order-1 md:order-2 relative aspect-square w-full max-w-[480px] mx-auto">
-          <HeroPortrait src="/portraits/portrait-hero.png" />
+          <HeroPortrait src="/portraits/portrait-hero.webp" />
         </div>
       </div>
 

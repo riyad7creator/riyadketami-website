@@ -21,6 +21,11 @@ export default function Card({ children, tilt = false, glow = false, className =
   const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-8, 8]), { stiffness: 300, damping: 30 });
   const glowX = useTransform(mouseX, [-0.5, 0.5], [0, 100]);
   const glowY = useTransform(mouseY, [-0.5, 0.5], [0, 100]);
+  // Must be called unconditionally (Rules of Hooks) even though its result is only used when `glow` is true.
+  const glowBackground = useTransform(
+    [glowX, glowY],
+    ([x, y]) => `radial-gradient(circle at ${x}% ${y}%, rgba(0,255,102,0.08) 0%, transparent 60%)`
+  );
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!tilt || !ref.current) return;
@@ -48,12 +53,7 @@ export default function Card({ children, tilt = false, glow = false, className =
       {glow && (
         <motion.div
           className="absolute inset-0 pointer-events-none rounded-[var(--radius-lg)] opacity-0 group-hover:opacity-100"
-          style={{
-            background: useTransform(
-              [glowX, glowY],
-              ([x, y]) => `radial-gradient(circle at ${x}% ${y}%, rgba(0,255,102,0.08) 0%, transparent 60%)`
-            ),
-          }}
+          style={{ background: glowBackground }}
         />
       )}
       {children}

@@ -1,5 +1,8 @@
 // Pure constants — no mongoose dependency, safe to import in client components
 
+/** Canonical production origin — single source of truth for metadata, sitemap, emails. */
+export const SITE_URL = process.env.NEXTAUTH_URL ?? 'https://ketami.net';
+
 export const BLOG_CATEGORIES = [
   { value: 'business', label: 'Business' },
   { value: 'digital-marketing', label: 'Digital Marketing' },

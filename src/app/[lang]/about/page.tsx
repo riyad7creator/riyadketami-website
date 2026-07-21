@@ -39,7 +39,7 @@ export default async function AboutPage({
       <section className="relative pt-32 pb-16 px-5 sm:px-8 overflow-hidden">
         {/* Static background texture */}
         <Image
-          src="/images/matrix-bg-about.png"
+          src="/images/matrix-bg-about.webp"
           alt=""
           fill
           className="object-cover opacity-[0.06]"
@@ -73,7 +73,7 @@ export default async function AboutPage({
             <div className="relative aspect-[4/3] w-full max-w-[480px] mx-auto rounded-[var(--radius-lg)] overflow-hidden border border-border">
               {/* Full-bleed consulting visual background */}
               <Image
-                src="/images/consulting-visual.png"
+                src="/images/consulting-visual.webp"
                 alt=""
                 fill
                 className="object-cover"
@@ -85,7 +85,7 @@ export default async function AboutPage({
               {/* Portrait inset — bottom-left corner */}
               <div className="absolute bottom-5 left-5 w-24 h-24 rounded-full border-2 border-matrix/60 overflow-hidden shadow-[0_0_24px_rgba(0,255,102,0.25)]">
                 <Image
-                  src="/portraits/portrait-hero.png"
+                  src="/portraits/portrait-hero.webp"
                   alt="Riyad Ketami"
                   fill
                   className="object-cover object-top"

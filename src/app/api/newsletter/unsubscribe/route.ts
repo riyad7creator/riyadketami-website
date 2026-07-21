@@ -31,7 +31,7 @@ function buildPage(title: string, message: string): string {
     <p class="eyebrow">// newsletter</p>
     <h1>${title}</h1>
     <p>${message}</p>
-    <p><a href="https://riyadketami.com/en">← Back to site</a></p>
+    <p><a href="https://ketami.net/en">← Back to site</a></p>
   </div>
 </body>
 </html>`;

@@ -1,8 +1,9 @@
 import type { MetadataRoute } from 'next';
 import { locales } from '@/i18n/config';
 import { getBlogPosts } from '@/lib/blog-data';
+import { SITE_URL } from '@/lib/constants';
 
-const BASE = 'https://riyadketami.com';
+const BASE = SITE_URL;
 
 const STATIC_PATHS = ['', '/about', '/services', '/blog', '/contact'];
 

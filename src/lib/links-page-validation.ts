@@ -15,53 +15,62 @@ const optionalUrl = z.string().url().optional().or(z.literal(''));
 // LinkCard
 // ---------------------------------------------------------------------------
 
-export const linkCardSchema = z
-  .object({
-    section: z.enum(['sponsored', 'resource', 'service', 'fallback']),
-    title: z.string().min(1, 'Title is required').max(80),
-    description: z.string().max(200).optional(),
-    href: safeHref,
-    icon: z.string().max(50).optional(),
-    thumbnail: optionalUrl,
-    pillLabel: z.string().max(20).optional(),
-    pillVariant: z.enum(['sponsored', 'new', 'free', 'booking', 'affiliate', 'custom']).optional(),
-    pillColor: z.string().max(20).optional(),
-    order: z.number().int().min(0).optional(),
-    active: z.boolean().optional(),
-    startsAt: z.string().datetime().nullable().optional(),
-    endsAt: z.string().datetime().nullable().optional(),
-  })
-  .refine(
-    (d) => {
-      if (d.startsAt && d.endsAt) return new Date(d.startsAt) < new Date(d.endsAt);
-      return true;
-    },
-    { message: 'Start date must be before end date', path: ['endsAt'] }
-  );
+const linkCardShape = z.object({
+  section: z.enum(['sponsored', 'resource', 'service', 'fallback']),
+  title: z.string().min(1, 'Title is required').max(80),
+  description: z.string().max(200).optional(),
+  href: safeHref,
+  icon: z.string().max(50).optional(),
+  thumbnail: optionalUrl,
+  pillLabel: z.string().max(20).optional(),
+  pillVariant: z.enum(['sponsored', 'new', 'free', 'booking', 'affiliate', 'custom']).optional(),
+  pillColor: z.string().max(20).optional(),
+  order: z.number().int().min(0).optional(),
+  active: z.boolean().optional(),
+  startsAt: z.string().datetime().nullable().optional(),
+  endsAt: z.string().datetime().nullable().optional(),
+});
 
-export const linkCardPatchSchema = linkCardSchema.partial().omit({ section: true });
+/** Zod v4: .partial() cannot be applied after .refine(), so the base shape
+ *  is kept separate and the date-order check is reapplied on each derived schema. */
+const validDateOrder = (d: { startsAt?: string | null; endsAt?: string | null }) => {
+  if (d.startsAt && d.endsAt) return new Date(d.startsAt) < new Date(d.endsAt);
+  return true;
+};
+const dateOrderRefinement = {
+  message: 'Start date must be before end date',
+  path: ['endsAt'],
+};
+
+export const linkCardSchema = linkCardShape.refine(validDateOrder, dateOrderRefinement);
+
+export const linkCardPatchSchema = linkCardShape
+  .omit({ section: true })
+  .partial()
+  .refine(validDateOrder, dateOrderRefinement);
 
 // ---------------------------------------------------------------------------
 // LatestSource
 // ---------------------------------------------------------------------------
 
-export const latestSourceSchema = z
-  .object({
-    type: z.enum(['youtube', 'blog', 'tiktok', 'instagram']),
-    label: z.string().min(1).max(50),
-    rssUrl: optionalUrl,
-    manualUrl: optionalUrl,
-    manualTitle: z.string().max(200).optional(),
-    manualThumb: optionalUrl,
-    active: z.boolean().optional(),
-    order: z.number().int().min(0).optional(),
-  })
-  .refine(
-    (d) => (d.rssUrl && d.rssUrl.length > 0) || (d.manualUrl && d.manualTitle),
-    { message: 'Either rssUrl or both manualUrl and manualTitle are required' }
-  );
+const latestSourceShape = z.object({
+  type: z.enum(['youtube', 'blog', 'tiktok', 'instagram']),
+  label: z.string().min(1).max(50),
+  rssUrl: optionalUrl,
+  manualUrl: optionalUrl,
+  manualTitle: z.string().max(200).optional(),
+  manualThumb: optionalUrl,
+  active: z.boolean().optional(),
+  order: z.number().int().min(0).optional(),
+});
 
-export const latestSourcePatchSchema = latestSourceSchema.partial();
+export const latestSourceSchema = latestSourceShape.refine(
+  (d) => (d.rssUrl && d.rssUrl.length > 0) || Boolean(d.manualUrl && d.manualTitle),
+  { message: 'Either rssUrl or both manualUrl and manualTitle are required' }
+);
+
+/** Patch omits the either/or requirement — a partial update may touch only one field. */
+export const latestSourcePatchSchema = latestSourceShape.partial();
 
 // ---------------------------------------------------------------------------
 // SiteProfile

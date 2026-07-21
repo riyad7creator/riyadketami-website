@@ -54,13 +54,15 @@ export default function NewsletterCard({ subscriberCount }: { subscriberCount: n
         </p>
       ) : (
         <form onSubmit={(e) => void handleSubmit(e)} className="flex flex-col gap-2">
+          <label htmlFor="links-newsletter-email" className="sr-only">Email</label>
           <input
+            id="links-newsletter-email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="your@email.com"
             required
-            className="w-full bg-bg-1 border border-border rounded-[var(--radius-md)] px-3 py-2.5 text-sm text-text-0 placeholder:text-text-2 focus:outline-none focus:border-matrix/50 transition-colors"
+            className="w-full bg-bg-1 border border-border rounded-[var(--radius-md)] px-3 py-2.5 text-sm text-text-0 placeholder:text-text-1 focus:outline-none focus:border-matrix/50 transition-colors"
           />
           <button
             type="submit"

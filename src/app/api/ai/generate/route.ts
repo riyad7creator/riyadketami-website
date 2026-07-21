@@ -33,7 +33,7 @@ Write in a clear, authoritative, and practical style. Aim for 600-1000 words.`;
       headers: {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://riyadketami.com',
+        'HTTP-Referer': 'https://ketami.net',
         'X-Title': 'Riyad Ketami Admin',
       },
       body: JSON.stringify({

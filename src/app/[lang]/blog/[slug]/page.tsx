@@ -6,6 +6,7 @@ import DOMPurify from 'isomorphic-dompurify';
 import { isValidLocale } from '@/i18n/config';
 import { getDictionary } from '@/lib/dictionaries';
 import { getBlogPost } from '@/lib/blog-data';
+import { SITE_URL } from '@/lib/constants';
 import { Pill, Reveal } from '@/components/ui';
 import { ArrowLeft } from 'lucide-react';
 import ViewTracker from '@/components/blog/ViewTracker';
@@ -21,7 +22,10 @@ export async function generateMetadata({
   if (!isValidLocale(lang)) return {};
   const post = await getBlogPost(lang, slug);
   if (!post) return { title: 'Post not found' };
-  const APP_URL = process.env.NEXTAUTH_URL ?? 'https://riyadketami.com';
+  const APP_URL = SITE_URL;
+  // Explicit fallback — this route defines its own `openGraph` object, which
+  // means it no longer inherits the root opengraph-image.tsx file convention.
+  const ogImage = post.featuredImage ?? `${APP_URL}/opengraph-image`;
   return {
     title: post.title,
     description: post.excerpt,
@@ -31,7 +35,14 @@ export async function generateMetadata({
       description: post.excerpt,
       url: `${APP_URL}/${lang}/blog/${slug}`,
       publishedTime: post.createdAt ? new Date(post.createdAt).toISOString() : undefined,
-      images: post.featuredImage ? [post.featuredImage] : undefined,
+      modifiedTime: post.updatedAt ? new Date(post.updatedAt).toISOString() : undefined,
+      images: [ogImage],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.excerpt,
+      images: [ogImage],
     },
   };
 }
@@ -49,7 +60,7 @@ export default async function BlogPostPage({
 
   const cleanHtml = DOMPurify.sanitize(post.content);
 
-  const APP_URL = process.env.NEXTAUTH_URL ?? 'https://riyadketami.com';
+  const APP_URL = SITE_URL;
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Article',

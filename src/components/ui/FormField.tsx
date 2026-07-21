@@ -10,7 +10,7 @@ interface FormFieldProps extends ComponentPropsWithoutRef<'input'> {
 }
 
 const inputBase =
-  'w-full bg-surface border border-border rounded-[var(--radius-md)] px-4 py-2.5 text-text-0 placeholder:text-text-2 text-sm transition-colors duration-[var(--duration-fast)] focus:outline-none focus:border-accent/60 focus:ring-1 focus:ring-accent/30 disabled:opacity-50';
+  'w-full bg-surface border border-border rounded-[var(--radius-md)] px-4 py-2.5 text-text-0 placeholder:text-text-1 text-sm transition-colors duration-[var(--duration-fast)] focus:outline-none focus:border-accent/60 focus:ring-1 focus:ring-accent/30 disabled:opacity-50';
 
 export default function FormField({
   label,
@@ -58,7 +58,7 @@ export default function FormField({
       )}
 
       {(error || hint) && (
-        <p className={`text-xs ${error ? 'text-danger' : 'text-text-2'}`}>
+        <p className={`text-xs ${error ? 'text-danger' : 'text-text-1'}`}>
           {error ?? hint}
         </p>
       )}

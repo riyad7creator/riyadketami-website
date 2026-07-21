@@ -173,8 +173,8 @@ export async function processImage(
 
   const mimeType = `image/${format}`;
 
-  // SVGs and GIFs pass through unchanged (canvas mangles them)
-  if (file.type === 'image/svg+xml' || file.type === 'image/gif') {
+  // GIFs pass through unchanged (canvas mangles them)
+  if (file.type === 'image/gif') {
     const dataUrl = await new Promise<string>((res) => {
       const reader = new FileReader();
       reader.onload = () => res(reader.result as string);

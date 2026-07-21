@@ -191,7 +191,7 @@ export async function processImage(
     const { width, height, sx, sy, sw, sh } = calcDimensions(srcW, srcH, maxWidth, maxHeight, fit);
 
     // Build the (possibly cropped) source canvas
-    let srcCanvas = document.createElement('canvas');
+    const srcCanvas = document.createElement('canvas');
     srcCanvas.width = sw;
     srcCanvas.height = sh;
     srcCanvas.getContext('2d')!.drawImage(img, sx, sy, sw, sh, 0, 0, sw, sh);

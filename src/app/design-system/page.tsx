@@ -6,7 +6,6 @@ import {
   Pill,
   Badge,
   SectionHeader,
-  Reveal,
   Card,
   Stat,
   Testimonial,

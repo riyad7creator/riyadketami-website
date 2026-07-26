@@ -285,7 +285,7 @@ function CardForm({
             <input
               value={form.pillColor ?? ''}
               onChange={(e) => set('pillColor', e.target.value)}
-              placeholder="#00ff66"
+              placeholder="#00cd29"
               className={inputCls}
             />
           </div>

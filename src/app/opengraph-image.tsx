@@ -16,7 +16,7 @@ export default function OgImage() {
           flexDirection: 'column',
           justifyContent: 'space-between',
           padding: '72px 80px',
-          backgroundColor: '#0a0b0d',
+          backgroundColor: '#111111',
           fontFamily: 'sans-serif',
           position: 'relative',
         }}
@@ -29,7 +29,7 @@ export default function OgImage() {
             left: 0,
             right: 0,
             height: '3px',
-            background: 'linear-gradient(90deg, #00ff66 0%, transparent 60%)',
+            background: 'linear-gradient(90deg, #00CD29 0%, transparent 60%)',
           }}
         />
 
@@ -42,16 +42,16 @@ export default function OgImage() {
             width: 500,
             height: 500,
             borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(0,255,102,0.08) 0%, transparent 70%)',
+            background: 'radial-gradient(circle, rgba(0,205,41,0.08) 0%, transparent 70%)',
           }}
         />
 
-        {/* Logo */}
+        {/* "RK." minimal mark */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          <span style={{ fontSize: 28, fontWeight: 700, color: '#ffffff', letterSpacing: -1 }}>
+          <span style={{ fontSize: 28, fontWeight: 700, color: '#F4F4EF', letterSpacing: -1 }}>
             RK
           </span>
-          <span style={{ fontSize: 28, fontWeight: 700, color: '#00ff66' }}>.</span>
+          <span style={{ fontSize: 28, fontWeight: 700, color: '#00CD29' }}>.</span>
         </div>
 
         {/* Main content */}
@@ -60,7 +60,7 @@ export default function OgImage() {
             style={{
               fontSize: 13,
               letterSpacing: '0.2em',
-              color: '#00ff66',
+              color: '#00CD29',
               fontFamily: 'monospace',
               textTransform: 'uppercase',
             }}
@@ -71,14 +71,14 @@ export default function OgImage() {
             style={{
               fontSize: 72,
               fontWeight: 800,
-              color: '#ffffff',
+              color: '#F4F4EF',
               lineHeight: 1.0,
-              letterSpacing: -3,
+              letterSpacing: 0,
             }}
           >
-            Riyad Ketami
+            RIYAD KETAMI
           </div>
-          <div style={{ fontSize: 22, color: '#9ca3af', lineHeight: 1.4, maxWidth: 560 }}>
+          <div style={{ fontSize: 22, color: '#9A9A94', lineHeight: 1.4, maxWidth: 560 }}>
             AI consulting, content creation, and digital entrepreneurship.
             400K+ community across platforms.
           </div>
@@ -86,12 +86,12 @@ export default function OgImage() {
 
         {/* Footer */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ fontSize: 14, color: '#4b5563', fontFamily: 'monospace', letterSpacing: '0.1em' }}>
+          <span style={{ fontSize: 14, color: 'rgba(154,154,148,0.65)', fontFamily: 'monospace', letterSpacing: '0.1em' }}>
             riyadketami.com
           </span>
           <div style={{ display: 'flex', gap: 16 }}>
             {['TikTok', 'YouTube', 'Instagram'].map((s) => (
-              <span key={s} style={{ fontSize: 13, color: '#374151', fontFamily: 'monospace', letterSpacing: '0.1em' }}>
+              <span key={s} style={{ fontSize: 13, color: 'rgba(154,154,148,0.45)', fontFamily: 'monospace', letterSpacing: '0.1em' }}>
                 {s.toUpperCase()}
               </span>
             ))}

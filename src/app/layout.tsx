@@ -1,6 +1,14 @@
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
-import { interTight, inter, jetbrainsMono, ibmPlexArabic, tajawal, cairo } from '@/lib/fonts';
+import {
+  spaceGrotesk,
+  montserrat,
+  jetbrainsMono,
+  ibmPlexArabic,
+  cairo,
+  arefRuqaa,
+  permanentMarker,
+} from '@/lib/fonts';
 import { ClarityScript } from '@/components/ClarityScript';
 import MotionProvider from '@/components/MotionProvider';
 import './globals.css';
@@ -40,12 +48,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       dir={dir}
       suppressHydrationWarning
       className={[
-        interTight.variable,
-        inter.variable,
+        spaceGrotesk.variable,
+        montserrat.variable,
         jetbrainsMono.variable,
         ibmPlexArabic.variable,
-        tajawal.variable,
         cairo.variable,
+        arefRuqaa.variable,
+        permanentMarker.variable,
       ].join(' ')}
     >
       <body suppressHydrationWarning>

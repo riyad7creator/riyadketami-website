@@ -38,6 +38,7 @@ export default function Footer({ locale, links = [] }: FooterProps) {
       <div className="max-w-6xl mx-auto px-5 sm:px-8 py-10 flex flex-col gap-8">
         {/* Top row */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+          {/* "RK." minimal mark */}
           <Link href={`/${locale}`} className="font-display font-bold text-lg text-text-0 tracking-tight">
             RK<span className="text-matrix">.</span>
           </Link>

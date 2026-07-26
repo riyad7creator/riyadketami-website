@@ -90,7 +90,7 @@ function StorageBar({ stats, loading }: { stats: MediaStats | null; loading: boo
       </div>
       <div className="w-full bg-bg-1 rounded-full h-1.5 overflow-hidden">
         <motion.div
-          className={`h-full rounded-full ${pct > 85 ? 'bg-danger' : pct > 60 ? 'bg-amber-400' : 'bg-matrix'}`}
+          className={`h-full rounded-full ${pct > 85 ? 'bg-danger' : pct > 60 ? 'bg-warning' : 'bg-matrix'}`}
           initial={{ width: 0 }}
           animate={{ width: `${pct}%` }}
           transition={{ duration: 0.6, ease: 'easeOut' }}

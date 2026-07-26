@@ -2,7 +2,12 @@
 
 import { useEffect, useRef } from 'react';
 
-const GLYPHS = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEF$#@';
+/**
+ * Matrix Rain — DZ Edition (brand book 08 / M3): "the glyphs are Arabic letters
+ * and Darija words. Our rain speaks the language." Arabic letterforms plus
+ * digits and terminal punctuation — no Katakana.
+ */
+const GLYPHS = 'ابتثجحخدذرزسشصضطظعغفقكلمنهوي٠١٢٣٤٥٦٧٨٩0123456789#$@><_/';
 
 interface MatrixRainProps {
   className?: string;
@@ -45,7 +50,7 @@ export default function MatrixRain({
     // Read the rain green from tokens so canvas colors can't drift from CSS
     const rainRgb =
       getComputedStyle(document.documentElement).getPropertyValue('--matrix-rain-rgb').trim() ||
-      '0, 255, 65';
+      '0, 205, 41';
 
     let drops: Drop[] = [];
     let raf = 0;
@@ -111,7 +116,8 @@ export default function MatrixRain({
       // Full clear every frame — trails are drawn explicitly per drop
       ctx.clearRect(0, 0, W, H);
 
-      ctx.font = `${FONT_SIZE}px "JetBrains Mono", ui-monospace, monospace`;
+      // IBM Plex Sans Arabic carries the Arabic glyphs; JetBrains Mono does not.
+      ctx.font = `${FONT_SIZE}px "IBM Plex Sans Arabic", "JetBrains Mono", ui-monospace, monospace`;
       ctx.textBaseline = 'top';
 
       for (const drop of drops) {

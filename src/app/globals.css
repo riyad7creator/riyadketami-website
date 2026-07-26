@@ -23,8 +23,8 @@
   /* Fonts. NOTE: font-mono/font-arabic utilities stay in tailwind.config.ts —
      their next/font variables (--font-mono, --font-arabic) would collide with
      Tailwind v4 @theme keys of the same name. */
-  --font-display: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif;
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display-face), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-sans-face), ui-sans-serif, system-ui, sans-serif;
 
   /* Breakpoints */
   --breakpoint-xs: 375px;
@@ -71,22 +71,22 @@ body {
   min-height: 100dvh;
 }
 
-/* Arabic locale — body font */
+/* Arabic locale — one geometric family for headings and body, so Arabic and
+   Latin share a single geometry (brand book, Typography Core). */
 :lang(ar) body {
-  font-family: var(--font-cairo), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-arabic-body), ui-sans-serif, system-ui, sans-serif;
   direction: rtl;
   text-align: right;
   word-spacing: normal;
 }
 
-/* Arabic headlines — Tajawal Black */
 :lang(ar) h1,
 :lang(ar) h2,
 :lang(ar) h3,
 :lang(ar) h4,
 :lang(ar) h5,
 :lang(ar) h6 {
-  font-family: var(--font-tajawal), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-arabic-body), ui-sans-serif, system-ui, sans-serif;
   font-weight: 900;
   line-height: 1.4;
   letter-spacing: 0 !important;
@@ -99,7 +99,7 @@ body {
 :lang(ar) a:not(.font-mono),
 :lang(ar) button:not(.font-mono),
 :lang(ar) label {
-  font-family: var(--font-cairo), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-arabic-body), ui-sans-serif, system-ui, sans-serif;
   line-height: 1.7;
   letter-spacing: 0 !important;
   word-spacing: normal;
@@ -129,7 +129,8 @@ body {
   font-family: var(--font-mono), ui-monospace, monospace !important;
 }
 
-/* IBM Plex Arabic for tagline/monospace Arabic lines */
+/* JetBrains Mono carries no Arabic, so terminal-style Arabic lines fall back
+   to IBM Plex Sans Arabic. */
 :lang(ar) .font-mono {
   font-family: var(--font-arabic), ui-monospace, monospace;
   font-weight: 400;
@@ -169,7 +170,7 @@ body {
 /* Typography scale — uses @layer base so utilities can override these defaults */
 @layer base {
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif;
+    font-family: var(--font-display-face), ui-sans-serif, system-ui, sans-serif;
     font-weight: 700;
     line-height: 1.1;
     margin: 0;
@@ -188,21 +189,22 @@ body {
 }
 
 @layer base {
-  .font-display { font-family: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif; }
+  .font-display { font-family: var(--font-display-face), ui-sans-serif, system-ui, sans-serif; }
   .font-mono { font-family: var(--font-mono), ui-monospace, monospace; }
 
+  /* Rule-breaker faces (brand book 07). Max ONE per composition, titles and
+     accents only — never body text, never subtitles, never client documents. */
+  .font-ruqaa { font-family: var(--font-ruqaa), serif; }
+  .font-marker { font-family: var(--font-marker), cursive; }
+
+  /* Rule R3: in documents and UI, green stays FLAT — no gradients. These
+     utilities are kept as flat colour so existing markup stays on-brand. */
   .text-gradient-matrix {
-    background: linear-gradient(135deg, var(--matrix) 0%, var(--matrix-dim) 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: var(--matrix);
   }
 
   .text-gradient-accent {
-    background: linear-gradient(135deg, var(--accent) 0%, #38bdf8 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: var(--accent);
   }
 
   .glass {

@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-const GLYPHS = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEF$#%@&';
+// Matrix Rain — DZ Edition (brand book 08 / M3): Arabic letterforms, not Katakana.
+const GLYPHS = 'ابتثجحخدذرزسشصضطظعغفقكلمنهوي٠١٢٣٤٥٦٧٨٩0123456789#$@%&';
 
 interface Particle {
   x: number;
@@ -61,8 +62,8 @@ export default function HeroCanvas({ src, className = '', paused = false }: Hero
 
     // Read tokens once so canvas colors stay in sync with design tokens
     const root = getComputedStyle(document.documentElement);
-    const bg0 = root.getPropertyValue('--bg-0').trim() || '#0A0B0D';
-    const rainRgb = root.getPropertyValue('--matrix-rain-rgb').trim() || '0, 255, 65';
+    const bg0 = root.getPropertyValue('--bg-0').trim() || '#111111';
+    const rainRgb = root.getPropertyValue('--matrix-rain-rgb').trim() || '0, 205, 41';
 
     let particles: Particle[] = [];
     let raf = 0;
@@ -151,7 +152,7 @@ export default function HeroCanvas({ src, className = '', paused = false }: Hero
       canvas.width = Math.floor(w * dpr);
       canvas.height = Math.floor(h * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.font = `${FONT_SIZE}px "JetBrains Mono", ui-monospace, monospace`;
+      ctx.font = `${FONT_SIZE}px "IBM Plex Sans Arabic", "JetBrains Mono", ui-monospace, monospace`;
       ctx.textBaseline = 'middle';
       ctx.textAlign = 'center';
 

@@ -60,6 +60,8 @@ export default function NavBar({ locale, items }: NavBarProps) {
         <nav className="max-w-6xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between gap-6">
           <Link
             href={`/${locale}`}
+            /* "RK." minimal mark — an approved addition to the brand identity,
+               set in Space Grotesk Bold with the period in Signal Green. */
             className="font-display font-bold text-text-0 hover:text-matrix transition-colors duration-[var(--duration-fast)] tracking-tight"
           >
             RK
@@ -110,7 +112,22 @@ export default function NavBar({ locale, items }: NavBarProps) {
         </nav>
       </header>
 
-      {/* Mobile drawer */}
+      {/* Mobile drawer + blurred backdrop over the page behind it */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            key="nav-backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 0.15 } }}
+            transition={{ duration: 0.2 }}
+            onClick={() => setMobileOpen(false)}
+            className="fixed inset-0 top-16 z-[calc(var(--z-nav)-2)] bg-bg-0/60 backdrop-blur-md md:hidden"
+            aria-hidden
+          />
+        )}
+      </AnimatePresence>
+
       <AnimatePresence>
         {mobileOpen && (
           <motion.nav

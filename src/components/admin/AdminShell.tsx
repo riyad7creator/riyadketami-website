@@ -41,6 +41,7 @@ export default function AdminShell({ user, children }: AdminShellProps) {
         {/* Sidebar */}
         <aside className="w-56 shrink-0 flex flex-col border-r border-border bg-bg-1/60">
           <div className="px-5 py-5 border-b border-border">
+            {/* "RK." minimal mark + terminal cursor */}
             <span className="font-display font-bold text-text-0 tracking-tight">
               RK.<span className="text-matrix">_</span>
             </span>

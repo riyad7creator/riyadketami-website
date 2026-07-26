@@ -13,10 +13,12 @@ const PRODUCT_VARIANTS: Array<'secondary' | 'primary' | 'secondary'> = ['seconda
 export default function ProductsSection({ locale, dict }: ProductsSectionProps) {
   const t = dict.home.products;
 
+  // Newsletter + Masterclass waitlist both feed the signup form; the course
+  // doesn't exist yet so its CTA is an honest waitlist, not "get access".
   const hrefs = [
     `#newsletter`,
-    `/${locale}/consulting`,
-    `/${locale}/consulting`,
+    `#newsletter`,
+    `/${locale}/contact`,
   ];
 
   return (

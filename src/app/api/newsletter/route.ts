@@ -37,29 +37,36 @@ export async function POST(req: Request) {
 
     await dbConnect();
 
-    // Atomic upsert — prevents TOCTOU race where two concurrent signups both pass findOne
-    const setFields: Record<string, string> = {};
+    // Atomic upsert — prevents TOCTOU race where two concurrent signups both pass findOne.
+    // A previously-unsubscribed address signing up again is a RE-subscribe: flip the flag
+    // back in the same atomic operation so they actually receive emails again.
+    const setFields: Record<string, unknown> = { unsubscribed: false };
     if (preferredLanguage) setFields.preferredLanguage = preferredLanguage;
 
-    const result = await Subscriber.updateOne(
+    const before = await Subscriber.findOneAndUpdate(
       { email },
       {
         $setOnInsert: { email, ...(source ? { source } : {}) },
-        ...(Object.keys(setFields).length ? { $set: setFields } : {}),
+        $set: setFields,
+        $unset: { unsubscribedAt: '' },
       },
-      { upsert: true }
+      { upsert: true, new: false }
     );
 
-    // If no new doc was created, the email was already subscribed — update language if provided
-    if (result.upsertedCount === 0 && preferredLanguage) {
-      await Subscriber.updateOne({ email }, { $set: setFields });
+    const isNew = before === null;
+    const isResubscribe = before !== null && before.unsubscribed === true;
+
+    // Already subscribed and active — nothing more to do (language was updated above)
+    if (!isNew && !isResubscribe) {
+      return NextResponse.json({ ok: true });
     }
 
-    // Fire-and-forget Kit.com sync — non-fatal, must not block the 201 response
-    syncToKit({ email_address: email, first_name: '' }).catch(() => {});
+    // Fire-and-forget Kit.com sync — non-fatal, must not block the response.
+    // Runs for both new signups and re-subscribes (Kit reactivates on re-create).
+    syncToKit({ email_address: email }).catch(() => {});
 
     // Fire-and-forget admin notification for new subscriber
-    if (result.upsertedCount > 0) {
+    if (isNew) {
       fetch(`${process.env.NEXTAUTH_URL ?? 'http://localhost:3000'}/api/admin/notifications`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -72,18 +79,18 @@ export async function POST(req: Request) {
       }).catch(() => {});
     }
 
-    // Fire-and-forget welcome email — non-fatal, must not block the 201 response
+    // Fire-and-forget welcome email — only for genuinely new subscribers
     const resend = getResend();
-    if (resend) {
+    if (resend && isNew) {
       const p = resend.emails.send({
         from: FROM_EMAIL,
         to: email,
         subject: "Welcome. You're in. 👋",
         html: emailShell('// welcome to the list', `
-          <h2 style="color:#fff;margin:0 0 16px;font-size:22px;">You're in. Welcome.</h2>
-          <p style="color:#9ca3af;line-height:1.7;margin:0 0 16px;">Every week I send one sharp email: AI strategies, business tactics, and creator insights. No filler, no fluff.</p>
-          <p style="color:#9ca3af;line-height:1.7;margin:0 0 24px;">If you ever want to work together, <a href="https://riyadketami.com/en/contact" style="color:#00ff66;text-decoration:none;">reach out here</a>.</p>
-          <p style="color:#6b7280;font-size:12px;margin:0;">— Riyad<br/>riyadketami.com</p>
+          <h2 style="color:#F4F4EF;margin:0 0 16px;font-size:22px;">You're in. Welcome.</h2>
+          <p style="color:#9A9A94;line-height:1.7;margin:0 0 16px;">Every week I send one sharp email: AI strategies, business tactics, and creator insights. No filler, no fluff.</p>
+          <p style="color:#9A9A94;line-height:1.7;margin:0 0 24px;">If you ever want to work together, <a href="https://riyadketami.com/en/contact" style="color:#00CD29;text-decoration:none;">reach out here</a>.</p>
+          <p style="color:#9A9A94;font-size:12px;margin:0;">— Riyad<br/>riyadketami.com</p>
         `),
       });
       p.catch(() => {}); // prevent UnhandledPromiseRejection; failure is non-fatal

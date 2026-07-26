@@ -22,10 +22,10 @@ export function escHtml(s: string): string {
     .replace(/'/g, '&#39;');
 }
 
-/** Wrap inner content in the shared branded email shell */
+/** Wrap inner content in the shared branded email shell (KETAMI brand book v1.0) */
 export function emailShell(eyebrow: string, inner: string): string {
-  return `<div style="font-family:monospace;max-width:600px;margin:0 auto;padding:32px;background:#0a0b0d;color:#e5e7eb;border:1px solid #1f2937;border-radius:8px;">
-  <p style="color:#00ff66;font-size:11px;letter-spacing:0.2em;margin:0 0 20px;">${eyebrow}</p>
+  return `<div style="font-family:monospace;max-width:600px;margin:0 auto;padding:32px;background:#111111;color:#F4F4EF;border:1px solid #2A2A28;border-radius:8px;">
+  <p style="color:#00CD29;font-size:11px;letter-spacing:0.2em;margin:0 0 20px;">${eyebrow}</p>
   ${inner}
 </div>`;
 }

@@ -11,7 +11,9 @@ export async function GET() {
     if (!check.ok) return check.response;
 
     await dbConnect();
-    const members = await User.find({ _id: { $ne: check.session.user.id } })
+    // Include the signed-in user — hiding yourself from the team list made
+    // accounts unmanageable and looked like a bug from the admin's seat.
+    const members = await User.find({})
       .select('-password')
       .sort({ createdAt: -1 });
 

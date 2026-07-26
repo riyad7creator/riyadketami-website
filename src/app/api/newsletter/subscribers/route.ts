@@ -9,6 +9,28 @@ export async function GET(req: Request) {
 
   try {
     const { searchParams } = new URL(req.url);
+
+    // Full-list CSV export — server-side so it is never limited to one UI page,
+    // and includes unsubscribe status so a re-import elsewhere can respect it.
+    if (searchParams.get('format') === 'csv') {
+      await dbConnect();
+      const all = await Subscriber.find({}).sort({ createdAt: -1 }).lean();
+      const rows = all.map((s) =>
+        [
+          s.email,
+          new Date(s.createdAt).toISOString().slice(0, 10),
+          s.unsubscribed ? 'unsubscribed' : 'active',
+        ].join(',')
+      );
+      const csv = 'email,joined,status\n' + rows.join('\n');
+      return new Response(csv, {
+        headers: {
+          'Content-Type': 'text/csv; charset=utf-8',
+          'Content-Disposition': `attachment; filename="subscribers-${new Date().toISOString().slice(0, 10)}.csv"`,
+        },
+      });
+    }
+
     const page = Math.max(1, parseInt(searchParams.get('page') ?? '1'));
     const limit = Math.min(100, parseInt(searchParams.get('limit') ?? '50'));
     const search = searchParams.get('search')?.trim() ?? '';

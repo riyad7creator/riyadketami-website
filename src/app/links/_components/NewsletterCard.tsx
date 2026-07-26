@@ -6,8 +6,9 @@ import NewsletterForm from '@/components/newsletter/NewsletterForm';
 import type { Dictionary } from '@/lib/dictionaries';
 import type { Locale } from '@/i18n/config';
 
+// subscriberCount is intentionally unused in copy: citing a reader count broke
+// the brand's no-unverified-claims rule. Prop kept for API compat.
 export default function NewsletterCard({
-  subscriberCount,
   dict,
   locale = 'en',
 }: {
@@ -15,10 +16,6 @@ export default function NewsletterCard({
   dict: Dictionary;
   locale?: Locale;
 }) {
-  const countLabel =
-    subscriberCount >= 1000
-      ? `${Math.floor(subscriberCount / 1000)}K+`
-      : `${subscriberCount}+`;
 
   return (
     <section
@@ -39,7 +36,7 @@ export default function NewsletterCard({
             AI &amp; business insights, every week.
           </p>
           <p className="text-xs text-text-2 -mt-0.5">
-            Free. Join {countLabel} readers. Unsubscribe anytime.
+            Free. One email a week. Unsubscribe anytime.
           </p>
         </div>
       </div>

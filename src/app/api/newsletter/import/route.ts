@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db/connect';
 import Subscriber from '@/models/Subscriber';
+import { syncToKit } from '@/lib/kit';
 import { requireAdmin, serverError } from '@/lib/api-helpers';
 import type { Locale } from '@/i18n/config';
 
@@ -56,6 +57,18 @@ export async function POST(req: Request) {
     const result = await Subscriber.bulkWrite(ops, { ordered: false });
     const imported = result.upsertedCount ?? 0;
     const skipped = validEntries.length - imported;
+
+    // Imported emails must reach Kit too, or the two lists silently drift.
+    // upsertedIds is keyed by op index, which matches validEntries.
+    const newlyImported = Object.keys(result.upsertedIds ?? {}).map(
+      (i) => validEntries[Number(i)]!.email
+    );
+    // Fire-and-forget, sequential to stay polite to Kit's rate limits.
+    void (async () => {
+      for (const email of newlyImported) {
+        await syncToKit({ email_address: email });
+      }
+    })();
 
     return NextResponse.json({ imported, skipped, total: validEntries.length });
   } catch (error) {

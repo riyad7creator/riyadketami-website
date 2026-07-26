@@ -1,6 +1,7 @@
 import { createHmac, timingSafeEqual } from 'crypto';
 import dbConnect from '@/lib/db/connect';
 import Subscriber from '@/models/Subscriber';
+import { unsubscribeFromKit } from '@/lib/kit';
 
 /** Reproduce the same token used in send/route.ts */
 function unsubToken(email: string): string {
@@ -17,12 +18,12 @@ function buildPage(title: string, message: string): string {
   <title>${title} — Riyad Ketami Newsletter</title>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:ui-monospace,"JetBrains Mono",monospace;background:#0a0b0d;color:#e5e7eb;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
-    .card{max-width:480px;width:100%;border:1px solid #1f2937;border-radius:8px;padding:40px;background:#0e0f11}
-    .eyebrow{color:#00ff66;font-size:11px;letter-spacing:0.2em;margin-bottom:20px}
-    h1{font-size:20px;font-weight:700;color:#f9fafb;margin-bottom:12px}
-    p{color:#9ca3af;line-height:1.7;font-size:14px;margin-bottom:16px}
-    a{color:#00ff66;text-decoration:none}
+    body{font-family:ui-monospace,"JetBrains Mono",monospace;background:#111111;color:#F4F4EF;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+    .card{max-width:480px;width:100%;border:1px solid #2A2A28;border-radius:8px;padding:40px;background:#1E1E1E}
+    .eyebrow{color:#00CD29;font-size:11px;letter-spacing:0.2em;margin-bottom:20px}
+    h1{font-size:20px;font-weight:700;color:#F4F4EF;margin-bottom:12px}
+    p{color:#9A9A94;line-height:1.7;font-size:14px;margin-bottom:16px}
+    a{color:#00CD29;text-decoration:none}
     a:hover{text-decoration:underline}
   </style>
 </head>
@@ -78,6 +79,9 @@ export async function GET(req: Request) {
       { headers: { 'Content-Type': 'text/html' } }
     );
   }
+
+  // Mirror the unsubscribe to Kit so the ESP list can't drift from ours
+  unsubscribeFromKit(email).catch(() => {});
 
   return new Response(
     buildPage('Unsubscribed', "You've been successfully removed from the list. You won't receive any more emails from us."),

@@ -33,24 +33,34 @@ export default function MatrixText({
 }: MatrixTextProps) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: '-10% 0px' });
-  const [displayed, setDisplayed] = useState(autoPlay ? scramble(text, 0) : text);
+  // Initialize with the real text: scramble() uses Math.random(), which would make
+  // server and client HTML disagree (hydration mismatch). Scrambling starts on inView.
+  const [displayed, setDisplayed] = useState(text);
   const frameRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   // Always track the latest text so cleanup can resolve to it
   const textRef = useRef(text);
   useEffect(() => { textRef.current = text; }, [text]);
 
   const runScramble = (target: string = text) => {
+    // Vestibular safety: no scramble for reduced-motion users
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setDisplayed(target);
+      return;
+    }
+
     // Cancel any running animation before starting a new one
     if (frameRef.current) {
       clearTimeout(frameRef.current);
       frameRef.current = null;
     }
 
+    // Resolve multiple chars per tick on long strings so total time caps at ~750ms
+    const charsPerTick = Math.max(1, Math.ceil(target.length / 25));
     let count = 0;
     const step = () => {
       setDisplayed(scramble(target, count));
       if (count < target.length) {
-        count++;
+        count += charsPerTick;
         frameRef.current = setTimeout(step, speed);
       } else {
         // Hard resolve — always land on the real text

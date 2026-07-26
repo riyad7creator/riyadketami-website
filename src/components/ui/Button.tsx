@@ -2,6 +2,7 @@
 
 import { forwardRef } from 'react';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import type { ComponentPropsWithoutRef } from 'react';
 
 type Variant = 'primary' | 'secondary' | 'ghost' | 'danger';
@@ -11,8 +12,10 @@ interface ButtonProps extends ComponentPropsWithoutRef<'button'> {
   variant?: Variant;
   size?: Size;
   loading?: boolean;
-  as?: 'button' | 'a';
+  /** When set, renders a Next.js <Link> styled as a button — never nest Button inside <Link>. */
   href?: string;
+  target?: string;
+  rel?: string;
 }
 
 const variants: Record<Variant, string> = {
@@ -28,25 +31,58 @@ const sizes: Record<Size, string> = {
   lg: 'h-12 px-7 text-base rounded-[var(--radius-md)]',
 };
 
-const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ variant = 'secondary', size = 'md', loading, children, className = '', disabled, ...props }, ref) => {
+const MotionLink = motion.create(Link);
+
+// Press feedback is a spring so rapid taps inherit velocity instead of queueing tweens.
+const pressProps = {
+  whileTap: { scale: 0.97 },
+  transition: { type: 'spring', stiffness: 500, damping: 30 },
+} as const;
+
+const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonProps>(
+  ({ variant = 'secondary', size = 'md', loading, children, className = '', disabled, href, target, rel, ...props }, ref) => {
     const base =
-      'inline-flex items-center justify-center gap-2 cursor-pointer select-none transition-colors duration-[var(--duration-fast)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-40 disabled:pointer-events-none';
+      'relative inline-flex items-center justify-center gap-2 cursor-pointer select-none transition-colors duration-[var(--duration-fast)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-40 disabled:pointer-events-none';
+    const classes = `${base} ${variants[variant]} ${sizes[size]} ${className}`;
+
+    // Label stays mounted (opacity 0) while loading so the button never changes width.
+    const content = (
+      <>
+        {loading && (
+          <span className="absolute inset-0 flex items-center justify-center" aria-hidden>
+            <span className="h-4 w-4 rounded-full border-2 border-current border-t-transparent animate-spin" />
+          </span>
+        )}
+        <span className={`inline-flex items-center gap-2 ${loading ? 'opacity-0' : ''}`}>{children}</span>
+      </>
+    );
+
+    if (href) {
+      return (
+        <MotionLink
+          ref={ref as React.Ref<HTMLAnchorElement>}
+          href={href}
+          target={target}
+          rel={rel}
+          {...pressProps}
+          className={classes}
+          aria-busy={loading || undefined}
+        >
+          {content}
+        </MotionLink>
+      );
+    }
 
     return (
       <motion.button
         ref={ref as React.Ref<HTMLButtonElement>}
-        whileHover={{ scale: 1.015 }}
-        whileTap={{ scale: 0.97 }}
-        transition={{ duration: 0.15, ease: 'easeOut' }}
-        className={`${base} ${variants[variant]} ${sizes[size]} ${className}`}
+        {...pressProps}
+        className={classes}
         disabled={disabled ?? loading}
+        aria-busy={loading || undefined}
         {...(props as ComponentPropsWithoutRef<typeof motion.button>)}
       >
-        {loading ? (
-          <span className="h-4 w-4 rounded-full border-2 border-current border-t-transparent animate-spin" />
-        ) : null}
-        {children}
+        {content}
       </motion.button>
     );
   }

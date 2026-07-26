@@ -15,7 +15,9 @@ const optionalUrl = z.string().url().optional().or(z.literal(''));
 // LinkCard
 // ---------------------------------------------------------------------------
 
-const linkCardBaseSchema = z.object({
+/** Unrefined base. zod v4 throws if .partial()/.omit() is called on a schema
+ *  that already carries refinements, so derivations must start from here. */
+const linkCardBase = z.object({
   section: z.enum(['sponsored', 'resource', 'service', 'fallback']),
   title: z.string().min(1, 'Title is required').max(80),
   description: z.string().max(200).optional(),
@@ -31,21 +33,28 @@ const linkCardBaseSchema = z.object({
   endsAt: z.string().datetime().nullable().optional(),
 });
 
-export const linkCardSchema = linkCardBaseSchema.refine(
-  (d) => {
-    if (d.startsAt && d.endsAt) return new Date(d.startsAt) < new Date(d.endsAt);
-    return true;
-  },
-  { message: 'Start date must be before end date', path: ['endsAt'] }
-);
+const dateWindowOrdered = (d: { startsAt?: string | null; endsAt?: string | null }) => {
+  if (d.startsAt && d.endsAt) return new Date(d.startsAt) < new Date(d.endsAt);
+  return true;
+};
 
-export const linkCardPatchSchema = linkCardBaseSchema.partial().omit({ section: true });
+const dateWindowError = {
+  message: 'Start date must be before end date',
+  path: ['endsAt'],
+};
+
+export const linkCardSchema = linkCardBase.refine(dateWindowOrdered, dateWindowError);
+
+export const linkCardPatchSchema = linkCardBase
+  .omit({ section: true })
+  .partial()
+  .refine(dateWindowOrdered, dateWindowError);
 
 // ---------------------------------------------------------------------------
 // LatestSource
 // ---------------------------------------------------------------------------
 
-const latestSourceBaseSchema = z.object({
+const latestSourceBase = z.object({
   type: z.enum(['youtube', 'blog', 'tiktok', 'instagram']),
   label: z.string().min(1).max(50),
   rssUrl: optionalUrl,
@@ -56,12 +65,14 @@ const latestSourceBaseSchema = z.object({
   order: z.number().int().min(0).optional(),
 });
 
-export const latestSourceSchema = latestSourceBaseSchema.refine(
+export const latestSourceSchema = latestSourceBase.refine(
   (d) => (d.rssUrl && d.rssUrl.length > 0) || (d.manualUrl && d.manualTitle),
   { message: 'Either rssUrl or both manualUrl and manualTitle are required' }
 );
 
-export const latestSourcePatchSchema = latestSourceBaseSchema.partial();
+// A patch may touch a single field, so the either/or source requirement — which
+// only makes sense for a complete record — is intentionally not applied here.
+export const latestSourcePatchSchema = latestSourceBase.partial();
 
 // ---------------------------------------------------------------------------
 // SiteProfile

@@ -16,10 +16,10 @@ interface RevealProps {
 }
 
 const offsets: Record<Direction, { x?: number; y?: number }> = {
-  up: { y: 32 },
-  down: { y: -32 },
-  left: { x: 32 },
-  right: { x: -32 },
+  up: { y: 16 },
+  down: { y: -16 },
+  left: { x: 16 },
+  right: { x: -16 },
   none: {},
 };
 
@@ -27,7 +27,7 @@ export default function Reveal({
   children,
   direction = 'up',
   delay = 0,
-  duration = 0.6,
+  duration = 0.45,
   once = true,
   className,
 }: RevealProps) {

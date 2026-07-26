@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { Button, Reveal } from '@/components/ui';
 import MatrixText from '@/components/ui/MatrixText';
 import type { Locale } from '@/i18n/config';
@@ -48,11 +47,13 @@ export default function ProductsSection({ locale, dict }: ProductsSectionProps) 
                   <h3 className="font-display font-semibold text-lg text-text-0">{item.name}</h3>
                   <p className="text-text-2 text-sm leading-relaxed">{item.description}</p>
                 </div>
-                <Link href={hrefs[i] ?? `/${locale}/contact`}>
-                  <Button variant={PRODUCT_VARIANTS[i] ?? 'secondary'} className="w-full">
-                    {item.cta}
-                  </Button>
-                </Link>
+                <Button
+                  href={hrefs[i] ?? `/${locale}/contact`}
+                  variant={PRODUCT_VARIANTS[i] ?? 'secondary'}
+                  className="w-full"
+                >
+                  {item.cta}
+                </Button>
               </div>
             </Reveal>
           ))}

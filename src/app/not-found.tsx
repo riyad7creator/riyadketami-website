@@ -11,7 +11,7 @@ export default function NotFound() {
       {/* Glow */}
       <div
         className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse, rgba(0,255,102,0.06) 0%, transparent 70%)' }}
+        style={{ background: 'radial-gradient(ellipse, rgba(var(--matrix-rgb), 0.06) 0%, transparent 70%)' }}
         aria-hidden
       />
 

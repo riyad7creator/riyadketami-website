@@ -1,8 +1,8 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import Image from 'next/image';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion';
 import HeroCanvas from './HeroCanvas';
 
 interface HeroPortraitProps {
@@ -25,6 +25,11 @@ export default function HeroPortrait({ src }: HeroPortraitProps) {
   // Subtle scale-down on photo for depth
   const photoScale = useTransform(scrollYProgress, [0, 0.45], [1, 0.96]);
 
+  // Suspend the particle canvas while its layer is fully transparent —
+  // no reason to burn frames on an invisible 2,200-particle sim.
+  const [canvasActive, setCanvasActive] = useState(false);
+  useMotionValueEvent(matrixOpacity, 'change', (v) => setCanvasActive(v > 0.01));
+
   return (
     <div ref={ref} className="relative w-full h-full">
       {/* Layer 1: Real portrait — visible on load, dissolves on scroll */}
@@ -45,7 +50,7 @@ export default function HeroPortrait({ src }: HeroPortraitProps) {
           className="absolute inset-0"
           style={{
             background:
-              'radial-gradient(ellipse at center, transparent 55%, rgba(0,255,102,0.06) 100%)',
+              'radial-gradient(ellipse at center, transparent 55%, rgba(var(--matrix-rgb), 0.06) 100%)',
           }}
           aria-hidden
         />
@@ -62,14 +67,14 @@ export default function HeroPortrait({ src }: HeroPortraitProps) {
         style={{ opacity: matrixOpacity }}
         className="absolute inset-0 z-20"
       >
-        <HeroCanvas src={src} />
+        <HeroCanvas src={src} paused={!canvasActive} />
       </motion.div>
 
       {/* Ambient glow ring */}
       <div
         className="absolute inset-0 rounded-[var(--radius-lg)] pointer-events-none z-0"
         style={{
-          boxShadow: '0 0 60px rgba(0,255,102,0.07), inset 0 0 40px rgba(0,255,102,0.03)',
+          boxShadow: '0 0 60px rgba(var(--matrix-rgb), 0.07), inset 0 0 40px rgba(var(--matrix-rgb), 0.03)',
         }}
         aria-hidden
       />

@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { locales, isValidLocale } from '@/i18n/config';
 import { getDictionary } from '@/lib/dictionaries';
 import { localizedAlternates } from '@/lib/seo';
-import { NavBar, Footer, PageTransition } from '@/components/ui';
+import { NavBar, Footer } from '@/components/ui';
 
 export async function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
@@ -52,7 +52,7 @@ export default async function LangLayout({
       </a>
       <NavBar locale={lang} items={navItems} />
       <main id="main-content" className="min-h-[100dvh]">
-        <PageTransition>{children}</PageTransition>
+        {children}
       </main>
       <Footer locale={lang} />
     </>

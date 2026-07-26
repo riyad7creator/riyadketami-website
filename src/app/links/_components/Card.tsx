@@ -53,7 +53,7 @@ export default function Card({
           ? 'bg-matrix/5 border border-matrix/30 hover:border-matrix/60 hover:bg-matrix/8'
           : 'glass hover:border-matrix/35'
       }`}
-      style={featured ? { boxShadow: '0 0 30px rgba(0,255,102,0.06)' } : undefined}
+      style={featured ? { boxShadow: '0 0 30px rgba(var(--matrix-rgb), 0.06)' } : undefined}
     >
       {thumbnail ? (
         <div className="relative w-12 h-12 rounded-[var(--radius-sm)] overflow-hidden shrink-0 border border-border">

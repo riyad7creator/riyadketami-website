@@ -2,7 +2,8 @@ import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { interTight, inter, jetbrainsMono, ibmPlexArabic, tajawal, cairo } from '@/lib/fonts';
 import { ClarityScript } from '@/components/ClarityScript';
-import ScrollControl from '@/components/ScrollControl';
+        <ScrollControl />
+        <MotionProvider>{children}</MotionProvider>
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -50,7 +51,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     >
       <body suppressHydrationWarning>
         <ScrollControl />
-        {children}
+        <MotionProvider>{children}</MotionProvider>
         <ClarityScript />
       </body>
     </html>

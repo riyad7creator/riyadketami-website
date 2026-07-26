@@ -63,7 +63,7 @@ function StatusBadge({ status }: { status: Status }) {
   };
   const { icon, label, cls } = map[status];
   return (
-    <span className={`inline-flex items-center gap-1 font-mono text-[9px] tracking-[0.12em] border rounded-full px-2 py-0.5 ${cls}`}>
+    <span className={`inline-flex items-center gap-1 font-mono text-[10px] tracking-[0.12em] border rounded-full px-2 py-0.5 ${cls}`}>
       {icon} {label}
     </span>
   );
@@ -390,13 +390,13 @@ export default function TranslationCard({ lang, enPost, translation, onRefresh }
           <div className="grid grid-cols-2 gap-0 border-b border-border">
             {/* EN side */}
             <div className="px-4 py-3 border-r border-border flex flex-col gap-2">
-              <span className="font-mono text-[9px] text-text-2 tracking-widest uppercase">EN — Original</span>
+              <span className="font-mono text-[10px] text-text-2 tracking-widest uppercase">EN — Original</span>
               <p className="text-sm font-semibold text-text-0">{enPost.title}</p>
               {enPost.excerpt && <p className="text-xs text-text-2 leading-relaxed">{enPost.excerpt}</p>}
             </div>
             {/* Translation side */}
             <div className={`px-4 py-3 flex flex-col gap-2 bg-bg-1/30`} dir={meta.dir}>
-              <span className="font-mono text-[9px] text-text-2 tracking-widest uppercase">{meta.flag} {lang.toUpperCase()} — Translation</span>
+              <span className="font-mono text-[10px] text-text-2 tracking-widest uppercase">{meta.flag} {lang.toUpperCase()} — Translation</span>
               {panelState === 'editing' ? (
                 <>
                   <input

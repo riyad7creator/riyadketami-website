@@ -26,7 +26,7 @@ export default function Pill({
 
   return (
     <span
-      className={`inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-mono font-semibold tracking-[0.12em] border uppercase ${cls}`}
+      className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-mono font-semibold tracking-[0.12em] border uppercase ${cls}`}
       style={customStyle}
     >
       {label}

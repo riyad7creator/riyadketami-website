@@ -39,7 +39,7 @@ function TransBadge({
     <Link
       href={`/admin/posts/${postId}#translations`}
       title={exists ? `${lang.toUpperCase()} translated` : `${lang.toUpperCase()} missing — click to translate`}
-      className={`inline-flex items-center px-1.5 py-0.5 rounded font-mono text-[9px] tracking-widest border transition-colors duration-[var(--duration-fast)]
+      className={`inline-flex items-center px-1.5 py-0.5 rounded font-mono text-[10px] tracking-widest border transition-colors duration-[var(--duration-fast)]
         ${exists
           ? 'text-matrix border-matrix/30 bg-matrix/[0.08] hover:bg-matrix/[0.15]'
           : 'text-text-2 border-border/60 bg-transparent hover:border-danger/40 hover:text-danger/80'
@@ -174,7 +174,7 @@ export default function AdminPostsPage() {
                           <TransBadge lang="ar" exists={langs?.has('ar') ?? false} postId={post._id} />
                         </div>
                       ) : (
-                        <span className="font-mono text-[9px] text-text-2">—</span>
+                        <span className="font-mono text-[10px] text-text-2">—</span>
                       )}
                     </td>
                     <td className="px-4 py-3 text-xs text-text-2">{post.category ?? '—'}</td>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Trash2 } from 'lucide-react';
 
 interface InlineDeleteConfirmProps {
@@ -24,7 +25,12 @@ export default function InlineDeleteConfirm({ onConfirm, label = 'Delete', disab
 
   if (confirming) {
     return (
-      <div className="flex items-center gap-1 animate-in fade-in slide-in-from-right-2 duration-150">
+      <motion.div
+        initial={{ opacity: 0, x: 8 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
+        className="flex items-center gap-1"
+      >
         <button
           type="button"
           onClick={() => setConfirming(false)}
@@ -39,7 +45,7 @@ export default function InlineDeleteConfirm({ onConfirm, label = 'Delete', disab
         >
           Delete?
         </button>
-      </div>
+      </motion.div>
     );
   }
 

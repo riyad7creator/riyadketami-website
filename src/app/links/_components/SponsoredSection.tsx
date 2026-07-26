@@ -17,7 +17,7 @@ export default function SponsoredSection({ cards, isFallback }: SponsoredSection
     >
       <MatrixText
         text={isFallback ? '// featured' : '// sponsored'}
-        className="font-mono text-[9px] tracking-[0.2em] text-matrix px-1"
+        className="font-mono text-[10px] tracking-[0.2em] text-matrix px-1"
       />
       <div className="flex flex-col gap-2.5">
         {cards.map((card, idx) => (

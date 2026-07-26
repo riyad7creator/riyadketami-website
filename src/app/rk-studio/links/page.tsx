@@ -151,7 +151,7 @@ function SortableCardRow({
       </div>
 
       {card.pillLabel && (
-        <span className="font-mono text-[9px] px-1.5 py-0.5 rounded border border-border text-text-2 uppercase hidden sm:block">
+        <span className="font-mono text-[10px] px-1.5 py-0.5 rounded border border-border text-text-2 uppercase hidden sm:block">
           {card.pillLabel}
         </span>
       )}
@@ -692,7 +692,7 @@ function SortableSourceRow({
       </button>
 
       <div className="w-16 shrink-0">
-        <span className="font-mono text-[9px] px-1.5 py-0.5 rounded bg-bg-1 border border-border text-text-2 uppercase">
+        <span className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-bg-1 border border-border text-text-2 uppercase">
           {source.type}
         </span>
       </div>

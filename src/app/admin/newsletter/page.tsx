@@ -8,6 +8,7 @@ interface Subscriber {
   _id: string;
   email: string;
   createdAt: string;
+  unsubscribed?: boolean;
 }
 
 interface NewsletterResponse {
@@ -55,19 +56,10 @@ export default function AdminNewsletterPage() {
 
   useEffect(() => { void load(); }, [load]);
 
-  // Export CSV
+  // Export CSV — server-side so it always covers the FULL list (not just the
+  // current page) and includes unsubscribe status.
   const handleExport = () => {
-    if (!data) return;
-    const csv = 'email,joined\n' + data.subscribers
-      .map((s) => `${s.email},${new Date(s.createdAt).toISOString().slice(0, 10)}`)
-      .join('\n');
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `subscribers-${new Date().toISOString().slice(0, 10)}.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
+    window.location.href = '/api/newsletter/subscribers?format=csv';
   };
 
   // Delete subscriber
@@ -273,7 +265,14 @@ export default function AdminNewsletterPage() {
           <div className="flex flex-col divide-y divide-border border border-border rounded-[var(--radius-lg)] overflow-hidden">
             {data.subscribers.map((sub) => (
               <div key={sub._id} className="flex items-center gap-4 px-5 py-3 group">
-                <span className="flex-1 text-sm text-text-1 truncate">{sub.email}</span>
+                <span className={`flex-1 text-sm truncate ${sub.unsubscribed ? 'text-text-2 line-through' : 'text-text-1'}`}>
+                  {sub.email}
+                </span>
+                {sub.unsubscribed && (
+                  <span className="font-mono text-[10px] tracking-[0.1em] text-danger/80 border border-danger/30 rounded-full px-2 py-0.5 shrink-0 uppercase">
+                    unsubscribed
+                  </span>
+                )}
                 <span className="font-mono text-xs text-text-2 shrink-0">
                   {new Date(sub.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                 </span>

@@ -18,7 +18,7 @@
     },
     "audience": {
       "eyebrow": "// audience",
-      "title": "A few million people are listening.",
+      "title": "400K+ people are listening.",
       "subtitle": "Across platforms, the work compounds."
     },
     "about_teaser": {
@@ -43,7 +43,7 @@
     "newsletter": {
       "eyebrow": "// weekly insights",
       "title": "Stay ahead of the curve.",
-      "subtitle": "Join 50,000+ entrepreneurs getting AI strategies, digital business tactics, and creator insights every week. Free.",
+      "subtitle": "One sharp email a week: AI strategies, digital business tactics, and creator insights. Free, no fluff.",
       "placeholder": "your@email.com",
       "cta": "Subscribe free",
       "success": "// you're in. Check your inbox."
@@ -69,14 +69,14 @@
         {
           "tag": "Free",
           "name": "The Newsletter",
-          "description": "Weekly AI strategies, creator tactics, and digital business insights. 50,000+ readers already inside.",
+          "description": "Weekly AI strategies, creator tactics, and digital business insights. Straight to your inbox.",
           "cta": "Subscribe free"
         },
         {
           "tag": "Course",
           "name": "AI Business Masterclass",
-          "description": "The exact AI systems and workflows I use to run a high-output digital business at a fraction of the usual cost.",
-          "cta": "Get access"
+          "description": "The exact AI systems and workflows I use to run a high-output digital business at a fraction of the usual cost. Coming soon.",
+          "cta": "Join the waitlist"
         },
         {
           "tag": "Consulting",

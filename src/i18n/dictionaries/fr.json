@@ -18,7 +18,7 @@
     },
     "audience": {
       "eyebrow": "// audience",
-      "title": "Quelques millions de personnes écoutent.",
+      "title": "Plus de 400K personnes écoutent.",
       "subtitle": "Sur toutes les plateformes, le travail s'accumule."
     },
     "about_teaser": {
@@ -43,7 +43,7 @@
     "newsletter": {
       "eyebrow": "// insights hebdomadaires",
       "title": "Prenez de l'avance.",
-      "subtitle": "Rejoignez 50 000+ entrepreneurs qui reçoivent chaque semaine des stratégies IA, des tactiques créateur et des insights business digitaux. Gratuit.",
+      "subtitle": "Un email percutant par semaine : stratégies IA, tactiques business digital et insights créateur. Gratuit, sans blabla.",
       "placeholder": "votre@email.com",
       "cta": "S'inscrire gratuitement",
       "success": "// c'est fait. Vérifiez votre boîte mail."
@@ -69,14 +69,14 @@
         {
           "tag": "Gratuit",
           "name": "La Newsletter",
-          "description": "Stratégies IA, tactiques créateur et insights business digital chaque semaine. 50 000+ lecteurs déjà à l'intérieur.",
+          "description": "Stratégies IA, tactiques créateur et insights business digital chaque semaine. Directement dans votre boîte mail.",
           "cta": "S'inscrire gratuitement"
         },
         {
           "tag": "Formation",
           "name": "Masterclass IA Business",
           "description": "Les systèmes et workflows IA que j'utilise pour gérer un business digital high-output à une fraction du coût habituel.",
-          "cta": "Accéder"
+          "cta": "Rejoindre la liste d'attente"
         },
         {
           "tag": "Consulting",

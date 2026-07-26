@@ -11,7 +11,8 @@ const schema = z.object({ email: z.string().email() });
 export async function GET() {
   try {
     await dbConnect();
-    const count = await Subscriber.countDocuments();
+    // Only active subscribers — unsubscribed rows must not inflate the number
+    const count = await Subscriber.countDocuments({ unsubscribed: { $ne: true } });
     return NextResponse.json({ count });
   } catch {
     return NextResponse.json({ count: 0 });
@@ -28,33 +29,43 @@ export async function POST(req: Request) {
 
     await dbConnect();
 
-    // Atomic upsert — prevents TOCTOU race where two concurrent signups both pass findOne
-    const result = await Subscriber.updateOne(
+    // Atomic upsert — prevents TOCTOU race where two concurrent signups both pass findOne.
+    // A previously-unsubscribed address signing up again is a RE-subscribe: flip the flag
+    // back in the same atomic operation so they actually receive emails again.
+    const before = await Subscriber.findOneAndUpdate(
       { email },
-      { $setOnInsert: { email } },
-      { upsert: true }
+      {
+        $setOnInsert: { email },
+        $set: { unsubscribed: false },
+        $unset: { unsubscribedAt: '' },
+      },
+      { upsert: true, new: false }
     );
 
-    // If no new doc was created, the email was already subscribed — return early
-    if (result.upsertedCount === 0) {
+    const isNew = before === null;
+    const isResubscribe = before !== null && before.unsubscribed === true;
+
+    // Already subscribed and active — nothing to do
+    if (!isNew && !isResubscribe) {
       return NextResponse.json({ ok: true });
     }
 
-    // Fire-and-forget Kit.com sync — non-fatal, must not block the 201 response
+    // Fire-and-forget Kit.com sync — non-fatal, must not block the response.
+    // Runs for both new signups and re-subscribes (Kit reactivates on re-create).
     syncToKit({ email_address: email }).catch(() => {});
 
-    // Fire-and-forget welcome email — non-fatal, must not block the 201 response
+    // Fire-and-forget welcome email — only for genuinely new subscribers
     const resend = getResend();
-    if (resend) {
+    if (resend && isNew) {
       const p = resend.emails.send({
         from: FROM_EMAIL,
         to: email,
         subject: "Welcome. You're in. 👋",
         html: emailShell('// welcome to the list', `
-          <h2 style="color:#fff;margin:0 0 16px;font-size:22px;">You're in. Welcome.</h2>
-          <p style="color:#9ca3af;line-height:1.7;margin:0 0 16px;">Every week I send one sharp email: AI strategies, business tactics, and creator insights. No filler, no fluff.</p>
-          <p style="color:#9ca3af;line-height:1.7;margin:0 0 24px;">If you ever want to work together, <a href="https://riyadketami.com/en/contact" style="color:#00ff66;text-decoration:none;">reach out here</a>.</p>
-          <p style="color:#6b7280;font-size:12px;margin:0;">— Riyad<br/>riyadketami.com</p>
+          <h2 style="color:#F4F4EF;margin:0 0 16px;font-size:22px;">You're in. Welcome.</h2>
+          <p style="color:#9A9A94;line-height:1.7;margin:0 0 16px;">Every week I send one sharp email: AI strategies, business tactics, and creator insights. No filler, no fluff.</p>
+          <p style="color:#9A9A94;line-height:1.7;margin:0 0 24px;">If you ever want to work together, <a href="https://riyadketami.com/en/contact" style="color:#00CD29;text-decoration:none;">reach out here</a>.</p>
+          <p style="color:#9A9A94;font-size:12px;margin:0;">— Riyad<br/>riyadketami.com</p>
         `),
       });
       p.catch(() => {}); // prevent UnhandledPromiseRejection; failure is non-fatal

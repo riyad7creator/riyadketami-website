@@ -5,7 +5,9 @@ import { motion } from 'framer-motion';
 import { Mail } from 'lucide-react';
 import MatrixText from '@/components/ui/MatrixText';
 
-export default function NewsletterCard({ subscriberCount }: { subscriberCount: number }) {
+// subscriberCount is intentionally unused in copy: citing an inflated reader
+// count broke the brand's no-unverified-claims rule. Prop kept for API compat.
+export default function NewsletterCard({ subscriberCount: _subscriberCount }: { subscriberCount: number }) {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
@@ -25,9 +27,6 @@ export default function NewsletterCard({ subscriberCount }: { subscriberCount: n
     }
   };
 
-  const countLabel =
-    subscriberCount >= 1000 ? `${Math.floor(subscriberCount / 1000)}K+` : `${subscriberCount}+`;
-
   return (
     <section
       id="newsletter"
@@ -44,7 +43,7 @@ export default function NewsletterCard({ subscriberCount }: { subscriberCount: n
             AI &amp; business insights, every week.
           </p>
           <p className="text-xs text-text-2">
-            Free. Join {countLabel} readers. Unsubscribe anytime.
+            Free. One email a week. Unsubscribe anytime.
           </p>
         </div>
       </div>

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import dbConnect from '@/lib/db/connect';
 import Subscriber from '@/models/Subscriber';
+import { syncToKit } from '@/lib/kit';
 import { serverError } from '@/lib/api-helpers';
 
 export async function POST(req: Request) {
@@ -33,11 +34,13 @@ export async function POST(req: Request) {
     let imported = 0;
     let skipped = 0;
 
+    const newlyImported: string[] = [];
     await Promise.all(
       validEmails.map(async (email) => {
         try {
           await Subscriber.create({ email });
           imported++;
+          newlyImported.push(email);
         } catch (e: unknown) {
           // Duplicate key error
           if ((e as { code?: number })?.code === 11000) {
@@ -48,6 +51,14 @@ export async function POST(req: Request) {
         }
       })
     );
+
+    // Imported emails must reach Kit too, or the two lists silently drift.
+    // Fire-and-forget, sequential to stay polite to Kit's rate limits.
+    void (async () => {
+      for (const email of newlyImported) {
+        await syncToKit({ email_address: email });
+      }
+    })();
 
     return NextResponse.json({ imported, skipped, total: validEmails.length });
   } catch (error) {

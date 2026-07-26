@@ -35,16 +35,18 @@ function toCardProps(c: ILinkCard & { _id: unknown }): CardProps {
   };
 }
 
+// Counts must match reality (admin → Content Stats is the reference):
+// TikTok 246K · Facebook 164K · Instagram 70.4K · YouTube 5K as of 2026-07.
 const DEFAULT_PROFILE = {
   name: 'Riyad Ketami',
   tagline: 'Digital Entrepreneur · AI Consultant · Creator',
   statusLine: undefined as string | undefined,
   statusEnabled: false,
-  subscriberCount: 5000,
+  subscriberCount: 0,
   socials: {
-    tiktok: { url: 'https://tiktok.com/@riyadketami', count: '200K+' },
-    youtube: { url: 'https://youtube.com/@riyadketami', count: '50K+' },
-    instagram: { url: 'https://instagram.com/riyadketami', count: '80K+' },
+    tiktok: { url: 'https://tiktok.com/@riyadketami', count: '245K+' },
+    youtube: { url: 'https://youtube.com/@riyadketami', count: '5K+' },
+    instagram: { url: 'https://instagram.com/riyadketami', count: '70K+' },
   },
 };
 

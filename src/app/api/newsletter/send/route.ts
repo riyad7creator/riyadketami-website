@@ -55,13 +55,13 @@ export async function POST(req: Request) {
       const unsub = unsubLink(email);
       const html = emailShell(
         '// newsletter',
-        `<h2 style="font-size:22px;font-weight:700;color:#f9fafb;margin:0 0 16px;">${escHtml(subject)}</h2>
-         ${preview ? `<p style="color:#9ca3af;font-size:13px;margin:0 0 24px;">${escHtml(preview)}</p>` : ''}
-         <div style="color:#d1d5db;font-size:15px;line-height:1.7;">${content}</div>
-         <hr style="border:none;border-top:1px solid #1f2937;margin:32px 0;" />
-         <p style="color:#6b7280;font-size:12px;">
+        `<h2 style="font-size:22px;font-weight:700;color:#F4F4EF;margin:0 0 16px;">${escHtml(subject)}</h2>
+         ${preview ? `<p style="color:#9A9A94;font-size:13px;margin:0 0 24px;">${escHtml(preview)}</p>` : ''}
+         <div style="color:#C6C6C0;font-size:15px;line-height:1.7;">${content}</div>
+         <hr style="border:none;border-top:1px solid #2A2A28;margin:32px 0;" />
+         <p style="color:#9A9A94;font-size:12px;">
            You received this because you subscribed at riyadketami.com.&nbsp;
-           <a href="${unsub}" style="color:#6b7280;text-decoration:underline;">Unsubscribe</a>
+           <a href="${unsub}" style="color:#9A9A94;text-decoration:underline;">Unsubscribe</a>
          </p>`
       );
 

@@ -112,22 +112,8 @@ export default function NavBar({ locale, items }: NavBarProps) {
         </nav>
       </header>
 
-      {/* Mobile drawer + blurred backdrop over the page behind it */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            key="nav-backdrop"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0, transition: { duration: 0.15 } }}
-            transition={{ duration: 0.2 }}
-            onClick={() => setMobileOpen(false)}
-            className="fixed inset-0 top-16 z-[calc(var(--z-nav)-2)] bg-bg-0/60 backdrop-blur-md md:hidden"
-            aria-hidden
-          />
-        )}
-      </AnimatePresence>
-
+      {/* Mobile drawer — the blur lives on the panel itself, so only the area
+          behind the menu is frosted; the rest of the page stays untouched. */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.nav
@@ -139,7 +125,7 @@ export default function NavBar({ locale, items }: NavBarProps) {
                drawer pops in rather than merely sliding. */
             transition={{ duration: 0.28, ease: [0.34, 1.56, 0.64, 1] }}
             aria-label="Mobile navigation"
-            className="fixed top-16 inset-x-0 z-[calc(var(--z-nav)-1)] glass border-b border-border px-5 py-4 flex flex-col gap-1 md:hidden"
+            className="fixed top-[4.5rem] inset-x-3 z-[calc(var(--z-nav)-1)] glass backdrop-blur-xl border border-border rounded-[var(--radius-lg)] shadow-2xl px-3 py-3 flex flex-col gap-1 md:hidden"
           >
             {items.map((item) => {
               const active = pathname === item.href;
@@ -148,7 +134,7 @@ export default function NavBar({ locale, items }: NavBarProps) {
                   key={item.href}
                   href={item.href}
                   aria-current={active ? 'page' : undefined}
-                  className={`px-3 py-3 min-h-[44px] flex items-center rounded-[var(--radius-md)] text-sm font-medium transition-colors duration-[var(--duration-fast)] ${
+                  className={`px-4 py-3 min-h-[44px] flex items-center rounded-[var(--radius-md)] text-sm font-medium transition-colors duration-[var(--duration-fast)] ${
                     active ? 'bg-matrix/10 text-matrix' : 'text-text-1 hover:bg-surface hover:text-text-0'
                   }`}
                 >

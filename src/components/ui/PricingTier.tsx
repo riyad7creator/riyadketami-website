@@ -34,7 +34,7 @@ export default function PricingTier({
       transition={{ type: 'spring', stiffness: 400, damping: 30 }}
       className={`flex flex-col gap-6 rounded-[var(--radius-lg)] p-7 border ${
         featured
-          ? 'bg-matrix/5 border-matrix/40 shadow-[0_0_40px_rgba(0,255,102,0.12)]'
+          ? 'bg-matrix/5 border-matrix/40 shadow-[0_0_40px_rgba(var(--matrix-rgb),0.12)]'
           : 'glass border-border'
       } ${className}`}
     >

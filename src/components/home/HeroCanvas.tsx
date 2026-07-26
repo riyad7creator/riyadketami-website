@@ -23,6 +23,8 @@ interface Particle {
 interface HeroCanvasProps {
   src: string;
   className?: string;
+  /** When true, the rAF loop is suspended (e.g. while the layer is fully transparent). */
+  paused?: boolean;
 }
 
 const SAMPLE = 96;
@@ -35,9 +37,18 @@ function pickGlyph(): string {
   return GLYPHS[Math.floor(Math.random() * GLYPHS.length)] ?? '0';
 }
 
-export default function HeroCanvas({ src, className = '' }: HeroCanvasProps) {
+export default function HeroCanvas({ src, className = '', paused = false }: HeroCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [ready, setReady] = useState(false);
+  const pausedRef = useRef(paused);
+  const controlsRef = useRef<{ start: () => void; stop: () => void } | null>(null);
+
+  // Toggle the loop without re-running the main effect (which would reload the image)
+  useEffect(() => {
+    pausedRef.current = paused;
+    if (paused) controlsRef.current?.stop();
+    else controlsRef.current?.start();
+  }, [paused]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -51,10 +62,15 @@ export default function HeroCanvas({ src, className = '' }: HeroCanvasProps) {
     // Read tokens once so canvas colors stay in sync with design tokens
     const root = getComputedStyle(document.documentElement);
     const bg0 = root.getPropertyValue('--bg-0').trim() || '#0A0B0D';
+    const rainRgb = root.getPropertyValue('--matrix-rain-rgb').trim() || '0, 255, 65';
 
     let particles: Particle[] = [];
     let raf = 0;
     let started = 0;
+    let lastT = 0;
+    let running = false;
+    let loaded = false;
+    let intersecting = true;
     let dpr = Math.min(window.devicePixelRatio || 1, 2);
 
     const computeParticles = () => {
@@ -156,19 +172,22 @@ export default function HeroCanvas({ src, className = '' }: HeroCanvasProps) {
     const DAMPING = 0.76;
     const SETTLE_THRESHOLD = 0.4;
 
-    // Quantized fillStyle cache: 16 alpha buckets × 2 modes (head, settled)
-    // Using #00FF41 brand green
+    // Quantized fillStyle cache: 16 alpha buckets × 2 modes (head, settled).
+    // Settled glyphs use the rain green from tokens (--matrix-rain-rgb).
     const ALPHA_BUCKETS = 16;
     const headStyles: string[] = [];
     const settledStyles: string[] = [];
     for (let i = 0; i < ALPHA_BUCKETS; i++) {
       const a = (i + 1) / ALPHA_BUCKETS;
       headStyles.push(`rgba(200,255,220,${a.toFixed(3)})`);
-      settledStyles.push(`rgba(0,255,65,${(a * 0.75).toFixed(3)})`);
+      settledStyles.push(`rgba(${rainRgb},${(a * 0.75).toFixed(3)})`);
     }
 
     const draw = (t: number) => {
       if (!started) started = t;
+      // Compensate for long gaps (loop was paused) so scheduling doesn't jump
+      if (lastT && t - lastT > 250) started += t - lastT - 16;
+      lastT = t;
       const elapsed = t - started;
 
       const w = canvas.clientWidth;
@@ -216,8 +235,26 @@ export default function HeroCanvas({ src, className = '' }: HeroCanvasProps) {
         ctx.fillText(p.glyph, p.x, p.y);
       }
 
+      if (running) raf = requestAnimationFrame(draw);
+    };
+
+    const stop = () => {
+      running = false;
+      cancelAnimationFrame(raf);
+    };
+    const start = () => {
+      if (running || !loaded || pausedRef.current || !intersecting || document.hidden) return;
+      running = true;
       raf = requestAnimationFrame(draw);
     };
+    controlsRef.current = { start, stop };
+
+    const io = new IntersectionObserver(([entry]) => {
+      intersecting = entry?.isIntersecting ?? true;
+      if (intersecting) start();
+      else stop();
+    });
+    io.observe(canvas);
 
     const image = new Image();
     image.crossOrigin = 'anonymous';
@@ -230,8 +267,9 @@ export default function HeroCanvas({ src, className = '' }: HeroCanvasProps) {
         if (cancelled) return;
         resize();
         setReady(true);
-        cancelAnimationFrame(raf);
-        raf = requestAnimationFrame(draw);
+        loaded = true;
+        stop();
+        start();
       });
     };
 
@@ -251,8 +289,10 @@ export default function HeroCanvas({ src, className = '' }: HeroCanvasProps) {
 
     return () => {
       cancelled = true;
-      cancelAnimationFrame(raf);
+      stop();
+      controlsRef.current = null;
       ro.disconnect();
+      io.disconnect();
     };
   }, [src]);
 

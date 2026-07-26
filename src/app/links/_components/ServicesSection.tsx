@@ -9,7 +9,7 @@ export default function ServicesSection({ cards }: { cards: CardProps[] }) {
     <section className="w-full flex flex-col gap-2.5" aria-label="Services">
       <MatrixText
         text="// work with me"
-        className="font-mono text-[9px] tracking-[0.2em] text-matrix px-1"
+        className="font-mono text-[10px] tracking-[0.2em] text-matrix px-1"
       />
       <div className="flex flex-col gap-2.5">
         {cards.map((card) => (

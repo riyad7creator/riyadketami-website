@@ -20,7 +20,9 @@
   --color-surface: var(--surface);
   --color-surface-hover: var(--surface-hover);
 
-  /* Fonts — font-family utilities come from tailwind.config.ts fontFamily extension */
+  /* Fonts. NOTE: font-mono/font-arabic utilities stay in tailwind.config.ts —
+     their next/font variables (--font-mono, --font-arabic) would collide with
+     Tailwind v4 @theme keys of the same name. */
   --font-display: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 
@@ -44,7 +46,21 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color-scheme: dark;
-  scroll-behavior: smooth;
+}
+
+/* Smooth scrolling only for in-page anchor jumps (html:focus-within), never for
+   route-change scroll restoration, and never for reduced-motion users. */
+@media (prefers-reduced-motion: no-preference) {
+  html:focus-within {
+    scroll-behavior: smooth;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee,
+  .animate-pulse-ring {
+    animation: none !important;
+  }
 }
 
 body {
@@ -126,7 +142,7 @@ body {
 }
 
 ::selection {
-  background: rgba(0, 255, 102, 0.2);
+  background: rgba(var(--matrix-rgb), 0.2);
   color: var(--matrix);
 }
 
@@ -156,9 +172,14 @@ body {
     font-family: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif;
     font-weight: 700;
     line-height: 1.1;
-    letter-spacing: -0.02em;
     margin: 0;
   }
+
+  /* Optical sizing: tighten more as type grows, less as it shrinks.
+     A single blanket value over-tightens small headings. */
+  h1, h2 { letter-spacing: -0.025em; }
+  h3     { letter-spacing: -0.015em; }
+  h4, h5, h6 { letter-spacing: -0.01em; }
 
   p {
     line-height: 1.7;

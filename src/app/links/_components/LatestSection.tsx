@@ -28,7 +28,7 @@ export default function LatestSection({ items }: { items: LatestItem[] }) {
     <section className="w-full flex flex-col gap-2.5" aria-label="Latest content">
       <MatrixText
         text="// latest"
-        className="font-mono text-[9px] tracking-[0.2em] text-matrix px-1"
+        className="font-mono text-[10px] tracking-[0.2em] text-matrix px-1"
       />
       <div className="flex flex-col gap-2.5">
         {items.map(({ source, item }) => {
@@ -66,7 +66,7 @@ export default function LatestSection({ items }: { items: LatestItem[] }) {
 
               <div className="flex-1 min-w-0 flex flex-col gap-1">
                 <div className="flex items-center gap-1.5 flex-wrap">
-                  <span className="font-mono text-[9px] tracking-[0.12em] text-text-2 uppercase">
+                  <span className="font-mono text-[10px] tracking-[0.12em] text-text-2 uppercase">
                     {source.label}
                   </span>
                   {fresh && <Pill label="new" variant="new" />}

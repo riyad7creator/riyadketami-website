@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Reveal } from '@/components/ui';
 import MatrixText from '@/components/ui/MatrixText';
 import MatrixRain from '@/components/ui/MatrixRain';
@@ -51,9 +52,16 @@ export default function NewsletterSection({ dict }: NewsletterSectionProps) {
 
         <Reveal direction="up" delay={0.24} className="w-full">
           {status === 'success' ? (
-            <div className="glass border border-matrix/30 rounded-[var(--radius-md)] px-6 py-4">
-              <p className="font-mono text-sm text-matrix">{t.success}</p>
-            </div>
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              className="glass border border-matrix/30 rounded-[var(--radius-md)] px-6 py-4"
+              role="status"
+              aria-live="polite"
+            >
+              <MatrixText text={t.success} className="text-sm text-matrix" />
+            </motion.div>
           ) : (
             <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 w-full">
               <input

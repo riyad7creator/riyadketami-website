@@ -1,7 +1,5 @@
 'use client';
 
-import { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
 import type { ReactNode } from 'react';
 
 interface MarqueeProps {
@@ -24,17 +22,20 @@ export default function Marquee({
   return (
     <div className={`flex overflow-hidden select-none ${className}`}>
       <div
-        className="flex gap-8 animate-marquee"
+        className={`flex animate-marquee ${pauseOnHover ? 'marquee-pausable' : ''}`}
         style={
           {
             '--duration': duration,
             '--direction': reverse ? 'reverse' : 'normal',
-            animationPlayState: pauseOnHover ? undefined : 'running',
           } as React.CSSProperties
         }
       >
-        {children}
-        {children}
+        {/* Each copy carries its own trailing gap (pe-8) so both halves are
+            geometrically identical and the -50% wrap point is seamless. */}
+        <div className="flex gap-8 pe-8 shrink-0">{children}</div>
+        <div className="flex gap-8 pe-8 shrink-0" aria-hidden>
+          {children}
+        </div>
       </div>
 
       <style>{`
@@ -45,8 +46,8 @@ export default function Marquee({
         .animate-marquee {
           animation: marquee var(--duration, 30s) linear var(--direction, normal) infinite;
         }
-        .animate-marquee:hover {
-          animation-play-state: ${pauseOnHover ? 'paused' : 'running'};
+        .marquee-pausable:hover {
+          animation-play-state: paused;
         }
       `}</style>
     </div>

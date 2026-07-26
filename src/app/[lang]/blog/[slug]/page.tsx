@@ -133,7 +133,7 @@ export default async function BlogPostPage({
         {/* Content */}
         <Reveal direction="up" delay={0.2}>
           <div
-            className="prose prose-invert prose-sm sm:prose-base max-w-none prose-headings:font-display prose-headings:text-text-0 prose-p:text-text-1 prose-a:text-matrix prose-a:no-underline hover:prose-a:underline prose-code:text-matrix prose-code:bg-bg-2 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-pre:bg-bg-1 prose-pre:border prose-pre:border-border prose-blockquote:border-matrix/40 prose-blockquote:text-text-2"
+            className="prose prose-invert sm:prose-lg max-w-none prose-headings:font-display prose-headings:text-text-0 prose-p:text-text-1 prose-a:text-matrix prose-a:underline prose-a:decoration-matrix/40 prose-a:underline-offset-2 hover:prose-a:decoration-matrix prose-code:text-matrix prose-code:bg-bg-2 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-pre:bg-bg-1 prose-pre:border prose-pre:border-border prose-blockquote:border-matrix/40 prose-blockquote:text-text-2"
             dangerouslySetInnerHTML={{ __html: cleanHtml }}
           />
         </Reveal>

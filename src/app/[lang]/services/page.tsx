@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { isValidLocale } from '@/i18n/config';
 import { getDictionary } from '@/lib/dictionaries';
@@ -139,12 +138,8 @@ export default async function ServicesPage({
           </Reveal>
           <Reveal direction="up" delay={0.24}>
             <div className="flex flex-wrap gap-3 justify-center">
-              <Link href={`/${lang}/contact`}>
-                <Button variant="primary" size="lg">{t.cta_button}</Button>
-              </Link>
-              <Link href={`/${lang}/contact`}>
-                <Button variant="secondary" size="lg">{t.cta_button_alt}</Button>
-              </Link>
+              <Button href={`/${lang}/contact`} variant="primary" size="lg">{t.cta_button}</Button>
+              <Button href={`/${lang}/contact`} variant="secondary" size="lg">{t.cta_button_alt}</Button>
             </div>
           </Reveal>
         </div>

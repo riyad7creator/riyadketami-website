@@ -17,10 +17,14 @@ export default function Card({ children, tilt = false, glow = false, className =
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [8, -8]), { stiffness: 300, damping: 30 });
-  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-8, 8]), { stiffness: 300, damping: 30 });
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [5, -5]), { stiffness: 300, damping: 30 });
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-5, 5]), { stiffness: 300, damping: 30 });
   const glowX = useTransform(mouseX, [-0.5, 0.5], [0, 100]);
   const glowY = useTransform(mouseY, [-0.5, 0.5], [0, 100]);
+  const glowBackground = useTransform(
+    [glowX, glowY],
+    ([x, y]) => `radial-gradient(circle at ${x}% ${y}%, rgba(var(--matrix-rgb), 0.08) 0%, transparent 60%)`
+  );
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!tilt || !ref.current) return;
@@ -43,17 +47,12 @@ export default function Card({ children, tilt = false, glow = false, className =
       style={tilt ? { rotateX, rotateY, transformPerspective: 1000 } : undefined}
       whileHover={glow ? { scale: 1.01 } : undefined}
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-      className={`glass rounded-[var(--radius-lg)] relative overflow-hidden ${onClick ? 'cursor-pointer' : ''} ${className}`}
+      className={`group glass rounded-[var(--radius-lg)] relative overflow-hidden ${onClick ? 'cursor-pointer' : ''} ${className}`}
     >
       {glow && (
         <motion.div
-          className="absolute inset-0 pointer-events-none rounded-[var(--radius-lg)] opacity-0 group-hover:opacity-100"
-          style={{
-            background: useTransform(
-              [glowX, glowY],
-              ([x, y]) => `radial-gradient(circle at ${x}% ${y}%, rgba(0,255,102,0.08) 0%, transparent 60%)`
-            ),
-          }}
+          className="absolute inset-0 pointer-events-none rounded-[var(--radius-lg)] opacity-0 group-hover:opacity-100 transition-opacity duration-[var(--duration-base)]"
+          style={{ background: glowBackground }}
         />
       )}
       {children}

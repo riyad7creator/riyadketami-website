@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import HeroPortrait from './HeroPortrait';
 import { Button, Reveal, MatrixRain } from '@/components/ui';
 import MatrixText from '@/components/ui/MatrixText';
@@ -53,16 +52,12 @@ export default function Hero({ locale, dict, socials = [] }: HeroProps) {
 
           <Reveal direction="up" delay={0.24}>
             <div className="flex flex-wrap gap-3 pt-2">
-              <Link href={`/${locale}/services`}>
-                <Button variant="primary" size="lg">
-                  {t.cta_consulting}
-                </Button>
-              </Link>
-              <Link href={`/${locale}/blog`}>
-                <Button variant="secondary" size="lg">
-                  {t.cta_blog}
-                </Button>
-              </Link>
+              <Button href={`/${locale}/services`} variant="primary" size="lg">
+                {t.cta_consulting}
+              </Button>
+              <Button href={`/${locale}/blog`} variant="secondary" size="lg">
+                {t.cta_blog}
+              </Button>
             </div>
           </Reveal>
 

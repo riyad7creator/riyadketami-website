@@ -67,7 +67,7 @@ export default function FollowerStrip({ lang, dict, entries }: FollowerStripProp
             <span className="font-mono text-xs tracking-[0.18em] uppercase text-text-2 group-hover:text-matrix transition-colors duration-[var(--duration-fast)]">
               {PLATFORM_LABELS[e.platform]}
             </span>
-            <span className="font-display font-bold text-2xl sm:text-3xl text-text-0 group-hover:text-matrix transition-colors duration-[var(--duration-fast)]">
+            <span className="font-display font-bold text-2xl sm:text-3xl text-text-0 group-hover:text-matrix transition-colors duration-[var(--duration-fast)] tabular-nums">
               {formatFollowers(e.followers, lang)}
             </span>
             <span className="font-mono text-xs text-text-2 group-hover:text-text-1 transition-colors duration-[var(--duration-fast)]">

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { FormField, Button } from '@/components/ui';
 import { contactFormSchema } from '@/lib/validation';
@@ -52,13 +53,16 @@ export default function ContactForm({ labels }: ContactFormProps) {
 
   if (status === 'success') {
     return (
-      <p
+      <motion.p
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
         role="status"
         aria-live="polite"
         className="font-mono text-sm text-matrix tracking-[0.15em] py-8"
       >
         {labels.success}
-      </p>
+      </motion.p>
     );
   }
 

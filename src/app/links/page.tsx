@@ -119,16 +119,19 @@ export default async function LinksPage() {
         className="fixed top-0 left-1/2 -translate-x-1/2 w-[480px] h-[240px] pointer-events-none"
         style={{
           background:
-            'radial-gradient(ellipse at center top, rgba(0,255,102,0.07) 0%, transparent 70%)',
+            'radial-gradient(ellipse at center top, rgba(var(--matrix-rgb), 0.07) 0%, transparent 70%)',
         }}
         aria-hidden
       />
 
-      {/* Avatar pulse-ring animation */}
+      {/* Avatar pulse-ring animation — paused under prefers-reduced-motion via globals.css */}
       <style>{`
         @keyframes pulse-ring {
           0%, 100% { opacity: 0.3; transform: scale(1.18); }
           50%       { opacity: 0.8; transform: scale(1.22); }
+        }
+        .animate-pulse-ring {
+          animation: pulse-ring 3s ease-in-out infinite;
         }
       `}</style>
 
@@ -172,7 +175,7 @@ export default async function LinksPage() {
           </Link>
         </div>
 
-        <p className="font-mono text-[9px] text-text-2 tracking-[0.12em] pb-4">
+        <p className="font-mono text-[10px] text-text-2 tracking-[0.12em] pb-4">
           © {new Date().getFullYear()} Riyad Ketami
         </p>
       </div>

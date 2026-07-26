@@ -9,7 +9,7 @@ export default function ResourcesSection({ cards }: { cards: CardProps[] }) {
     <section className="w-full flex flex-col gap-2.5" aria-label="Free resources">
       <MatrixText
         text="// free resources"
-        className="font-mono text-[9px] tracking-[0.2em] text-matrix px-1"
+        className="font-mono text-[10px] tracking-[0.2em] text-matrix px-1"
       />
       <div className="flex flex-col gap-2.5">
         {cards.map((card) => (

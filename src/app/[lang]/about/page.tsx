@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { isValidLocale } from '@/i18n/config';
 import { getDictionary } from '@/lib/dictionaries';
@@ -61,11 +60,9 @@ export default async function AboutPage({
               <p className="text-text-1 text-lg leading-relaxed max-w-md">{t.subheadline}</p>
             </Reveal>
             <Reveal direction="up" delay={0.24}>
-              <Link href={`/${lang}/services`}>
-                <Button variant="primary" size="lg">
-                  {t.cta}
-                </Button>
-              </Link>
+              <Button href={`/${lang}/services`} variant="primary" size="lg">
+                {t.cta}
+              </Button>
             </Reveal>
           </div>
 
@@ -83,7 +80,7 @@ export default async function AboutPage({
               {/* Dark overlay */}
               <div className="absolute inset-0 bg-black/60" />
               {/* Portrait inset — bottom-left corner */}
-              <div className="absolute bottom-5 left-5 w-24 h-24 rounded-full border-2 border-matrix/60 overflow-hidden shadow-[0_0_24px_rgba(0,255,102,0.25)]">
+              <div className="absolute bottom-5 left-5 w-24 h-24 rounded-full border-2 border-matrix/60 overflow-hidden shadow-[0_0_24px_rgba(var(--matrix-rgb),0.25)]">
                 <Image
                   src="/portraits/portrait-hero.png"
                   alt="Riyad Ketami"
@@ -127,7 +124,7 @@ export default async function AboutPage({
 
           <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
             {t.skills.map((skill, i) => (
-              <Reveal key={i} direction="up" delay={0.05 + i * 0.05}>
+              <Reveal key={i} direction="up" delay={0.05 + Math.min(i, 5) * 0.05}>
                 <div className="flex items-center gap-3 glass rounded-[var(--radius-md)] px-5 py-4 border border-border">
                   <Check size={14} className="text-matrix shrink-0" />
                   <span className="text-text-1 text-sm font-medium">{skill}</span>
@@ -150,11 +147,9 @@ export default async function AboutPage({
             </h2>
           </Reveal>
           <Reveal direction="up" delay={0.16}>
-            <Link href={`/${lang}/services`}>
-              <Button variant="primary" size="lg">
-                {t.cta}
-              </Button>
-            </Link>
+            <Button href={`/${lang}/services`} variant="primary" size="lg">
+              {t.cta}
+            </Button>
           </Reveal>
         </div>
       </section>

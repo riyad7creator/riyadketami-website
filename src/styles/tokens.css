@@ -14,6 +14,14 @@
   --matrix-dim: #0FA968;
   --accent: #7DD3FC;
 
+  /* Matrix green, decomposed. Use rgba(var(--matrix-rgb), α) for glows and
+     washes so translucent greens follow the token instead of drifting. */
+  --matrix-rgb: 0, 255, 102;
+  /* Canvas rain glyphs use a deliberately cooler green than the UI accent
+     (introduced in af287ae). Read via getComputedStyle in canvas components. */
+  --matrix-rain: #00FF41;
+  --matrix-rain-rgb: 0, 255, 65;
+
   /* Feedback */
   --danger: #FF4D4D;
   --warning: #FFB020;
@@ -33,7 +41,7 @@
   --radius-xl: 32px;
 
   /* Shadows */
-  --glow-matrix: 0 0 20px rgba(0, 255, 102, 0.3);
+  --glow-matrix: 0 0 20px rgba(var(--matrix-rgb), 0.3);
   --glow-accent: 0 0 20px rgba(125, 211, 252, 0.3);
 
   /* Transitions */

@@ -44,7 +44,7 @@ export default function BlogCard({
             src={coverImage}
             alt={title}
             fill
-            className="object-cover transition-transform duration-[var(--duration-slow)] group-hover:scale-105"
+            className="object-cover transition-transform duration-[var(--duration-slow)] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </div>

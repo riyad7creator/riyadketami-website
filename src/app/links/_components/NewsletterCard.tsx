@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Mail } from 'lucide-react';
 import MatrixText from '@/components/ui/MatrixText';
 
@@ -38,7 +39,7 @@ export default function NewsletterCard({ subscriberCount }: { subscriberCount: n
           <Mail size={14} className="text-matrix" />
         </div>
         <div className="flex flex-col gap-0.5">
-          <MatrixText text="// weekly insights" className="text-[9px] tracking-[0.18em] text-matrix" />
+          <MatrixText text="// weekly insights" className="text-[10px] tracking-[0.18em] text-matrix" />
           <p className="font-display font-semibold text-text-0 text-sm mt-0.5">
             AI &amp; business insights, every week.
           </p>
@@ -49,9 +50,16 @@ export default function NewsletterCard({ subscriberCount }: { subscriberCount: n
       </div>
 
       {status === 'success' ? (
-        <p className="font-mono text-xs text-matrix tracking-[0.15em]">
+        <motion.p
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          role="status"
+          aria-live="polite"
+          className="font-mono text-xs text-matrix tracking-[0.15em]"
+        >
           {`// you're in. Check your inbox.`}
-        </p>
+        </motion.p>
       ) : (
         <form onSubmit={(e) => void handleSubmit(e)} className="flex flex-col gap-2">
           <input

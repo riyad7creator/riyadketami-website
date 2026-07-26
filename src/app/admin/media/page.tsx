@@ -145,7 +145,7 @@ function MediaCard({ file, onCopy, onDelete, onAltSave }: MediaCardProps) {
       />
 
       {/* Folder badge */}
-      <span className="absolute top-1.5 right-1.5 px-1.5 py-0.5 text-[9px] font-mono bg-bg-0/80 text-matrix border border-matrix/20 rounded">
+      <span className="absolute top-1.5 right-1.5 px-1.5 py-0.5 text-[10px] font-mono bg-bg-0/80 text-matrix border border-matrix/20 rounded">
         {file.folder}
       </span>
 
@@ -333,9 +333,9 @@ function DropzoneCard({ activeFolder, onUploaded }: DropzoneCardProps) {
           <Upload size={16} className="text-text-2" />
           <div className="text-center px-2">
             <p className="text-xs text-text-1">Drop or click</p>
-            <p className="text-[9px] font-mono text-text-2 mt-0.5">JPG PNG SVG WebP</p>
+            <p className="text-[10px] font-mono text-text-2 mt-0.5">JPG PNG SVG WebP</p>
           </div>
-          {error && <p className="text-[9px] text-danger px-2 text-center leading-tight">{error}</p>}
+          {error && <p className="text-[10px] text-danger px-2 text-center leading-tight">{error}</p>}
         </>
       )}
       <input

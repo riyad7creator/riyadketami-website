@@ -2,8 +2,7 @@
 
 import { useRef, useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion, useMotionValue, useMotionTemplate, useSpring, useTransform } from 'framer-motion';
 import { Check } from 'lucide-react';
 import { Button } from '@/components/ui';
 
@@ -29,33 +28,26 @@ interface ServiceCardProps {
 
 export default function ServiceCard({ item, lang, index = 0 }: ServiceCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
-  const [sheenPos, setSheenPos] = useState({ x: 50, y: 50 });
   const [hovered, setHovered] = useState(false);
 
-  // Framer Motion spring values for tilt
+  // Tilt + sheen are pure motion values — mousemove never triggers a React re-render
   const rawX = useMotionValue(0);
   const rawY = useMotionValue(0);
-  const rotateY = useSpring(useTransform(rawX, [-0.5, 0.5], [-8, 8]), { stiffness: 300, damping: 20 });
-  const rotateX = useSpring(useTransform(rawY, [-0.5, 0.5], [8, -8]), { stiffness: 300, damping: 20 });
-
-  function getRelativePos(clientX: number, clientY: number) {
-    const rect = cardRef.current?.getBoundingClientRect();
-    if (!rect) return { xNorm: 0, yNorm: 0, xPct: 50, yPct: 50 };
-    const xPct = ((clientX - rect.left) / rect.width) * 100;
-    const yPct = ((clientY - rect.top) / rect.height) * 100;
-    return {
-      xNorm: xPct / 100 - 0.5,
-      yNorm: yPct / 100 - 0.5,
-      xPct,
-      yPct,
-    };
-  }
+  const rotateY = useSpring(useTransform(rawX, [-0.5, 0.5], [-5, 5]), { stiffness: 300, damping: 20 });
+  const rotateX = useSpring(useTransform(rawY, [-0.5, 0.5], [5, -5]), { stiffness: 300, damping: 20 });
+  const sheenX = useMotionValue(50);
+  const sheenY = useMotionValue(50);
+  const sheen = useMotionTemplate`radial-gradient(circle at ${sheenX}% ${sheenY}%, rgba(var(--matrix-rgb), 0.1) 0%, transparent 55%)`;
 
   function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
-    const { xNorm, yNorm, xPct, yPct } = getRelativePos(e.clientX, e.clientY);
-    rawX.set(xNorm);
-    rawY.set(yNorm);
-    setSheenPos({ x: xPct, y: yPct });
+    const rect = cardRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const xPct = ((e.clientX - rect.left) / rect.width) * 100;
+    const yPct = ((e.clientY - rect.top) / rect.height) * 100;
+    rawX.set(xPct / 100 - 0.5);
+    rawY.set(yPct / 100 - 0.5);
+    sheenX.set(xPct);
+    sheenY.set(yPct);
   }
 
   function handleMouseEnter() {
@@ -68,21 +60,6 @@ export default function ServiceCard({ item, lang, index = 0 }: ServiceCardProps)
     rawY.set(0);
   }
 
-  function handleTouchStart(e: React.TouchEvent<HTMLDivElement>) {
-    const touch = e.touches[0];
-    if (!touch) return;
-    const { xNorm, yNorm } = getRelativePos(touch.clientX, touch.clientY);
-    rawX.set(xNorm);
-    rawY.set(yNorm);
-    setHovered(true);
-  }
-
-  function handleTouchEnd() {
-    rawX.set(0);
-    rawY.set(0);
-    setHovered(false);
-  }
-
   return (
     <div style={{ perspective: '1000px' }}>
       <motion.div
@@ -91,17 +68,12 @@ export default function ServiceCard({ item, lang, index = 0 }: ServiceCardProps)
         onMouseMove={handleMouseMove}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-        className="relative flex flex-col gap-6 h-full rounded-[var(--radius-lg)] p-8 border border-white/10 bg-white/[0.02] hover:border-matrix/40 hover:bg-matrix/[0.04] hover:shadow-[0_0_60px_rgba(0,255,102,0.06)] transition-colors duration-200 cursor-default select-none"
+        className="relative flex flex-col gap-6 h-full rounded-[var(--radius-lg)] p-8 border border-white/10 bg-white/[0.02] hover:border-matrix/40 hover:bg-matrix/[0.04] hover:shadow-[0_0_60px_rgba(var(--matrix-rgb),0.06)] transition-colors duration-200 cursor-default select-none"
       >
         {/* Radial sheen that follows the cursor */}
-        <div
+        <motion.div
           className="pointer-events-none absolute inset-0 rounded-[var(--radius-lg)] transition-opacity duration-200"
-          style={{
-            opacity: hovered ? 1 : 0,
-            background: `radial-gradient(circle at ${sheenPos.x}% ${sheenPos.y}%, rgba(0,255,136,0.1) 0%, transparent 55%)`,
-          }}
+          style={{ opacity: hovered ? 1 : 0, background: sheen }}
           aria-hidden
         />
 
@@ -144,11 +116,9 @@ export default function ServiceCard({ item, lang, index = 0 }: ServiceCardProps)
 
         {/* CTA */}
         <div className="pt-2">
-          <Link href={`/${lang}/contact`}>
-            <Button variant="secondary" className="w-full">
-              {item.cta}
-            </Button>
-          </Link>
+          <Button href={`/${lang}/contact`} variant="secondary" className="w-full">
+            {item.cta}
+          </Button>
         </div>
       </motion.div>
     </div>

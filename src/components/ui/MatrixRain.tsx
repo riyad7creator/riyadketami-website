@@ -42,9 +42,16 @@ export default function MatrixRain({
     const TRAIL_MIN = 6;
     const TRAIL_MAX = 28;
 
+    // Read the rain green from tokens so canvas colors can't drift from CSS
+    const rainRgb =
+      getComputedStyle(document.documentElement).getPropertyValue('--matrix-rain-rgb').trim() ||
+      '0, 255, 65';
+
     let drops: Drop[] = [];
-    let raf: number;
+    let raf = 0;
     let frame = 0;
+    let running = false;
+    let intersecting = true;
 
     const randomGlyph = () => GLYPHS[Math.floor(Math.random() * GLYPHS.length)] ?? '0';
 
@@ -70,15 +77,31 @@ export default function MatrixRain({
       drops = Array.from({ length: count }, () => newDrop(canvas.width, canvas.height, true));
     };
 
-    // Pause animation when tab is hidden to save CPU
+    // Run only while the tab is visible AND the canvas intersects the viewport.
+    // The `running` flag guarantees a single rAF loop no matter how the two
+    // signals interleave.
+    const stop = () => {
+      running = false;
+      cancelAnimationFrame(raf);
+    };
+    const start = () => {
+      if (running || document.hidden || !intersecting) return;
+      running = true;
+      raf = requestAnimationFrame(draw);
+    };
+
     const handleVisibility = () => {
-      if (document.hidden) {
-        cancelAnimationFrame(raf);
-      } else {
-        raf = requestAnimationFrame(draw);
-      }
+      if (document.hidden) stop();
+      else start();
     };
     document.addEventListener('visibilitychange', handleVisibility);
+
+    const io = new IntersectionObserver(([entry]) => {
+      intersecting = entry?.isIntersecting ?? true;
+      if (intersecting) start();
+      else stop();
+    });
+    io.observe(canvas);
 
     const draw = () => {
       frame++;
@@ -115,11 +138,11 @@ export default function MatrixRain({
             // Head: near-white hot
             ctx.fillStyle = `rgba(220,255,235,${Math.min(1, cellAlpha * 5)})`;
           } else if (j <= 2) {
-            // Near-head: #00FF41 bright
-            ctx.fillStyle = `rgba(0,255,65,${Math.min(1, cellAlpha * 2.5)})`;
+            // Near-head: rain green, bright
+            ctx.fillStyle = `rgba(${rainRgb},${Math.min(1, cellAlpha * 2.5)})`;
           } else {
-            // Body: #00FF41 fading
-            ctx.fillStyle = `rgba(0,200,50,${Math.max(0, cellAlpha)})`;
+            // Body: rain green, fading
+            ctx.fillStyle = `rgba(${rainRgb},${Math.max(0, cellAlpha * 0.78)})`;
           }
 
           ctx.fillText(drop.glyphs[drop.trailLen - 1 - j] ?? '0', drop.x, cy);
@@ -131,17 +154,18 @@ export default function MatrixRain({
         }
       }
 
-      raf = requestAnimationFrame(draw);
+      if (running) raf = requestAnimationFrame(draw);
     };
 
     const ro = new ResizeObserver(resize);
     ro.observe(canvas);
     resize();
-    draw();
+    start();
 
     return () => {
-      cancelAnimationFrame(raf);
+      stop();
       ro.disconnect();
+      io.disconnect();
       document.removeEventListener('visibilitychange', handleVisibility);
     };
   }, [opacity, speed, density]);

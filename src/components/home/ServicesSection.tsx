@@ -77,9 +77,15 @@ export default function ServicesSection({ locale, dict }: ServicesSectionProps) 
                 {/* CTA */}
                 <Link
                   href={`/${locale}/contact`}
-                  className="inline-flex items-center gap-2 font-mono text-xs tracking-[0.12em] text-matrix hover:gap-3 transition-all duration-[var(--duration-fast)]"
+                  className="group/cta inline-flex items-center gap-2 font-mono text-xs tracking-[0.12em] text-matrix"
                 >
-                  {item.cta} →
+                  {item.cta}
+                  <span
+                    className="transition-transform duration-[var(--duration-fast)] group-hover/cta:translate-x-0.5 rtl:group-hover/cta:-translate-x-0.5 rtl-flip"
+                    aria-hidden
+                  >
+                    →
+                  </span>
                 </Link>
               </div>
             </Reveal>

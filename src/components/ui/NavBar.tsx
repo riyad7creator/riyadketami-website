@@ -51,7 +51,7 @@ export default function NavBar({ locale, items }: NavBarProps) {
   return (
     <>
       <header
-        className={`fixed top-0 inset-x-0 z-[var(--z-nav)] transition-all duration-300 ${
+        className={`fixed top-0 inset-x-0 z-[var(--z-nav)] transition-[background-color,border-color,box-shadow,backdrop-filter] duration-200 ${
           scrolled
             ? 'backdrop-blur-md bg-bg-0/70 border-b border-white/[0.06] shadow-[0_1px_0_rgba(255,255,255,0.04)]'
             : 'bg-transparent border-b border-transparent'
@@ -66,16 +66,24 @@ export default function NavBar({ locale, items }: NavBarProps) {
             <span className="text-matrix">.</span>
           </Link>
 
-          {/* Desktop */}
+          {/* Desktop — the active pill slides between items on navigation */}
           <ul className="hidden md:flex items-center gap-1">
             {items.map((item) => {
               const active = pathname === item.href || pathname.startsWith(item.href + '/');
               return (
-                <li key={item.href}>
+                <li key={item.href} className="relative">
+                  {active && (
+                    <motion.span
+                      layoutId="nav-active"
+                      transition={{ type: 'spring', stiffness: 500, damping: 40 }}
+                      className="absolute inset-0 rounded-[var(--radius-sm)] bg-matrix/10"
+                      aria-hidden
+                    />
+                  )}
                   <Link
                     href={item.href}
                     aria-current={active ? 'page' : undefined}
-                    className={`px-3 py-1.5 rounded-[var(--radius-sm)] text-sm font-medium transition-colors duration-[var(--duration-fast)] ${
+                    className={`relative px-3 py-1.5 rounded-[var(--radius-sm)] text-sm font-medium transition-colors duration-[var(--duration-fast)] block ${
                       active ? 'text-matrix' : 'text-text-2 hover:text-text-0'
                     }`}
                   >
@@ -107,10 +115,12 @@ export default function NavBar({ locale, items }: NavBarProps) {
         {mobileOpen && (
           <motion.nav
             id="mobile-nav"
-            initial={{ opacity: 0, y: -16 }}
+            initial={{ opacity: 0, y: -12 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -16 }}
-            transition={{ duration: 0.2 }}
+            exit={{ opacity: 0, y: -12, transition: { duration: 0.15, ease: 'easeIn' } }}
+            /* Mirrors --ease-spring in tokens.css — slight overshoot so the
+               drawer pops in rather than merely sliding. */
+            transition={{ duration: 0.28, ease: [0.34, 1.56, 0.64, 1] }}
             aria-label="Mobile navigation"
             className="fixed top-16 inset-x-0 z-[calc(var(--z-nav)-1)] glass border-b border-border px-5 py-4 flex flex-col gap-1 md:hidden"
           >

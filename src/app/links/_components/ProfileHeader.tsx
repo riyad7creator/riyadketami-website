@@ -48,13 +48,13 @@ export default function ProfileHeader({
           className="absolute rounded-full pointer-events-none"
           style={{
             inset: '-60%',
-            background: 'radial-gradient(circle, rgba(0,255,102,0.15) 0%, transparent 70%)',
+            background: 'radial-gradient(circle, rgba(var(--matrix-rgb), 0.15) 0%, transparent 70%)',
           }}
           aria-hidden
         />
         <div
-          className="absolute inset-0 rounded-full border border-matrix/30 pointer-events-none"
-          style={{ animation: 'pulse-ring 3s ease-in-out infinite', transform: 'scale(1.18)' }}
+          className="absolute inset-0 rounded-full border border-matrix/30 pointer-events-none animate-pulse-ring"
+          style={{ transform: 'scale(1.18)' }}
           aria-hidden
         />
         <div className="relative w-20 h-20 rounded-full border-2 border-matrix/50 overflow-hidden bg-bg-1 shrink-0">
@@ -97,7 +97,7 @@ export default function ProfileHeader({
               <span className="font-display font-bold text-sm text-text-0 group-hover:text-matrix transition-colors">
                 {s.count}
               </span>
-              <span className="font-mono text-[9px] tracking-[0.15em] text-text-2 mt-0.5">
+              <span className="font-mono text-[10px] tracking-[0.15em] text-text-2 mt-0.5">
                 {s.label.toUpperCase()}
               </span>
             </a>

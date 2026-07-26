@@ -1,11 +1,16 @@
 import type { PillVariant } from '@/models/LinkCard';
 
+/**
+ * The brand is two-colour (brand book 05). Signal Green is reserved for the
+ * one pill that is genuinely a signal — "new". Disclosure labels (sponsored,
+ * affiliate) and the rest stay neutral so green keeps its scarcity.
+ */
 const VARIANT_STYLES: Record<string, string> = {
-  sponsored: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+  sponsored: 'bg-bg-2 text-text-2 border-border',
   new: 'bg-matrix/10 text-matrix border-matrix/20',
-  free: 'bg-sky-500/10 text-sky-400 border-sky-500/20',
-  booking: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
-  affiliate: 'bg-orange-500/10 text-orange-400 border-orange-500/20',
+  free: 'bg-surface text-text-1 border-border',
+  booking: 'bg-surface text-text-1 border-border',
+  affiliate: 'bg-bg-2 text-text-2 border-border',
   custom: 'bg-bg-1 text-text-1 border-border',
 };
 

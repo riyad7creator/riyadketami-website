@@ -290,5 +290,5 @@ Copy-provenance note: EN is verbatim §2.3; FR H1 and the Arabic hero line are v
 ### Still open
 - **K3** — Atlas is paused, so the `/links` DB cards are unaudited. Sponsored/resource/service cards are not rendered until then
 - **V01–V07** — placeholders on site; generation waits for cost approval (Step 3)
-- Pre-existing, out of scope: 26 lint errors in admin/API code from `origin/main` (mostly `react-hooks/set-state-in-effect`); Next 16 `middleware` → `proxy` rename; the rk-studio newsletter page doesn't show the July "unsubscribed" badge
+- Pre-existing, out of scope: 23 lint errors (+1 warning) in admin/API/utility files from `origin/main`, none in files this pass rewrote (mostly `react-hooks/set-state-in-effect`); Next 16 `middleware` → `proxy` rename; the rk-studio newsletter page doesn't show the July "unsubscribed" badge
 - The blog-translation prompt still asks for MSA in Arabic posts (editorial call)

@@ -13,7 +13,7 @@ interface SendBody {
 }
 
 const BATCH_SIZE = 100;
-const APP_URL = process.env.NEXTAUTH_URL ?? 'https://riyadketami.com';
+const APP_URL = process.env.NEXTAUTH_URL ?? 'https://ketami.net';
 
 function unsubToken(email: string): string {
   // Dedicated secret so rotating the auth secret doesn't invalidate old unsubscribe links.
@@ -85,7 +85,7 @@ export async function POST(req: Request) {
          <div style="color:#C6C6C0;font-size:15px;line-height:1.7;">${content}</div>
          <hr style="border:none;border-top:1px solid #2A2A28;margin:32px 0;" />
          <p style="color:#9A9A94;font-size:12px;">
-           You received this because you subscribed at riyadketami.com.&nbsp;
+           You received this because you subscribed at ketami.net.&nbsp;
            <a href="${unsub}" style="color:#9A9A94;text-decoration:underline;">Unsubscribe</a>
          </p>
          <img src="${pixelUrl}" alt="" width="1" height="1" style="display:block;border:0;" />`;

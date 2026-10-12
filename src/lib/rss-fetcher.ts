@@ -15,7 +15,7 @@ const parser = new XMLParser({
 });
 
 const FETCH_TIMEOUT_MS = 5_000;
-const USER_AGENT = 'RiyadKetami-Site/1.0 (+https://riyadketami.com)';
+const USER_AGENT = 'RiyadKetami-Site/1.0 (+https://ketami.net)';
 
 async function fetchRssFeed(url: string): Promise<RssItem[] | null> {
   try {

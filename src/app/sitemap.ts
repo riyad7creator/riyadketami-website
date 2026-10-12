@@ -1,8 +1,9 @@
+import { BRAND } from '@/lib/brand';
 import type { MetadataRoute } from 'next';
 import { locales } from '@/i18n/config';
 import { getBlogPosts } from '@/lib/blog-data';
 
-const BASE = 'https://riyadketami.com';
+const BASE = BRAND.url;
 
 const STATIC_PATHS = ['', '/about', '/services', '/blog', '/contact'];
 

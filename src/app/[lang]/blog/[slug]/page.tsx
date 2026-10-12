@@ -8,6 +8,7 @@ import { getDictionary } from '@/lib/dictionaries';
 import { getBlogPost } from '@/lib/blog-data';
 import { localizedAlternates } from '@/lib/seo';
 import { Pill, Reveal } from '@/components/ui';
+import { BRAND } from '@/lib/brand';
 import { ArrowLeft } from 'lucide-react';
 import ViewTracker from '@/components/blog/ViewTracker';
 import { jsonLdString } from '@/lib/json-ld';
@@ -23,7 +24,7 @@ export async function generateMetadata({
   if (!isValidLocale(lang)) return {};
   const post = await getBlogPost(lang, slug);
   if (!post) return { title: 'Post not found' };
-  const APP_URL = process.env.NEXTAUTH_URL ?? 'https://riyadketami.com';
+  const APP_URL = process.env.NEXTAUTH_URL ?? 'https://ketami.net';
   return {
     title: post.title,
     description: post.excerpt,
@@ -52,7 +53,7 @@ export default async function BlogPostPage({
 
   const cleanHtml = DOMPurify.sanitize(post.content);
 
-  const APP_URL = process.env.NEXTAUTH_URL ?? 'https://riyadketami.com';
+  const APP_URL = process.env.NEXTAUTH_URL ?? 'https://ketami.net';
   const articleUrl = `${APP_URL}/${lang}/blog/${post.slug}`;
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -65,8 +66,9 @@ export default async function BlogPostPage({
     datePublished: post.createdAt ? new Date(post.createdAt).toISOString() : undefined,
     dateModified: post.updatedAt ? new Date(post.updatedAt).toISOString() : undefined,
     image: post.featuredImage ?? undefined,
-    author: { '@type': 'Person', name: 'Riyad Ketami', url: `${APP_URL}/${lang}/about` },
-    publisher: { '@type': 'Person', name: 'Riyad Ketami', url: APP_URL },
+    // Same @id as the home-page Person (brief §5.2) so Google merges them
+    author: { '@type': 'Person', '@id': `${BRAND.url}/#person`, name: BRAND.name, url: BRAND.url },
+    publisher: { '@type': 'Person', '@id': `${BRAND.url}/#person`, name: BRAND.name, url: BRAND.url },
   };
 
   const date = new Date(post.createdAt).toLocaleDateString(

@@ -1,3 +1,4 @@
+import { BRAND } from '@/lib/brand';
 import type { MetadataRoute } from 'next';
 
 export default function robots(): MetadataRoute.Robots {
@@ -9,6 +10,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/admin/', '/api/', '/login', '/design-system'],
       },
     ],
-    sitemap: 'https://riyadketami.com/sitemap.xml',
+    sitemap: `${BRAND.url}/sitemap.xml`,
   };
 }

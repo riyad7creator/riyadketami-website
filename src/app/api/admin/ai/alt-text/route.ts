@@ -46,7 +46,7 @@ export async function POST(req: Request) {
           headers: {
             Authorization: `Bearer ${apiKey}`,
             'Content-Type': 'application/json',
-            'HTTP-Referer': 'https://riyadketami.com',
+            'HTTP-Referer': 'https://ketami.net',
             'X-Title': 'Riyad Ketami Admin',
           },
           body: JSON.stringify({

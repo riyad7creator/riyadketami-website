@@ -25,7 +25,7 @@ export async function POST(req: Request) {
         from: FROM_EMAIL,
         to: ADMIN_EMAIL,
         replyTo: email,
-        subject: `[riyadketami.com] ${escHtml(subject)}`,
+        subject: `[ketami.net] ${escHtml(subject)}`,
         html: emailShell('// new contact form submission', `
           <h2 style="color:#fff;margin:0 0 24px;font-size:20px;">${escHtml(subject)}</h2>
           <table style="width:100%;border-collapse:collapse;">

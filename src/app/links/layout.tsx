@@ -1,28 +1,24 @@
 import type { Metadata } from 'next';
+import { BRAND } from '@/lib/brand';
+
+const description = `${BRAND.title} · ${BRAND.proofLine}. ${BRAND.abb.name}, Telegram, YouTube and every channel in one place.`;
 
 export const metadata: Metadata = {
-  title: 'Riyad Ketami | Links',
-  description:
-    'Newsletter, free resources, consulting sessions, latest content, and social channels — all in one place.',
+  title: `Links | ${BRAND.name}`,
+  description,
+  alternates: { canonical: '/links' },
   openGraph: {
-    type: 'website',
-    title: 'Riyad Ketami | Links',
-    description: 'Digital Entrepreneur · AI Consultant · Creator. 400K+ community.',
-    url: 'https://riyadketami.com/links',
-    images: [
-      {
-        url: 'https://riyadketami.com/portraits/portrait-hero.png',
-        width: 800,
-        height: 800,
-        alt: 'Riyad Ketami',
-      },
-    ],
+    type: 'profile',
+    title: `${BRAND.name} — Links`,
+    description,
+    url: `${BRAND.url}/links`,
+    images: [{ url: BRAND.images.og, width: 1200, height: 630, alt: `${BRAND.name}, ${BRAND.title}` }],
   },
   twitter: {
-    card: 'summary',
-    title: 'Riyad Ketami | Links',
-    description: 'Newsletter, resources, consulting, and social channels.',
-    images: ['https://riyadketami.com/portraits/portrait-hero.png'],
+    card: 'summary_large_image',
+    title: `${BRAND.name} — Links`,
+    description,
+    images: [BRAND.images.og],
   },
 };
 

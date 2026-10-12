@@ -37,7 +37,7 @@ export async function POST(req: Request) {
 
     const model = await getModel('agents');
     const postsContext = posts.map((p: { title: string; excerpt?: string; slug: string }) =>
-      `Title: ${p.title}\nExcerpt: ${p.excerpt ?? '(none)'}\nURL: https://riyadketami.com/blog/${p.slug}`
+      `Title: ${p.title}\nExcerpt: ${p.excerpt ?? '(none)'}\nURL: https://ketami.net/blog/${p.slug}`
     ).join('\n\n');
 
     const langLabel = language === 'fr' ? 'French' : language === 'ar' ? 'Arabic' : 'English';
@@ -58,7 +58,7 @@ Return a JSON object with these fields:
       headers: {
         Authorization: `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://riyadketami.com',
+        'HTTP-Referer': 'https://ketami.net',
         'X-Title': 'Riyad Ketami Admin',
       },
       body: JSON.stringify({

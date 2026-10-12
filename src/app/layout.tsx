@@ -4,30 +4,33 @@ import { spaceGrotesk, jetbrainsMono, ibmPlexArabic } from '@/lib/fonts';
 import { ClarityScript } from '@/components/ClarityScript';
 import ScrollControl from '@/components/ScrollControl';
 import MotionProvider from '@/components/MotionProvider';
+import { BRAND } from '@/lib/brand';
 import './globals.css';
 
+// Brief §5.1. Every identity string comes from BRAND, so the [PENDING] title
+// swap in src/lib/brand.ts updates <title>, OG and Twitter in one go.
 export const metadata: Metadata = {
   title: {
-    default: 'Riyad Ketami',
-    template: '%s | Riyad Ketami',
+    default: BRAND.headTitle,
+    template: `%s | ${BRAND.name}`,
   },
-  description: 'AI educator, digital strategist, and content creator. 36.4M+ impressions a quarter across MENA. Bridging global AI and the MENA creator economy.',
-  metadataBase: new URL('https://riyadketami.com'),
+  description: BRAND.description,
+  metadataBase: new URL(BRAND.url),
   openGraph: {
-    type: 'website',
-    siteName: 'Riyad Ketami',
-    title: 'Riyad Ketami — Built in Algeria. Built for the world.',
-    description: 'AI educator and digital strategist. 36.4M+ impressions, 1.4M+ engagements. Bridging global AI and the MENA creator economy.',
+    type: 'profile',
+    siteName: BRAND.name,
+    title: BRAND.headTitle,
+    description: BRAND.description,
+    url: BRAND.url,
+    images: [{ url: BRAND.images.og, width: 1200, height: 630, alt: `${BRAND.name}, ${BRAND.title}, ${BRAND.proofLine}` }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Riyad Ketami — Built in Algeria. Built for the world.',
-    description: 'AI educator and digital strategist. 36.4M+ impressions, 1.4M+ engagements. Bridging global AI and the MENA creator economy.',
+    title: BRAND.headTitle,
+    description: BRAND.description,
+    images: [BRAND.images.og],
   },
-  icons: {
-    icon: '/favicon.ico',
-  },
-  keywords: ['Riyad Ketami', 'AI educator', 'digital strategist', 'AI consultant Algeria', 'AI MENA', 'Darija AI', 'content creator Algeria', 'TikTok', 'newsletter'],
+  keywords: [BRAND.name, BRAND.title, BRAND.abb.name, 'AI Darija', 'AI بالدارجة', 'AI Algeria', 'AI MENA', 'Oran'],
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

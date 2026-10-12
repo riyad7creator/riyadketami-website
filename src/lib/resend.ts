@@ -1,6 +1,8 @@
 import { Resend } from 'resend';
 
 export const RESEND_API_KEY = process.env.RESEND_API_KEY;
+// Sender stays on the old domain until ketami.net is verified in Resend
+// (BRAND_AUDIT.md M12). Set FROM_EMAIL to switch without a code change.
 export const FROM_EMAIL = process.env.FROM_EMAIL ?? 'noreply@riyadketami.com';
 export const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? 'riyad@ketami.net';
 

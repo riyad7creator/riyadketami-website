@@ -4,11 +4,8 @@ import {
   Pill,
   Badge,
   SectionHeader,
-  Reveal,
   Card,
   Stat,
-  Testimonial,
-  PricingTier,
   BlogCard,
   LinkCard,
   TeamCard,
@@ -17,7 +14,6 @@ import {
 } from '@/components/ui';
 import TabsDemo from './TabsDemo';
 import ToastDemo from './ToastDemo';
-import MatrixDemo from './MatrixDemo';
 
 export const metadata = { title: 'Design System' };
 
@@ -127,19 +123,11 @@ export default function DesignSystemPage() {
       {/* Stats */}
       <Section title="Stats">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-8">
-          <Stat value={2400000} suffix="+" label="Followers" />
-          <Stat value={47} suffix="+" label="Projects" />
-          <Stat value={8} suffix=" yrs" label="Experience" />
-          <Stat value={98} suffix="%" label="Client NPS" />
+          <Stat value={3} label="Example metric" />
+          <Stat value={12} suffix="%" label="Example rate" />
         </div>
       </Section>
 
-      {/* Matrix */}
-      <Section title="Matrix Effects">
-        <Suspense>
-          <MatrixDemo />
-        </Suspense>
-      </Section>
 
       {/* Tabs */}
       <Section title="Tabs">
@@ -217,48 +205,7 @@ export default function DesignSystemPage() {
         </div>
       </Section>
 
-      <Section title="Pricing Tiers">
-        <div className="grid sm:grid-cols-3 gap-4">
-          <PricingTier
-            name="The Signal"
-            price="$400"
-            description="One problem, one direction."
-            features={['60-min strategy session', 'Written brief', 'Action plan']}
-            cta="Book a call"
-          />
-          <PricingTier
-            name="The Sprint"
-            price="$3,500"
-            description="Defined scope, delivered."
-            features={['2–3 week engagement', 'Dedicated Slack channel', 'Weekly reviews', 'Final deliverable']}
-            cta="Start a sprint"
-            featured
-          />
-          <PricingTier
-            name="The Stack"
-            price="$5,500"
-            period="mo"
-            description="Retained partnership."
-            features={['Ongoing strategy', 'Async collaboration', 'Monthly reviews', 'Priority access']}
-            cta="Apply now"
-          />
-        </div>
-      </Section>
 
-      <Section title="Testimonial">
-        <div className="grid sm:grid-cols-2 gap-4">
-          <Testimonial
-            quote="Riyad helped us go from idea to launch in 3 weeks. The clarity he brought was remarkable."
-            author="Alex Chen"
-            title="Founder, BuildFast"
-          />
-          <Testimonial
-            quote="The Signal session alone changed how our entire team thinks about growth."
-            author="Sarah M."
-            title="CMO, ScaleHQ"
-          />
-        </div>
-      </Section>
 
       <Section title="SectionHeader">
         <SectionHeader

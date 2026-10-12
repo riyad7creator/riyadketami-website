@@ -33,9 +33,8 @@ const UserSchema = new mongoose.Schema(
     name: { type: String, required: true, maxlength: 60 },
     email: { type: String, required: true, unique: true, maxlength: 100, lowercase: true },
     password: { type: String, select: false },
-    // portrait-hero.png is the only portrait that exists on disk — the old
-    // portrait-clean.png default 404'd for every user without an uploaded image
-    image: { type: String, default: '/portraits/portrait-hero.png' },
+    // Default avatar: brand kit A01 (the old portrait-clean.png default 404'd)
+    image: { type: String, default: '/brand/profile-picture_800.jpg' },
     bio: { type: String, maxlength: 500 },
     tagline: { type: String, maxlength: 100 },
     role: { type: String, enum: USER_ROLES, default: 'viewer' },

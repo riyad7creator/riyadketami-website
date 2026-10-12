@@ -83,6 +83,8 @@
 }
 
 html {
+  /* Anchor jumps land below the fixed 64px header */
+  scroll-padding-top: 5rem;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color-scheme: dark;

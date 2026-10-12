@@ -6,6 +6,8 @@ import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import LangSwitcher from './LangSwitcher';
+import Wordmark from './Wordmark';
+import { BRAND } from '@/lib/brand';
 import type { Locale } from '@/i18n/config';
 
 interface NavItem {
@@ -31,10 +33,13 @@ export default function NavBar({ locale, items }: NavBarProps) {
     return () => window.removeEventListener('scroll', handler);
   }, []);
 
-  // Close menu on navigation
-  useEffect(() => {
+  // Close menu on navigation — adjusted during render rather than in an
+  // effect, so the closed state lands in the same commit as the new route.
+  const [menuPath, setMenuPath] = useState(pathname);
+  if (menuPath !== pathname) {
+    setMenuPath(pathname);
     setMobileOpen(false);
-  }, [pathname]);
+  }
 
   // Escape to close + Tab focus trap + inert background while open
   useEffect(() => {
@@ -91,21 +96,20 @@ export default function NavBar({ locale, items }: NavBarProps) {
   return (
     <>
       <header
-        className={`fixed top-0 inset-x-0 z-[var(--z-nav)] transition-[background-color,border-color,box-shadow,backdrop-filter] duration-200 ${
+        className={`fixed top-0 inset-x-0 z-[var(--z-nav)] transition-[background-color,border-color] duration-200 ${
           scrolled
-            ? 'backdrop-blur-md bg-bg-0/70 border-b border-white/[0.06] shadow-[0_1px_0_rgba(255,255,255,0.04)]'
+            ? 'bg-ink border-b border-line'
             : 'bg-transparent border-b border-transparent'
         }`}
       >
         <nav className="max-w-6xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between gap-6">
+          {/* Wordmark RIYAD KETAMI_ with the signal cursor (brief §3.3, §4) */}
           <Link
             href={`/${locale}`}
-            /* "RK." minimal mark — an approved addition to the brand identity,
-               set in Space Grotesk Bold with the period in Signal Green. */
-            className="font-display font-bold text-text-0 hover:text-matrix transition-colors duration-[var(--duration-fast)] tracking-tight"
+            aria-label={`${BRAND.name}, home`}
+            className="inline-flex min-h-[44px] items-center text-paper text-base"
           >
-            RK
-            <span className="text-matrix">.</span>
+            <Wordmark />
           </Link>
 
           {/* Desktop — the active pill slides between items on navigation */}
@@ -118,15 +122,15 @@ export default function NavBar({ locale, items }: NavBarProps) {
                     <motion.span
                       layoutId="nav-active"
                       transition={{ type: 'spring', stiffness: 500, damping: 40 }}
-                      className="absolute inset-0 rounded-[var(--radius-sm)] bg-matrix/10"
+                      className="absolute inset-x-3 bottom-1 h-px bg-signal"
                       aria-hidden
                     />
                   )}
                   <Link
                     href={item.href}
                     aria-current={active ? 'page' : undefined}
-                    className={`relative px-3 py-1.5 rounded-[var(--radius-sm)] text-sm font-medium transition-colors duration-[var(--duration-fast)] block ${
-                      active ? 'text-matrix' : 'text-text-2 hover:text-text-0'
+                    className={`relative flex min-h-[44px] items-center px-3 text-sm font-medium transition-colors duration-[var(--duration-fast)] ${
+                      active ? 'text-paper' : 'text-muted hover:text-paper'
                     }`}
                   >
                     {item.label}
@@ -152,8 +156,7 @@ export default function NavBar({ locale, items }: NavBarProps) {
         </nav>
       </header>
 
-      {/* Mobile drawer — the blur lives on the panel itself, so only the area
-          behind the menu is frosted; the rest of the page stays untouched. */}
+      {/* Mobile drawer — flat panel, no blur or heavy shadow (brief §3.4) */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.nav
@@ -166,7 +169,7 @@ export default function NavBar({ locale, items }: NavBarProps) {
                drawer pops in rather than merely sliding. */
             transition={{ duration: 0.28, ease: [0.34, 1.56, 0.64, 1] }}
             aria-label="Mobile navigation"
-            className="fixed top-[4.5rem] inset-x-3 z-[calc(var(--z-nav)-1)] glass backdrop-blur-xl border border-border rounded-[var(--radius-lg)] shadow-2xl px-3 py-3 flex flex-col gap-1 md:hidden"
+            className="fixed top-[4.5rem] inset-x-3 z-[calc(var(--z-nav)-1)] bg-panel border border-line rounded-[var(--radius-md)] px-3 py-3 flex flex-col gap-1 md:hidden"
           >
             {items.map((item) => {
               const active = pathname === item.href;
@@ -176,7 +179,7 @@ export default function NavBar({ locale, items }: NavBarProps) {
                   href={item.href}
                   aria-current={active ? 'page' : undefined}
                   className={`px-4 py-3 min-h-[44px] flex items-center rounded-[var(--radius-md)] text-sm font-medium transition-colors duration-[var(--duration-fast)] ${
-                    active ? 'bg-matrix/10 text-matrix' : 'text-text-1 hover:bg-surface hover:text-text-0'
+                    active ? 'text-paper border-s-2 border-signal' : 'text-text-1 hover:bg-surface hover:text-paper'
                   }`}
                 >
                   {item.label}

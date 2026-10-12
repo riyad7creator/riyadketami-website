@@ -4,7 +4,7 @@ import { BRAND } from '@/lib/brand';
 const description = `${BRAND.title} · ${BRAND.proofLine}. ${BRAND.abb.name}, Telegram, YouTube and every channel in one place.`;
 
 export const metadata: Metadata = {
-  title: `Links | ${BRAND.name}`,
+  title: 'Links', // root template appends " | Riyad Ketami"
   description,
   alternates: { canonical: '/links' },
   openGraph: {

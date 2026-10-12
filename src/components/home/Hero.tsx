@@ -29,7 +29,9 @@ export default function Hero({ locale, dict }: HeroProps) {
   return (
     <section className="relative isolate flex flex-col overflow-hidden bg-ink md:block md:min-h-[100svh]">
       <div className="order-1 mx-auto flex w-full max-w-[1200px] flex-col px-4 pb-10 pt-28 sm:px-8 md:min-h-[100svh] md:justify-center md:pb-16 md:pt-24">
-        <div className="flex max-w-[34rem] flex-col gap-6">
+        {/* RTL keeps the copy on the left: A05's subject sits right, and mirroring
+            the photo would alter the likeness. */}
+        <div className="flex max-w-[34rem] flex-col gap-6 md:rtl:ms-auto">
           <Eyebrow as="p" className="text-[11px] sm:text-xs">
             {BRAND.eyebrow}
           </Eyebrow>

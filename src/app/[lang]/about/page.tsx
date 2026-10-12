@@ -52,7 +52,7 @@ export default async function AboutPage({
               {BRAND.proofLine}
             </p>
             <p className="text-muted">{dict.home.contact.location}</p>
-            <div className="flex items-center gap-4 pt-2">
+            <div className="flex flex-col items-start gap-3 pt-2 sm:flex-row sm:items-center sm:gap-4">
               <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full border border-line">
                 <Image src={BRAND.images.avatar} alt="Riyad Ketami, portrait" fill sizes="64px" className="object-cover" />
               </div>

@@ -7,6 +7,7 @@ import type { ReactNode } from 'react';
 interface CardProps {
   children: ReactNode;
   tilt?: boolean;
+  /** Kept for API compatibility; the cursor glow was retired (brief §3.4). */
   glow?: boolean;
   className?: string;
   onClick?: () => void;
@@ -19,12 +20,6 @@ export default function Card({ children, tilt = false, glow = false, className =
 
   const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [5, -5]), { stiffness: 300, damping: 30 });
   const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-5, 5]), { stiffness: 300, damping: 30 });
-  const glowX = useTransform(mouseX, [-0.5, 0.5], [0, 100]);
-  const glowY = useTransform(mouseY, [-0.5, 0.5], [0, 100]);
-  const glowBackground = useTransform(
-    [glowX, glowY],
-    ([x, y]) => `radial-gradient(circle at ${x}% ${y}%, rgba(var(--matrix-rgb), 0.08) 0%, transparent 60%)`
-  );
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!tilt || !ref.current) return;
@@ -49,12 +44,6 @@ export default function Card({ children, tilt = false, glow = false, className =
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
       className={`group glass rounded-[var(--radius-lg)] relative overflow-hidden ${onClick ? 'cursor-pointer' : ''} ${className}`}
     >
-      {glow && (
-        <motion.div
-          className="absolute inset-0 pointer-events-none rounded-[var(--radius-lg)] opacity-0 group-hover:opacity-100 transition-opacity duration-[var(--duration-base)]"
-          style={{ background: glowBackground }}
-        />
-      )}
       {children}
     </motion.div>
   );

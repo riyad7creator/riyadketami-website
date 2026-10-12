@@ -43,7 +43,6 @@ export default async function LangLayout({
 
   return (
     <>
-      <link rel="preload" as="image" href="/portraits/portrait-hero.png" fetchPriority="high" />
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[var(--z-toast)] focus:px-4 focus:py-2 focus:bg-matrix focus:text-bg-0 focus:text-sm focus:font-medium focus:rounded-[var(--radius-md)]"
@@ -54,7 +53,7 @@ export default async function LangLayout({
       <main id="main-content" className="min-h-[100dvh]">
         {children}
       </main>
-      <Footer locale={lang} />
+      <Footer locale={lang} dict={dict} />
     </>
   );
 }

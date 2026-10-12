@@ -54,7 +54,11 @@ export default function AbbSection({ dict }: { dict: Dictionary }) {
           </dl>
           <p className="flex flex-wrap items-center gap-2 font-mono text-[11px] text-ink/60">
             {t.source}: {stats.source}
-            {!stats.verified && <Flag kind="VERIFY">{dict.verify.stats}</Flag>}
+            {!stats.verified && (
+              <Flag kind="VERIFY" className="!border-[#8A5A00]/50 !text-[#8A5A00]">
+                {dict.verify.stats}
+              </Flag>
+            )}
           </p>
         </div>
       </div>

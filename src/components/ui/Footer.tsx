@@ -1,65 +1,52 @@
 import Link from 'next/link';
 import type { Locale } from '@/i18n/config';
-
-interface FooterLink {
-  label: string;
-  href: string;
-  external?: boolean;
-}
+import type { Dictionary } from '@/lib/dictionaries';
+import { BRAND } from '@/lib/brand';
+import Wordmark from './Wordmark';
+import SocialRow from './SocialRow';
 
 interface FooterProps {
   locale: Locale;
-  links?: FooterLink[];
+  dict: Dictionary;
 }
 
-const SOCIAL_LINKS = [
-  { label: 'TikTok', abbr: 'TK', href: 'https://tiktok.com/@riyadketami' },
-  { label: 'Instagram', abbr: 'IG', href: 'https://instagram.com/riyadketami' },
-  { label: 'Facebook', abbr: 'FB', href: 'https://www.facebook.com/riyadketami' },
-  { label: 'YouTube', abbr: 'YT', href: 'https://youtube.com/@riyadketami' },
-  { label: 'LinkedIn', abbr: 'LI', href: 'https://linkedin.com/in/riyadketami' },
-  { label: 'X', abbr: 'X', href: 'https://x.com/riyadketami' },
-];
-
-export default function Footer({ locale, links = [] }: FooterProps) {
+export default function Footer({ locale, dict }: FooterProps) {
   const year = new Date().getFullYear();
 
-  const defaultLinks: FooterLink[] = [
-    { label: locale === 'fr' ? 'Blog' : locale === 'ar' ? 'المدونة' : 'Blog', href: `/${locale}/blog` },
-    { label: locale === 'fr' ? 'Services' : locale === 'ar' ? 'الخدمات' : 'Services', href: `/${locale}/services` },
-    { label: locale === 'fr' ? 'À propos' : locale === 'ar' ? 'عني' : 'About', href: `/${locale}/about` },
-    { label: locale === 'fr' ? 'Contact' : locale === 'ar' ? 'تواصل' : 'Contact', href: `/${locale}/contact` },
+  const links = [
+    { label: dict.nav.about, href: `/${locale}/about` },
+    { label: dict.nav.services, href: `/${locale}/services` },
+    { label: dict.nav.blog, href: `/${locale}/blog` },
+    { label: dict.nav.contact, href: `/${locale}/contact` },
     { label: 'Links', href: '/links' },
   ];
 
-  const allLinks = links.length > 0 ? links : defaultLinks;
-
-  const tagline =
-    locale === 'fr'
-      ? "Construit depuis l'Algérie. Livré au monde entier."
-      : locale === 'ar'
-        ? 'مبنيّ من الجزائر. مُرسَل إلى العالم.'
-        : 'Built from Algeria. Shipped to the world.';
-
   return (
-    <footer className="border-t border-border mt-32">
-      <div className="max-w-6xl mx-auto px-5 sm:px-8 py-10 flex flex-col gap-8">
-        {/* Top row */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-          {/* "RK." minimal mark */}
-          <Link href={`/${locale}`} className="font-display font-bold text-lg text-text-0 tracking-tight">
-            RK<span className="text-matrix">.</span>
-          </Link>
+    <footer className="mt-24 border-t border-line">
+      <div className="mx-auto flex max-w-[1200px] flex-col gap-8 px-4 py-12 sm:px-8">
+        <div className="flex flex-col justify-between gap-8 md:flex-row md:items-start">
+          <div className="flex flex-col gap-3">
+            <Link href={`/${locale}`} aria-label={`${BRAND.name}, home`} className="w-fit text-xl text-paper">
+              <Wordmark />
+            </Link>
+            <p className="font-mono text-xs uppercase tracking-[0.12em] text-paper">{BRAND.title}</p>
+            <a
+              href={BRAND.abb.url}
+              target="_blank"
+              rel="noopener"
+              className="w-fit font-mono text-xs uppercase tracking-[0.12em] text-muted hover:text-paper"
+            >
+              {BRAND.proofLine}
+            </a>
+          </div>
 
-          <nav aria-label="Footer navigation">
-            <ul className="flex flex-wrap items-center gap-x-5 gap-y-2">
-              {allLinks.map((link) => (
+          <nav aria-label="Footer">
+            <ul className="flex flex-wrap gap-x-2">
+              {links.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    target={link.external ? '_blank' : undefined}
-                    rel={link.external ? 'noopener noreferrer' : undefined}
-                    className="text-sm text-text-2 hover:text-text-1 transition-colors duration-[var(--duration-fast)]"
+                    className="inline-flex min-h-[44px] items-center px-2 text-sm text-muted transition-colors duration-[var(--duration-fast)] hover:text-paper"
                   >
                     {link.label}
                   </Link>
@@ -69,26 +56,19 @@ export default function Footer({ locale, links = [] }: FooterProps) {
           </nav>
         </div>
 
-        {/* Bottom row */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-6 border-t border-border">
-          <div className="flex items-center gap-4">
-            {SOCIAL_LINKS.map((s) => (
-              <a
-                key={s.abbr}
-                href={s.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={s.label}
-                className="font-mono text-[10px] tracking-[0.18em] text-text-2 hover:text-matrix transition-colors duration-[var(--duration-fast)]"
-              >
-                {s.abbr}
-              </a>
-            ))}
-          </div>
-          <div className="flex flex-col sm:items-end gap-1">
-            <p className="text-xs text-text-1 font-mono tracking-wide">{tagline}</p>
-            <p className="text-xs text-text-2 font-mono">
-              &copy; {year} Riyad Ketami
+        <div className="flex flex-col gap-2">
+          <a href={BRAND.mailto} className="w-fit select-text font-mono text-sm text-paper hover:text-signal">
+            {BRAND.email}
+          </a>
+          <p className="text-sm text-muted">{dict.home.contact.location}</p>
+        </div>
+
+        <div className="flex flex-col justify-between gap-4 border-t border-line pt-6 md:flex-row md:items-center">
+          <SocialRow className="-ms-2" />
+          <div className="flex flex-col gap-1 md:items-end">
+            <p className="font-mono text-xs text-paper">{BRAND.tagline}</p>
+            <p className="font-mono text-xs text-muted">
+              &copy; {year} {BRAND.name}
             </p>
           </div>
         </div>

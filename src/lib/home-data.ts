@@ -1,67 +1,15 @@
 import dbConnect from '@/lib/db/connect';
-import SocialAccount from '@/models/SocialAccount';
-import type { ISocialAccount, SocialPlatform } from '@/models/SocialAccount';
 import Post from '@/models/Post';
 import type { IPost } from '@/models/Post';
-import Link from '@/models/Link';
-import type { ILink } from '@/models/Link';
 import type { Locale } from '@/i18n/config';
-
-export interface LinkEntry {
-  id: string;
-  title: string;
-  url: string;
-  icon?: string;
-  description?: string;
-}
-
-export interface SocialEntry {
-  platform: SocialPlatform;
-  handle: string;
-  url: string;
-  followers: number;
-}
 
 export type TeaserPost = Pick<
   IPost,
   'slug' | 'title' | 'excerpt' | 'category' | 'featuredImage' | 'createdAt' | 'readTime' | 'language'
 >;
 
-async function getLinks(): Promise<LinkEntry[]> {
-  try {
-    await dbConnect();
-    const docs = await Link.find({ isVisible: true })
-      .sort({ order: 1 })
-      .select('_id title url icon description')
-      .lean<Array<Pick<ILink, 'title' | 'url' | 'icon' | 'description'> & { _id: unknown }>>();
-    return docs.map((d) => ({
-      id: String(d._id),
-      title: d.title,
-      url: d.url,
-      icon: d.icon,
-      description: d.description,
-    }));
-  } catch {
-    return [];
-  }
-}
-
-async function getSocials(): Promise<SocialEntry[]> {
-  try {
-    await dbConnect();
-    const docs = await SocialAccount.find({ visible: true })
-      .sort({ order: 1, follower_count: -1 })
-      .lean<Array<Pick<ISocialAccount, 'platform' | 'handle' | 'url' | 'follower_count'>>>();
-    return docs.map((d) => ({
-      platform: d.platform,
-      handle: d.handle,
-      url: d.url,
-      followers: d.follower_count,
-    }));
-  } catch {
-    return [];
-  }
-}
+// Socials and links come from BRAND (src/lib/brand.ts), not the DB: the public
+// site never reads follower counts (brief §2.1).
 
 async function getRecentPosts(lang: Locale): Promise<TeaserPost[]> {
   try {
@@ -77,9 +25,6 @@ async function getRecentPosts(lang: Locale): Promise<TeaserPost[]> {
 }
 
 export async function getHomeData(lang: Locale) {
-  const [socials, posts] = await Promise.all([getSocials(), getRecentPosts(lang)]);
-  return { socials, posts };
+  const posts = await getRecentPosts(lang);
+  return { posts };
 }
-
-// Used by the standalone /links page (client-side via API) and admin
-export { getLinks };

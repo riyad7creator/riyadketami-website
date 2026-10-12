@@ -1,0 +1,155 @@
+/**
+ * Single source of truth for identity, links and socials.
+ * Mirrors KETAMI_BRAND_REVIEW.md (brief) §1, §2.3, §5. Pure data — safe in
+ * server and client components. Localised page copy lives in the dictionaries;
+ * anything that must read the same in every locale lives here.
+ *
+ * Placeholders the brief marks [MISSING] / [VERIFY] stay `null` or carry a
+ * `verified: false` flag so the UI can show them visibly instead of guessing.
+ */
+
+// [PENDING] Title second word (brief §1). Swap this one line when decided:
+//   'AI Expert & Creative Entrepreneur' | 'AI Expert & Digital Creator'
+const TITLE = 'AI Expert';
+
+const PROOF_LINE = 'Co-founder, Algeria Business Bay';
+
+const SITE_URL = 'https://ketami.net';
+const EMAIL = 'riyad@ketami.net';
+
+// Brief §5.4 — every ABB link carries this UTM set.
+const ABB_UTM = 'utm_source=ketami.net&utm_medium=referral&utm_campaign=site';
+const ABB_ROOT = 'https://www.algeriabusinessbay.com';
+
+export type SocialKey =
+  | 'tiktok'
+  | 'instagram'
+  | 'facebook'
+  | 'youtube'
+  | 'threads'
+  | 'x'
+  | 'telegram';
+
+export interface SocialLink {
+  key: SocialKey;
+  label: string;
+  handle: string;
+  url: string;
+}
+
+// Brief §5.3 — verified live 11 Oct 2026. LinkedIn is [MISSING]; Substack is parked.
+const SOCIALS: SocialLink[] = [
+  { key: 'tiktok', label: 'TikTok', handle: '@riyadketami', url: 'https://www.tiktok.com/@riyadketami' },
+  { key: 'instagram', label: 'Instagram', handle: 'riyadketami', url: 'https://www.instagram.com/riyadketami/' },
+  { key: 'facebook', label: 'Facebook', handle: 'riyadketami', url: 'https://www.facebook.com/riyadketami' },
+  { key: 'youtube', label: 'YouTube', handle: '@RiyadKetami', url: 'https://www.youtube.com/@RiyadKetami' },
+  { key: 'threads', label: 'Threads', handle: '@riyadketami', url: 'https://www.threads.com/@riyadketami' },
+  { key: 'x', label: 'X', handle: 'riyadketami', url: 'https://x.com/riyadketami' },
+  { key: 'telegram', label: 'Telegram', handle: '@riyadspeech', url: 'https://t.me/riyadspeech' },
+];
+
+const socialUrl = (key: SocialKey) => SOCIALS.find((s) => s.key === key)!.url;
+
+/** `<title>` form per brief §5.1, built from the constants above. */
+function headTitle(name: string, title: string, proof: string): string {
+  // A compound title ("AI Expert & Creative Entrepreneur") already has its "&",
+  // so the proof line joins with a middot instead of stacking a second "&".
+  return title.includes('&') ? `${name} — ${title} · ${proof}` : `${name} — ${title} & ${proof}`;
+}
+
+export const BRAND = {
+  name: 'Riyad Ketami',
+  wordmark: 'RIYAD KETAMI',
+  monogram: 'RK',
+  title: TITLE,
+  proofLine: PROOF_LINE,
+  headTitle: headTitle('Riyad Ketami', TITLE, PROOF_LINE),
+  /** Mono hero eyebrow (brief §2.3). Same in every locale. */
+  eyebrow: `${TITLE} · ${PROOF_LINE} · Oran, Algeria`.toUpperCase(),
+  tagline: 'Built in Algeria. Built for the world.',
+  claim: 'AI بالدارجة',
+  /** About section only — never a headline (brief §1). */
+  manifesto: 'Attention is the code. Connection is the key.',
+  heroArabic: 'نخلّي الـAI يخدم البزنس تاعك، بالدارجة.',
+  description:
+    'AI expert and co-founder of Algeria Business Bay. Riyad Ketami makes AI work for Algerian and MENA business, in Darija.',
+  url: SITE_URL,
+  email: EMAIL,
+  mailto: `mailto:${EMAIL}`,
+  speakMailto: `mailto:${EMAIL}?subject=${encodeURIComponent('Speaking invitation')}`,
+  location: { city: 'Oran', country: 'Algeria', countryCode: 'DZ' },
+  languages: ['ar', 'fr', 'en'],
+
+  abb: {
+    name: 'Algeria Business Bay',
+    rootUrl: ABB_ROOT,
+    url: `${ABB_ROOT}/?${ABB_UTM}`,
+    cofounder: 'Larbi',
+    // [VERIFY with ABB before launch] — read from algeriabusinessbay.com on 11 Oct 2026.
+    stats: {
+      verified: false,
+      source: 'algeriabusinessbay.com, 11 Oct 2026',
+      values: { companies: 233, wilayas: 69, communities: 101 },
+    },
+  },
+
+  socials: SOCIALS,
+  youtubeUrl: socialUrl('youtube'),
+  telegramUrl: socialUrl('telegram'),
+  /** [MISSING: LinkedIn URL] — add here and it flows to quick links, footer and sameAs. */
+  linkedinUrl: null as string | null,
+  /** [MISSING: media kit URL] */
+  mediaKitUrl: null as string | null,
+  /** Quick link 3 — "This week's tool". Max one, always labelled PARTNER. [sponsor URL] */
+  partnerLink: null as { label: string; url: string } | null,
+
+  // Brief §2.3 "Trusted by AI teams" — text wordmarks only, no logo images.
+  // [VERIFY] permission to show each name (brief §8).
+  partners: {
+    verified: false,
+    names: ['Moonshot AI · Kimi', 'MiniMax', 'Pollo AI', 'Higgsfield', 'Emergent'],
+  },
+
+  images: {
+    // Kit assets (brief §6.1) live in /public/brand
+    avatar: '/brand/profile-picture_800.jpg',
+    og: '/brand/og-image_1200x630.jpg',
+    heroDesktop: '/brand/hero_2816x1584.jpg',
+    heroMobile: '/brand/hero-vertical_1584x2816.jpg',
+    oranPlate: '/brand/oran-plate_2816x1584.jpg',
+    speakerCard: '/brand/story-speaker-card_1080x1920.jpg',
+  },
+} as const;
+
+/** Every profile Google should tie to the name (brief §5.2 sameAs). */
+export function sameAs(): string[] {
+  return [...SOCIALS.map((s) => s.url), ...(BRAND.linkedinUrl ? [BRAND.linkedinUrl] : [])];
+}
+
+/** Person JSON-LD, brief §5.2. */
+export function personJsonLd() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    '@id': `${BRAND.url}/#person`,
+    name: BRAND.name,
+    jobTitle: BRAND.title,
+    description:
+      'AI expert and co-founder of Algeria Business Bay, making AI work for Algerian and MENA business in Darija.',
+    url: BRAND.url,
+    image: `${BRAND.url}/brand/profile-picture_800.jpg`,
+    email: BRAND.mailto,
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: BRAND.location.city,
+      addressCountry: BRAND.location.countryCode,
+    },
+    worksFor: {
+      '@type': 'Organization',
+      name: BRAND.abb.name,
+      url: BRAND.abb.rootUrl,
+    },
+    knowsLanguage: [...BRAND.languages],
+    sameAs: sameAs(),
+  };
+}

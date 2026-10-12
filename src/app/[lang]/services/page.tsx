@@ -1,14 +1,14 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { isValidLocale } from '@/i18n/config';
 import { getDictionary } from '@/lib/dictionaries';
 import { localizedAlternates } from '@/lib/seo';
-import { Accordion, Button, Reveal } from '@/components/ui';
+import { BRAND } from '@/lib/brand';
+import { Accordion, Button } from '@/components/ui';
 import type { AccordionItem } from '@/components/ui';
-import MatrixText from '@/components/ui/MatrixText';
-import MatrixRain from '@/components/ui/MatrixRain';
-import ServiceCard from '@/components/services/ServiceCard';
-import TestimonialsSection from '@/components/home/TestimonialsSection';
+import Eyebrow from '@/components/ui/Eyebrow';
+import { WhatIDoCards } from '@/components/home/WhatIDo';
 
 export async function generateMetadata({
   params,
@@ -20,7 +20,7 @@ export async function generateMetadata({
   const dict = getDictionary(lang);
   return {
     title: dict.services.headline,
-    description: dict.services.subheadline,
+    description: dict.meta.services_description,
     alternates: localizedAlternates(lang, 'services'),
   };
 }
@@ -43,108 +43,102 @@ export default async function ServicesPage({
 
   return (
     <>
-      {/* Hero + Service cards — shared matrix backdrop */}
-      <section className="relative pt-32 pb-24 px-5 sm:px-8 overflow-hidden">
-        <MatrixRain opacity={0.055} speed={0.6} density={0.55} />
-
-        <div className="relative z-10 max-w-6xl mx-auto flex flex-col gap-16">
-          <div className="flex flex-col gap-5">
-            <Reveal direction="up">
-              <MatrixText text={t.eyebrow} className="text-xs tracking-[0.2em] text-matrix" />
-            </Reveal>
-            <Reveal direction="up" delay={0.08}>
-              <h1 className="font-display font-bold text-[clamp(2.5rem,6vw,4rem)] tracking-[-0.02em] text-text-0 leading-[1.05]">
-                {t.headline}
-              </h1>
-            </Reveal>
-            <Reveal direction="up" delay={0.16}>
-              <p className="text-text-1 text-xl leading-relaxed max-w-[62ch]">{t.subheadline}</p>
-            </Reveal>
+      <section className="px-4 pb-20 pt-32 sm:px-8">
+        <div className="mx-auto flex max-w-[1200px] flex-col gap-12">
+          <div className="flex max-w-2xl flex-col gap-4">
+            <Eyebrow>{BRAND.eyebrow}</Eyebrow>
+            <h1 className="font-display text-[clamp(2.5rem,6vw,4rem)] font-bold leading-[1.05] text-paper">
+              {t.headline}
+            </h1>
+            <p className="text-xl leading-relaxed text-text-1">{t.subheadline}</p>
           </div>
-
-          <div className="grid sm:grid-cols-3 gap-5 items-stretch">
-            {t.items.map((item, i) => (
-              <Reveal key={i} direction="up" delay={0.05 + i * 0.1} className="h-full">
-                <ServiceCard item={item} lang={lang} index={i} />
-              </Reveal>
-            ))}
-          </div>
+          <WhatIDoCards dict={dict} headingLevel="h2" />
         </div>
       </section>
 
-      {/* Process */}
-      <section className="py-24 px-5 sm:px-8 border-t border-border bg-bg-1/40">
-        <div className="max-w-6xl mx-auto flex flex-col gap-14">
-          <div className="flex flex-col gap-3">
-            <Reveal direction="up">
-              <MatrixText text={t.process_eyebrow} className="text-xs tracking-[0.2em] text-matrix" />
-            </Reveal>
-            <Reveal direction="up" delay={0.08}>
-              <h2 className="font-display font-bold text-3xl sm:text-4xl tracking-tight text-text-0">
-                {t.process_title}
-              </h2>
-            </Reveal>
-          </div>
-
-          <div className="grid sm:grid-cols-3 gap-8">
-            {t.process.map((step, i) => (
-              <Reveal key={i} direction="up" delay={0.08 + i * 0.1}>
-                <div className="flex flex-col gap-4">
-                  <span className="font-mono text-[2.5rem] font-bold text-matrix/20 leading-none">
-                    {step.step}
-                  </span>
-                  <h3 className="font-display font-semibold text-xl text-text-0">{step.title}</h3>
-                  <p className="text-text-2 text-sm leading-relaxed">{step.body}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <TestimonialsSection dict={dict} />
-
-      {/* FAQ */}
-      <section className="py-24 px-5 sm:px-8 border-t border-border">
-        <div className="max-w-3xl mx-auto flex flex-col gap-10">
-          <div className="flex flex-col gap-3">
-            <Reveal direction="up">
-              <MatrixText text={t.faq_eyebrow} className="text-xs tracking-[0.2em] text-matrix" />
-            </Reveal>
-            <Reveal direction="up" delay={0.08}>
-              <h2 className="font-display font-bold text-3xl sm:text-4xl tracking-tight text-text-0">
-                {t.faq_title}
-              </h2>
-            </Reveal>
-          </div>
-          <Reveal direction="up" delay={0.12}>
-            <Accordion items={faqItems} />
-          </Reveal>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="relative py-24 px-5 sm:px-8 border-t border-border overflow-hidden">
-        <MatrixRain opacity={0.05} />
-        <div className="relative z-10 max-w-3xl mx-auto text-center flex flex-col items-center gap-6">
-          <Reveal direction="up">
-            <MatrixText text={t.cta_eyebrow} className="text-xs tracking-[0.2em] text-matrix" />
-          </Reveal>
-          <Reveal direction="up" delay={0.08}>
-            <h2 className="font-display font-bold text-3xl sm:text-4xl tracking-tight text-text-0">
-              {t.cta_title}
+      {/* A08 — downloadable speaker card for organisers (brief §6.1) */}
+      <section aria-labelledby="speaker" className="border-t border-line px-4 py-20 sm:px-8">
+        <div className="mx-auto grid max-w-[1200px] items-center gap-10 md:grid-cols-[1fr_280px]">
+          <div className="flex max-w-xl flex-col gap-4">
+            <Eyebrow>{t.speaker.eyebrow}</Eyebrow>
+            <h2 id="speaker" className="font-display text-3xl font-bold text-paper">
+              {t.speaker.title}
             </h2>
-          </Reveal>
-          <Reveal direction="up" delay={0.16}>
-            <p className="text-text-1 text-lg">{t.cta_body}</p>
-          </Reveal>
-          <Reveal direction="up" delay={0.24}>
-            <div className="flex flex-wrap gap-3 justify-center">
-              <Button href={`/${lang}/contact`} variant="primary" size="lg">{t.cta_button}</Button>
-              <Button href={`/${lang}/contact`} variant="secondary" size="lg">{t.cta_button_alt}</Button>
+            <p className="text-lg leading-relaxed text-text-1">{t.speaker.body}</p>
+            <div className="flex flex-wrap gap-3 pt-2">
+              <a
+                href={BRAND.images.speakerCard}
+                download
+                className="inline-flex min-h-[44px] items-center rounded-[var(--radius-md)] border border-line px-5 text-sm text-paper hover:border-paper/60"
+              >
+                {t.speaker.cta}
+              </a>
+              <Button href={BRAND.speakMailto} variant="primary">
+                {t.cta_button_alt}
+              </Button>
             </div>
-          </Reveal>
+          </div>
+          <div className="relative mx-auto aspect-[9/16] w-full max-w-[280px] overflow-hidden rounded-[var(--radius-md)] border border-line">
+            <Image
+              src={BRAND.images.speakerCard}
+              alt="Riyad Ketami speaker card: AI Expert, Co-founder, Algeria Business Bay"
+              fill
+              sizes="280px"
+              loading="lazy"
+              className="object-cover"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="process" className="border-t border-line px-4 py-20 sm:px-8">
+        <div className="mx-auto flex max-w-[1200px] flex-col gap-10">
+          <div className="flex flex-col gap-3">
+            <Eyebrow>{t.process_eyebrow}</Eyebrow>
+            <h2 id="process" className="font-display text-3xl font-bold text-paper sm:text-4xl">
+              {t.process_title}
+            </h2>
+          </div>
+          <ol className="grid gap-8 sm:grid-cols-3">
+            {t.process.map((step) => (
+              <li key={step.step} className="flex flex-col gap-3 border-t border-line pt-5">
+                <span className="font-mono text-xs tracking-[0.12em] text-signal">{step.step}</span>
+                <h3 className="font-display text-xl font-bold text-paper">{step.title}</h3>
+                <p className="text-sm leading-relaxed text-text-1">{step.body}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <section aria-labelledby="faq" className="border-t border-line px-4 py-20 sm:px-8">
+        <div className="mx-auto flex max-w-[1200px] flex-col gap-8">
+          <div className="flex flex-col gap-3">
+            <Eyebrow>{t.faq_eyebrow}</Eyebrow>
+            <h2 id="faq" className="font-display text-3xl font-bold text-paper sm:text-4xl">
+              {t.faq_title}
+            </h2>
+          </div>
+          <div className="max-w-3xl">
+            <Accordion items={faqItems} />
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="services-cta" className="border-t border-line px-4 py-20 sm:px-8">
+        <div className="mx-auto flex max-w-[1200px] flex-col gap-6">
+          <Eyebrow>{t.cta_eyebrow}</Eyebrow>
+          <h2 id="services-cta" className="font-display text-3xl font-bold text-paper sm:text-4xl">
+            {t.cta_title}
+          </h2>
+          <div className="flex flex-wrap gap-3">
+            <Button href={BRAND.mailto} variant="primary" size="lg">
+              {t.cta_button}
+            </Button>
+            <Button href={BRAND.speakMailto} variant="secondary" size="lg">
+              {t.cta_button_alt}
+            </Button>
+          </div>
         </div>
       </section>
     </>

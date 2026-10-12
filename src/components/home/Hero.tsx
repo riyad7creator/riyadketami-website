@@ -1,92 +1,83 @@
-import HeroPortrait from './HeroPortrait';
-import { Button, Reveal, MatrixRain } from '@/components/ui';
-import MatrixText from '@/components/ui/MatrixText';
+import { getImageProps } from 'next/image';
+import { Button } from '@/components/ui';
+import Eyebrow from '@/components/ui/Eyebrow';
+import Ar from '@/components/ui/Ar';
+import { BRAND } from '@/lib/brand';
 import type { Locale } from '@/i18n/config';
 import type { Dictionary } from '@/lib/dictionaries';
-import type { SocialEntry } from '@/lib/home-data';
 
 interface HeroProps {
   locale: Locale;
   dict: Dictionary;
-  socials?: SocialEntry[];
 }
 
-const PLATFORM_ABBR: Record<string, string> = {
-  tiktok: 'TK',
-  instagram: 'IG',
-  facebook: 'FB',
-  youtube: 'YT',
-  x: 'X',
-  linkedin: 'LI',
-  github: 'GH',
-};
+// Brief §6.2 V01 alt text; A05/A07 stand in until V01 is generated and approved.
+const HERO_ALT = 'Riyad Ketami, portrait at night in Oran';
 
-export default function Hero({ locale, dict, socials = [] }: HeroProps) {
-  const t = dict.home;
-  const socialLinks = socials.filter((s) => PLATFORM_ABBR[s.platform]);
+export default function Hero({ locale, dict }: HeroProps) {
+  const t = dict.home.hero;
+
+  // Art direction: A05 (subject right, text left) on desktop, A07 vertical on mobile.
+  const common = { alt: HERO_ALT, sizes: '100vw', fetchPriority: 'high' as const, loading: 'eager' as const };
+  const {
+    props: { srcSet: desktopSrcSet },
+  } = getImageProps({ ...common, src: BRAND.images.heroDesktop, width: 2816, height: 1584 });
+  const {
+    props: { srcSet: mobileSrcSet, ...img },
+  } = getImageProps({ ...common, src: BRAND.images.heroMobile, width: 1584, height: 2816 });
 
   return (
-    <section className="relative min-h-[100dvh] flex items-center pt-24 pb-12 px-5 sm:px-8 overflow-hidden">
-      <MatrixRain opacity={0.055} speed={0.6} density={0.55} />
+    <section className="relative isolate flex flex-col overflow-hidden bg-ink md:block md:min-h-[100svh]">
+      <div className="order-1 mx-auto flex w-full max-w-[1200px] flex-col px-4 pb-10 pt-28 sm:px-8 md:min-h-[100svh] md:justify-center md:pb-16 md:pt-24">
+        <div className="flex max-w-[34rem] flex-col gap-6">
+          <Eyebrow as="p" className="text-[11px] sm:text-xs">
+            {BRAND.eyebrow}
+          </Eyebrow>
 
-      <div className="relative z-10 max-w-6xl mx-auto w-full grid md:grid-cols-2 gap-10 md:gap-16 items-center">
-        <div className="flex flex-col gap-7 order-2 md:order-1">
-          <Reveal direction="up">
-            <MatrixText
-              text={t.eyebrow}
-              className="text-xs sm:text-sm tracking-[0.2em] text-matrix"
-            />
-          </Reveal>
+          <h1 className="font-display text-[clamp(2.25rem,6vw,4.25rem)] font-bold leading-[1.04] text-paper">
+            {t.headline}
+          </h1>
 
-          <Reveal direction="up" delay={0.08}>
-            <h1 className="font-display font-bold tracking-[-0.02em] text-text-0 leading-[1.05] text-[clamp(2.5rem,7vw,5rem)]">
-              {t.headline}
-            </h1>
-          </Reveal>
-
-          <Reveal direction="up" delay={0.16}>
-            <p className="text-text-1 text-lg sm:text-xl leading-relaxed max-w-md">
-              {t.subheadline}
-            </p>
-          </Reveal>
-
-          <Reveal direction="up" delay={0.24}>
-            <div className="flex flex-wrap gap-3 pt-2">
-              <Button href={`/${locale}/services`} variant="primary" size="lg">
-                {t.cta_consulting}
-              </Button>
-              <Button href={`/${locale}/blog`} variant="secondary" size="lg">
-                {t.cta_blog}
-              </Button>
-            </div>
-          </Reveal>
-
-          {socialLinks.length > 0 && (
-            <Reveal direction="up" delay={0.32}>
-              <div className="flex items-center gap-4 pt-1">
-                {socialLinks.map((s) => (
-                  <a
-                    key={s.platform}
-                    href={s.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={s.platform}
-                    className="font-mono text-[10px] tracking-[0.18em] text-text-2 hover:text-matrix transition-colors duration-[var(--duration-fast)]"
-                  >
-                    {PLATFORM_ABBR[s.platform]}
-                  </a>
-                ))}
-              </div>
-            </Reveal>
+          {locale !== 'ar' && (
+            <Ar as="p" className="w-fit text-xl text-paper sm:text-2xl">
+              {BRAND.heroArabic}
+            </Ar>
           )}
-        </div>
 
-        <div className="order-1 md:order-2 relative aspect-[3/4] md:aspect-square w-full max-w-[480px] mx-auto">
-          <HeroPortrait src="/portraits/portrait-hero.png" />
+          <p className="max-w-[30rem] text-base leading-relaxed text-text-1 sm:text-lg">{t.subheadline}</p>
+
+          <div className="flex flex-wrap gap-3 pt-2">
+            <Button href={BRAND.mailto} variant="primary" size="lg">
+              {t.cta_work}
+            </Button>
+            <Button href={BRAND.abb.url} target="_blank" rel="noopener" variant="secondary" size="lg">
+              {t.cta_abb}
+            </Button>
+          </div>
         </div>
       </div>
 
-      <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-bg-0 to-transparent pointer-events-none z-10" />
+      {/* Mobile: portrait below the copy, in flow. Desktop: full-bleed background, subject right.
+          [VISUAL V01] replaces the mobile source; [VISUAL V07] (optional loop) uses A05 as poster. */}
+      <div
+        data-visual="A05 A07 V01 V07"
+        className="relative order-2 aspect-[4/5] w-full md:absolute md:inset-0 md:-z-10 md:aspect-auto"
+      >
+        <picture>
+          <source media="(min-width: 768px)" srcSet={desktopSrcSet} />
+          <source srcSet={mobileSrcSet} />
+          <img
+            {...img}
+            alt={HERO_ALT}
+            className="absolute inset-0 h-full w-full object-cover object-[center_75%] md:object-right"
+          />
+        </picture>
+        {/* Darken behind the copy until text contrast clears 4.5:1 (brief §6.4) */}
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-b from-ink to-transparent to-30% md:bg-gradient-to-r md:from-ink md:via-ink/85 md:via-40% md:to-transparent md:to-100%"
+        />
+      </div>
     </section>
   );
 }

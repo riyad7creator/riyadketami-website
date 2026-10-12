@@ -1,20 +1,20 @@
+import { BRAND } from '@/lib/brand';
+
 /**
- * Single source of truth for the /links page profile defaults.
- *
- * Used by:
- *   - /api/links-page/profile/route.ts  (returned when no doc exists)
- *   - /app/links/page.tsx               (fallback if MongoDB is unreachable)
+ * Default /links profile, returned by /api/links-page/profile when no document
+ * exists. Identity comes from BRAND; counts stay empty — the public site never
+ * shows follower or subscriber numbers (brief §2.1).
  */
 export const DEFAULT_LINKS_PROFILE = {
   _id: 'links-profile' as const,
-  name: 'Riyad Ketami',
-  tagline: 'Digital Entrepreneur · AI Consultant · Creator',
+  name: BRAND.name,
+  tagline: `${BRAND.title} · ${BRAND.proofLine}`,
   statusLine: '' as string | undefined,
   statusEnabled: false,
-  subscriberCount: 5000,
+  subscriberCount: 0,
   socials: {
-    tiktok: { url: 'https://tiktok.com/@riyadketami', count: '200K+' },
-    youtube: { url: 'https://youtube.com/@riyadketami', count: '50K+', channelId: '' },
-    instagram: { url: 'https://instagram.com/riyadketami', count: '80K+' },
+    tiktok: { url: BRAND.socials.find((s) => s.key === 'tiktok')!.url, count: '' },
+    youtube: { url: BRAND.youtubeUrl, count: '', channelId: '' },
+    instagram: { url: BRAND.socials.find((s) => s.key === 'instagram')!.url, count: '' },
   },
 };

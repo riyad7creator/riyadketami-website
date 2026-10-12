@@ -26,7 +26,7 @@ export default function BlogCard({
   className = '',
 }: BlogCardProps) {
   const date = publishedAt
-    ? new Date(publishedAt).toLocaleDateString(lang === 'fr' ? 'fr-FR' : lang === 'ar' ? 'ar-MA' : 'en-US', {
+    ? new Date(publishedAt).toLocaleDateString(lang === 'fr' ? 'fr-FR' : lang === 'ar' ? 'ar-DZ' : 'en-US', {
         year: 'numeric',
         month: 'short',
         day: 'numeric',

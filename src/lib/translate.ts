@@ -1,9 +1,14 @@
+import { BRAND } from '@/lib/brand';
+
 const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
 const MODEL = 'google/gemini-flash-2.5';
 
+// Identity comes from BRAND so the prompt follows the title swap (brief §1).
+const WHO = `${BRAND.name} (${BRAND.title}, ${BRAND.proofLine}), based in ${BRAND.location.city}, ${BRAND.location.country}`;
+
 const INSTRUCTIONS: Record<'fr' | 'ar', string> = {
-  fr: `You are translating a blog post for Riyad Ketami, an Algerian digital entrepreneur and AI consultant. Translate to French. Use sharp, direct, modern French as written by a North African tech entrepreneur — NOT academic or formal Parisian French. Keep all HTML tags exactly as-is. Only translate visible text content. Preserve formatting.`,
-  ar: `You are translating a blog post for Riyad Ketami, a North African digital entrepreneur. Translate to Arabic. Use accessible Modern Standard Arabic (MSA) with Maghrebi-friendly tone — direct, practical, modern. NOT formal Gulf Arabic. Keep all HTML tags exactly as-is. Only translate visible text content. The output will be displayed RTL. Preserve formatting.`,
+  fr: `You are translating a blog post for ${WHO}. Translate to French. Use sharp, direct, modern French as written by a North African tech entrepreneur — NOT academic or formal Parisian French. Keep all HTML tags exactly as-is. Only translate visible text content. Preserve formatting.`,
+  ar: `You are translating a blog post for ${WHO}. Translate to Arabic. Use accessible Modern Standard Arabic (MSA) with Maghrebi-friendly tone — direct, practical, modern. NOT formal Gulf Arabic. Keep all HTML tags exactly as-is. Only translate visible text content. The output will be displayed RTL. Preserve formatting.`,
 };
 
 export async function translatePostContent({

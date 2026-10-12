@@ -6,7 +6,7 @@ import { getDictionary } from '@/lib/dictionaries';
 import { getBlogPosts } from '@/lib/blog-data';
 import { localizedAlternates } from '@/lib/seo';
 import { BlogCard, Reveal } from '@/components/ui';
-import MatrixText from '@/components/ui/MatrixText';
+import Eyebrow from '@/components/ui/Eyebrow';
 import CategoryFilter from '@/components/blog/CategoryFilter';
 import type { BlogCategory } from '@/lib/blog-categories';
 import { BLOG_CATEGORIES } from '@/lib/blog-categories';
@@ -56,7 +56,7 @@ export default async function BlogPage({
         <div className="max-w-6xl mx-auto flex flex-col gap-8">
           <div className="flex flex-col gap-4 max-w-2xl">
             <Reveal direction="up">
-              <MatrixText text={t.eyebrow} className="text-xs tracking-[0.2em] text-matrix" />
+              <Eyebrow text={t.eyebrow} />
             </Reveal>
             <Reveal direction="up" delay={0.08}>
               <h1 className="font-display font-bold text-[clamp(2rem,5vw,3.5rem)] tracking-[-0.02em] text-text-0 leading-[1.1]">

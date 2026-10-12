@@ -70,7 +70,7 @@ export default async function BlogPostPage({
   };
 
   const date = new Date(post.createdAt).toLocaleDateString(
-    lang === 'fr' ? 'fr-FR' : lang === 'ar' ? 'ar-MA' : 'en-US',
+    lang === 'fr' ? 'fr-FR' : lang === 'ar' ? 'ar-DZ' : 'en-US',
     { year: 'numeric', month: 'long', day: 'numeric' }
   );
 

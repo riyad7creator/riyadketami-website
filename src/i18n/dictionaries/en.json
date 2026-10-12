@@ -2,39 +2,93 @@
   "nav": {
     "about": "About",
     "blog": "Blog",
-    "consulting": "Consulting",
-    "contact": "Contact",
-    "services": "Services"
+    "services": "What I do",
+    "contact": "Contact"
+  },
+  "meta": {
+    "home_description": "AI expert and co-founder of Algeria Business Bay. Riyad Ketami makes AI work for Algerian and MENA business, in Darija.",
+    "about_description": "Riyad Ketami: designer since 2013, all in on AI since 2023, co-founder of Algeria Business Bay. Based in Oran, Algeria.",
+    "services_description": "AI explained in Darija, launch partnerships for AI companies in MENA, and talks and workshops for Algerian teams.",
+    "contact_description": "Work with Riyad Ketami. riyad@ketami.net · Oran, Algeria."
   },
   "home": {
-    "eyebrow": "// ai educator · digital strategist · mena region",
-    "headline": "Built in Algeria. Built for the world.",
-    "subheadline": "I help global AI companies reach the MENA market, and I help MENA founders build with AI before everyone else does.",
-    "cta_consulting": "Work with me",
-    "cta_blog": "See the work",
-    "links": {
-      "eyebrow": "// find me",
-      "title": "All my links in one place."
+    "hero": {
+      "headline": "I make AI work for Algerian business — in Darija.",
+      "subheadline": "Co-founder of Algeria Business Bay. Launch partner for the AI labs shipping the tools. I test new models the week they launch, then show what actually works.",
+      "cta_work": "Work with me",
+      "cta_abb": "Join Algeria Business Bay"
     },
-    "audience": {
-      "eyebrow": "// the reach",
-      "title": "The numbers, not the noise.",
-      "subtitle": "Cross-channel performance, Jan–Mar 2025."
+    "quick_links": {
+      "eyebrow": "Quick links",
+      "abb": "Algeria Business Bay",
+      "telegram": "Telegram channel",
+      "telegram_ar": "القناة",
+      "partner": "This week's tool",
+      "partner_label": "PARTNER",
+      "youtube": "YouTube — AI in Darija",
+      "linkedin": "LinkedIn"
     },
-    "about_teaser": {
-      "eyebrow": "// who",
-      "title": "AI educator. Digital strategist. Built from Algeria.",
-      "body": "I teach 470K+ followers how to use AI to build smarter businesses — in Algerian Darija, French, and English. I consult ambitious teams, ship the tools I need, and build for a market the world keeps ignoring: MENA's creator and entrepreneur economy.",
-      "cta": "Read the long version"
+    "now": {
+      "eyebrow": "Now",
+      "items": [
+        "Building Algeria Business Bay",
+        "Testing this month's AI launches",
+        "Speaking at ECSEL 26"
+      ]
     },
-    "consulting_teaser": {
-      "eyebrow": "// available for select engagements",
-      "title": "Three ways to work together.",
-      "subtitle": "Pick the depth that matches the moment.",
-      "cta": "See full engagement details"
+    "what_i_do": {
+      "eyebrow": "What I do",
+      "cards": [
+        {
+          "eyebrow": "AI بالدارجة",
+          "title": "AI explained in Darija",
+          "body": "Hands-on breakdowns of the newest models and tools, tested on real projects, for Algerian and MENA entrepreneurs.",
+          "link": "Watch on YouTube →"
+        },
+        {
+          "eyebrow": "FOR AI COMPANIES",
+          "title": "Launch partner in MENA",
+          "body": "Dedicated launch videos in Algerian Darija across TikTok, Instagram, Facebook and YouTube, scripted, produced and delivered by my team.",
+          "link": "Request the media kit →"
+        },
+        {
+          "eyebrow": "FOR EVENTS & TEAMS",
+          "title": "Talks and workshops",
+          "body": "What AI changes for Algerian companies, in plain words, with live demos. Keynotes, panels and practical sessions in Darija, French or English.",
+          "link": "Invite me to speak →"
+        }
+      ]
+    },
+    "abb": {
+      "eyebrow": "Co-founder",
+      "body": "A private community for business in Algeria: real answers and the right people, whether you run a company in Algiers, sell across the wilayas, or invest from abroad. Built with Larbi, for people who do business here.",
+      "cta": "Become a member",
+      "stats": {
+        "companies": "startups & companies mapped",
+        "wilayas": "wilayas represented",
+        "communities": "communities & networks"
+      },
+      "source": "Source"
+    },
+    "trusted": {
+      "eyebrow": "Trusted by AI teams"
+    },
+    "about": {
+      "eyebrow": "About",
+      "paragraphs": [
+        "I started in 2013 as a freelance graphic and web designer, then spent years inside agencies learning how brands get attention.",
+        "In 2023 I went all in on AI, and on explaining it in the language most of our market actually speaks: Darija.",
+        "Today I build Algeria Business Bay with Larbi, work with AI labs on their MENA launches, and speak about what AI really changes for Algerian companies."
+      ],
+      "cta": "Read more"
+    },
+    "contact": {
+      "eyebrow": "Contact",
+      "title": "Work with me",
+      "location": "Oran, Algeria"
     },
     "blog_teaser": {
-      "eyebrow": "// the log",
+      "eyebrow": "The log",
       "title": "Notes from the build.",
       "subtitle": "What's working. What's not. What I'm still figuring out.",
       "cta": "Browse the archive",
@@ -64,277 +118,19 @@
         "ar": "تم التسجيل. ستصلك النشرة البريدية باللغة العربية."
       },
       "error": "Something went wrong. Try again."
-    },
-    "speaking": {
-      "eyebrow": "// speaking & events",
-      "title": "Book me for your next event.",
-      "subtitle": "Keynotes and workshops on AI, the MENA creator economy, and building a high-output business from Algeria. English, French, and Algerian Darija.",
-      "stat_events": "30+",
-      "stat_events_label": "Events",
-      "stat_continents": "3",
-      "stat_continents_label": "Continents",
-      "stat_reach": "10K+",
-      "stat_reach_label": "Live attendees",
-      "cta_primary": "Book a speaking slot",
-      "cta_secondary": "See consulting"
-    },
-    "products": {
-      "eyebrow": "// what i offer",
-      "title": "Everything to build, grow, and monetize.",
-      "subtitle": "Tools, systems, and strategy from running one of MENA's largest AI content businesses.",
-      "items": [
-        {
-          "tag": "Free",
-          "name": "The Digital Rebel",
-          "description": "Weekly AI tools, tactics, and content strategy from Algeria, for builders. Free.",
-          "cta": "Subscribe free"
-        },
-        {
-          "tag": "Course",
-          "name": "AI Business Masterclass",
-          "description": "The exact AI systems and workflows I use to run a high-output digital business at a fraction of the usual cost. Coming soon.",
-          "cta": "Join the waitlist"
-        },
-        {
-          "tag": "Consulting",
-          "name": "Strategy Session",
-          "description": "60 minutes. Your biggest bottleneck. A clear, actionable direction forward. Limited slots available.",
-          "cta": "Book your session"
-        }
-      ]
-    },
-    "testimonials": {
-      "eyebrow": "// what people say",
-      "title": "Real results, real people.",
-      "items": [
-        {
-          "quote": "Riyad helped us implement an AI workflow that cut our content production time by 70%. The ROI was visible within the first month.",
-          "author": "Sarah M.",
-          "title": "Founder, Digital Agency"
-        },
-        {
-          "quote": "His newsletter alone transformed how I think about building online. When I hired him for consulting, he delivered beyond what I expected.",
-          "author": "Karim B.",
-          "title": "E-commerce Entrepreneur"
-        },
-        {
-          "quote": "The most practical AI consulting I've encountered. No fluff, just systems that work in the real world.",
-          "author": "Thomas L.",
-          "title": "Marketing Director"
-        }
-      ]
-    },
-    "services": {
-      "eyebrow": "// services",
-      "title": "How I can help.",
-      "subtitle": "Strategy, workshops, and keynotes. Built around what your team actually needs.",
-      "cta": "See all services"
     }
   },
   "about": {
-    "eyebrow": "// 01 / about",
-    "headline": "About Riyad Ketami",
-    "subheadline": "AI educator, digital strategist, and content creator. Building the bridge between global AI and the MENA creator economy.",
-    "identity_eyebrow": "// 02 / who i am",
-    "identity_title": "I work where culture, technology, and execution meet.",
-    "identity": [
-      "I'm Riyad Ketami. I help people use AI to build something real.",
-      "I do that on stage, in rooms with global brands, in workshops with founders, and every day on my channels — in front of a community that's grown into the millions across North Africa, the Arab world, and the Francophone diaspora.",
-      "I started as a designer. I became a strategist. Now I'm an operator: shipping content, shipping partnerships, shipping products. AI is the lever. MENA is the market the rest of the world keeps underestimating. Bridging both is the work."
-    ],
-    "principles_eyebrow": "// 03 / what i believe",
-    "principles_title": "What I believe.",
-    "principles": [
-      { "tag": "// 01", "name": "Direct over diplomatic", "description": "Brief, specific, decision-ready. Always." },
-      { "tag": "// 02", "name": "Numbers over narratives", "description": "If it can be measured, it gets measured. The rest is just talk." },
-      { "tag": "// 03", "name": "Systems over hustle", "description": "Built once, runs forever. AI is infrastructure, not magic." },
-      { "tag": "// 04", "name": "Local context, global standard", "description": "MENA fluency. International execution. Both, or neither." },
-      { "tag": "// 05", "name": "Builder, not commentator", "description": "I ship products. I don't just talk about them." },
-      { "tag": "// 06", "name": "No fluff. No theory. Just results.", "description": "The core promise. It's on the brand book for a reason." }
-    ],
-    "building_eyebrow": "// 04 / what i'm building",
-    "building_title": "What's next.",
-    "building_subtitle": "Several projects are in active development. Public launches starting 2026.",
-    "building_status": "IN BUILD",
-    "building": [
-      { "name": "AnimaOS", "description": "An AI operating system for digital professionals." },
-      { "name": "Eyela.ai", "description": "Co-founded SaaS platform." },
-      { "name": "Algeria Business Bay", "description": "A consulting practice and community for founders building in or expanding into the region." }
-    ],
-    "cta_eyebrow": "// 05 / let's work",
-    "cta_title": "Want to work together?",
-    "cta_body": "Partnership, consulting, or campaign inquiries. I respond within 48 hours.",
-    "cta_email": "riyad@ketami.net",
-    "cta_secondary": "Book a call",
-    "cta": "Work with me"
-  },
-  "consulting": {
-    "eyebrow": "// available for select engagements",
-    "headline": "Clarity, then execution.",
-    "subheadline": "Pick the depth that matches the moment. Every engagement starts with a clear brief.",
-    "tiers": {
-      "signal": {
-        "name": "The Signal",
-        "price": "$400",
-        "description": "A focused audit and strategy session. One problem, one clear direction.",
-        "highlights": [
-          "60-min strategy session",
-          "Written brief",
-          "One clear direction"
-        ]
-      },
-      "sprint": {
-        "name": "The Sprint",
-        "price": "$3,500",
-        "description": "A time-boxed execution sprint. Defined scope, delivered output.",
-        "highlights": [
-          "2–3 week engagement",
-          "Defined deliverable",
-          "Async + sync collaboration"
-        ]
-      },
-      "stack": {
-        "name": "The Stack",
-        "price": "$5,500/mo",
-        "description": "A retained partnership. Embedded strategy, ongoing execution.",
-        "highlights": [
-          "Embedded partnership",
-          "Monthly cadence",
-          "Priority access"
-        ]
-      }
-    },
-    "tier_cta": "Get in touch",
-    "process_eyebrow": "// how it works",
-    "process_title": "Three steps, no noise.",
-    "process": [
-      {
-        "step": "01",
-        "title": "Brief",
-        "body": "Fill out the contact form. I review every submission within 48 hours."
-      },
-      {
-        "step": "02",
-        "title": "Align",
-        "body": "A short call to confirm scope, deliverable, and timing."
-      },
-      {
-        "step": "03",
-        "title": "Execute",
-        "body": "I deliver. You get clear, usable output, not decks."
-      }
-    ],
-    "faq_eyebrow": "// questions",
-    "faq_title": "Frequently asked.",
-    "faq": [
-      {
-        "q": "How quickly can we start?",
-        "a": "For The Signal, usually within a week. Sprint and Stack depend on current capacity. Fill out the form and I'll give you a real date."
-      },
-      {
-        "q": "Do you work with early-stage founders?",
-        "a": "Yes, if the problem is sharp. I work best when direction exists and execution is the gap."
-      },
-      {
-        "q": "What's the cancellation policy?",
-        "a": "Signal: non-refundable after the session. Sprint: 50% refund if cancelled before kickoff. Stack: 30-day notice to cancel."
-      },
-      {
-        "q": "Do you sign NDAs?",
-        "a": "Yes. Standard mutual NDA available on request."
-      }
-    ],
-    "cta_eyebrow": "// start here",
-    "cta_title": "Ready to move?",
-    "cta_body": "Fill out the contact form. I read everything.",
-    "cta_button": "Get in touch",
-    "testimonials_eyebrow": "// client results",
-    "testimonials_title": "What clients say."
-  },
-  "blog": {
-    "eyebrow": "// the log",
-    "headline": "Notes from the build.",
-    "subheadline": "What's working. What's not. What I'm still figuring out.",
-    "filter_all": "All",
-    "empty": "No posts yet. Check back soon.",
-    "back": "Back to blog",
-    "min_read": "min read"
-  },
-  "contact": {
-    "eyebrow": "// open channel",
-    "headline": "Say something.",
-    "fields": {
-      "name": "Name",
-      "email": "Email",
-      "subject": "Subject",
-      "message": "Message",
-      "budget": "Budget (optional)"
-    },
-    "submit": "Send message →",
-    "success": "// message received. I'll get back to you within 48h.",
-    "error": "Something went wrong. Try again.",
-    "email_eyebrow": "// prefer email directly?",
-    "email_address": "riyad@ketami.net",
-    "email_response": "I respond within 48 hours."
-  },
-  "footer": {
-    "tagline": "Built from Algeria. Shipped to the world.",
-    "rights": "All rights reserved."
-  },
-  "links_page": {
-    "bio": "AI Educator · Digital Strategist · Algeria",
-    "tagline": "470K+ followers across TikTok, Instagram, Facebook, and YouTube.",
-    "cta_home": "Visit website",
-    "cta_contact": "Get in touch",
-    "newsletter_eyebrow": "// weekly insights",
-    "newsletter_title": "AI & business insights, every week.",
-    "newsletter_cta": "Subscribe free",
-    "newsletter_placeholder": "your@email.com",
-    "newsletter_success": "// you're in"
+    "eyebrow": "About",
+    "manifesto_label": "Manifesto",
+    "cta": "Work with me",
+    "cta_secondary": "Contact"
   },
   "services": {
-    "eyebrow": "// work with me",
-    "headline": "Three ways to work together.",
-    "subheadline": "Consulting, partnerships, and stage time for teams and brands ready to ship AI that actually moves numbers.",
-    "items": [
-      {
-        "tag": "Consulting",
-        "name": "AI Consulting & Coaching",
-        "description": "One-to-one and team engagements for businesses, founders, and creators. I design AI systems and workflows that save real hours per week. Not another subscription, real infrastructure.",
-        "features": [
-          "AI stack audit & roadmap",
-          "Custom workflows (n8n, Make, agents)",
-          "Team enablement & SOPs",
-          "Remote or on-site"
-        ],
-        "cta": "Get a quote"
-      },
-      {
-        "tag": "Partnerships",
-        "name": "MENA Brand Partnerships",
-        "description": "Custom-built campaigns for AI and SaaS companies entering or expanding in MENA. Multi-platform creative, regional distribution, measurable conversion. Not vanity views.",
-        "features": [
-          "Regional ambassadorships",
-          "Custom video & creative",
-          "Arabic, French & English",
-          "Performance-tracked"
-        ],
-        "cta": "Pitch a campaign"
-      },
-      {
-        "tag": "Speaking",
-        "name": "Speaking & Workshops",
-        "description": "Keynotes and team workshops on AI, the creator economy, and building in public. Half-day, full-day, or stage formats. For conferences, summits, and internal teams.",
-        "features": [
-          "Keynotes & panels",
-          "Half-day or full-day workshops",
-          "Custom agenda for your team",
-          "English, French & Arabic"
-        ],
-        "cta": "Book Riyad"
-      }
-    ],
-    "process_eyebrow": "// how it works",
+    "eyebrow": "What I do",
+    "headline": "What I do",
+    "subheadline": "I make AI work for Algerian and MENA business, in Darija.",
+    "process_eyebrow": "How it works",
     "process_title": "Simple, clear process.",
     "process": [
       {
@@ -345,42 +141,86 @@
       {
         "step": "02",
         "title": "Proposal",
-        "body": "You receive a clear, custom proposal covering scope, deliverables, and timeline. No surprises."
+        "body": "You receive a clear, custom proposal covering scope, deliverables, and timeline."
       },
       {
         "step": "03",
         "title": "Execution",
-        "body": "We build, facilitate, or speak. You leave with results you can actually use."
+        "body": "We build, film or speak. You leave with work you can use."
       }
     ],
-    "faq_eyebrow": "// questions",
+    "faq_eyebrow": "Questions",
     "faq_title": "Frequently asked.",
     "faq": [
       {
         "q": "How do I book?",
-        "a": "Click any 'Book' button to reach the contact form. I respond within 48 hours."
+        "a": "Email riyad@ketami.net or use the contact form. I respond within 48 hours."
       },
       {
         "q": "Are sessions available remotely?",
-        "a": "Yes. All services are available remotely or on-site, based on your preference."
+        "a": "Yes. Talks and workshops run remotely or on-site, based on your preference."
       },
       {
         "q": "What languages do you work in?",
-        "a": "English, French, and Arabic, whichever works best for your team."
+        "a": "Darija, French or English, whichever works best for your team."
       },
       {
         "q": "How much does it cost?",
-        "a": "Pricing depends on scope and format. Reach out and I'll send a custom quote within 24 hours."
-      },
-      {
-        "q": "Do you work with international clients?",
-        "a": "Yes. I've worked with teams across Europe, the Middle East, and North America."
+        "a": "Pricing depends on scope and format. Reach out and I'll send a custom quote."
       }
     ],
-    "cta_eyebrow": "// let's talk",
+    "speaker": {
+      "eyebrow": "For organisers",
+      "title": "Speaker card",
+      "body": "One image with my name, title and topics, ready for your programme or social posts.",
+      "cta": "Download the speaker card"
+    },
+    "cta_eyebrow": "Let's talk",
     "cta_title": "Ready to start?",
-    "cta_body": "Every engagement starts with a conversation. No pitch, no pressure.",
-    "cta_button": "Get in touch",
-    "cta_button_alt": "Request a quote"
+    "cta_button": "Work with me",
+    "cta_button_alt": "Invite me to speak"
+  },
+  "blog": {
+    "eyebrow": "The log",
+    "headline": "Notes from the build.",
+    "subheadline": "What's working. What's not. What I'm still figuring out.",
+    "filter_all": "All",
+    "empty": "No posts yet. Check back soon.",
+    "back": "Back to blog",
+    "min_read": "min read"
+  },
+  "contact": {
+    "eyebrow": "Contact",
+    "headline": "Work with me",
+    "fields": {
+      "name": "Name",
+      "email": "Email",
+      "subject": "Subject",
+      "message": "Message",
+      "budget": "Budget (optional)"
+    },
+    "submit": "Send message →",
+    "success": "// message received. I'll get back to you within 48h.",
+    "error": "Something went wrong. Try again.",
+    "email_eyebrow": "Prefer email?",
+    "email_address": "riyad@ketami.net",
+    "email_response": "I respond within 48 hours.",
+    "location": "Oran, Algeria"
+  },
+  "footer": {
+    "rights": "All rights reserved."
+  },
+  "links_page": {
+    "cta_home": "Visit website",
+    "cta_contact": "Get in touch",
+    "latest": "Latest"
+  },
+  "visual": {
+    "placeholder": "Visual coming"
+  },
+  "verify": {
+    "stats": "VERIFY with ABB before launch",
+    "partners": "VERIFY permission to show names",
+    "missing": "MISSING"
   }
 }

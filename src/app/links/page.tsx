@@ -1,115 +1,39 @@
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
-import MatrixRain from '@/components/ui/MatrixRain';
 import dbConnect from '@/lib/db/connect';
-import LinkCardModel from '@/models/LinkCard';
 import LatestSourceModel from '@/models/LatestSource';
-import SiteProfileModel from '@/models/SiteProfile';
-import SocialAccount from '@/models/SocialAccount';
-import type { ISocialAccount } from '@/models/SocialAccount';
-import { getSetting } from '@/models/SiteSettings';
 import { getCachedFeed, youtubeRssUrl } from '@/lib/rss-fetcher';
 import { getDictionary } from '@/lib/dictionaries';
+import { BRAND } from '@/lib/brand';
+import Eyebrow from '@/components/ui/Eyebrow';
+import { QuickLinkList } from '@/components/home/QuickLinks';
 import ProfileHeader from './_components/ProfileHeader';
-import type { SocialDisplayEntry } from './_components/ProfileHeader';
-import SponsoredSection from './_components/SponsoredSection';
 import LatestSection from './_components/LatestSection';
-import ResourcesSection from './_components/ResourcesSection';
 import NewsletterCard from './_components/NewsletterCard';
 import type { Locale } from '@/i18n/config';
-import ServicesSection from './_components/ServicesSection';
-import type { CardProps } from './_components/Card';
-import type { ILinkCard } from '@/models/LinkCard';
-import { DEFAULT_LINKS_PROFILE } from '@/lib/links-defaults';
-
-const SOCIAL_LABELS: Record<string, string> = {
-  tiktok: 'TikTok',
-  instagram: 'Instagram',
-  facebook: 'Facebook',
-  youtube: 'YouTube',
-  x: 'X',
-  linkedin: 'LinkedIn',
-  github: 'GitHub',
-  other: 'Web',
-};
-
-function formatSocialCount(n: number): string {
-  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1).replace(/\.0$/, '')}M`;
-  if (n >= 1_000) return `${(n / 1_000).toFixed(1).replace(/\.0$/, '')}K`;
-  return String(n);
-}
 
 export const revalidate = 3600;
 
 // A YouTube channel ID always starts with UC and is 24 chars
 const YT_CHANNEL_ID_RE = /^UC[\w-]{22}$/;
 
-function toCardProps(c: ILinkCard & { _id: unknown }): CardProps {
-  return {
-    _id: String(c._id),
-    title: c.title,
-    description: c.description,
-    href: c.href,
-    icon: c.icon,
-    thumbnail: c.thumbnail,
-    pillLabel: c.pillLabel,
-    pillVariant: c.pillVariant,
-    pillColor: c.pillColor,
-  };
-}
-
-const DEFAULT_PROFILE = DEFAULT_LINKS_PROFILE;
-
-export default async function LinksPage() {
-  await dbConnect();
-
-  const dict = getDictionary('en');
-  const locale: Locale = 'en';
-
-  const [profileDoc, cardsRaw, sourcesRaw, profileImage, socialAccountsRaw] = await Promise.all([
-    SiteProfileModel.findById('links-profile').lean(),
-    LinkCardModel.find({ active: true }).sort({ section: 1, order: 1 }).lean(),
-    LatestSourceModel.find({ active: true }).sort({ order: 1 }).lean(),
-    getSetting<string>('profile_image'),
-    SocialAccount.find({ visible: true }).sort({ order: 1, follower_count: -1 }).lean<Array<Pick<ISocialAccount, 'platform' | 'handle' | 'url' | 'follower_count'>>>(),
-  ]);
-
-  const socialEntries: SocialDisplayEntry[] = socialAccountsRaw.map((s) => ({
-    key: s.platform,
-    label: SOCIAL_LABELS[s.platform] ?? s.platform,
-    url: s.url,
-    count: formatSocialCount(s.follower_count),
-  }));
-
-  const profile = profileDoc ?? DEFAULT_PROFILE;
-  const now = new Date();
-
-  // Filter cards by their active date window
-  const liveCards = cardsRaw.filter((c) => {
-    if (c.startsAt && now < new Date(c.startsAt)) return false;
-    if (c.endsAt && now > new Date(c.endsAt)) return false;
-    return true;
-  });
-
-  const sponsored = liveCards.filter((c) => c.section === 'sponsored').slice(0, 2);
-  const fallback = liveCards.filter((c) => c.section === 'fallback').slice(0, 1);
-  const resources = liveCards.filter((c) => c.section === 'resource');
-  const services = liveCards.filter((c) => c.section === 'service');
-
-  // If no live sponsored cards, show the fallback card instead
-  const sponsoredToShow = sponsored.length > 0 ? sponsored : fallback;
-
-  // Fetch RSS / use manual overrides for each active latest source
-  const latestItems = (
-    await Promise.all(
-      sourcesRaw.map(async (source) => {
+/**
+ * Latest content from the admin-managed RSS sources. Non-fatal: the page must
+ * render even when MongoDB is unreachable.
+ *
+ * The admin-managed sponsored / resource / service cards are deliberately not
+ * rendered: the brief caps the link block at 5 with one PARTNER slot, and the
+ * stored cards still need the expired-campaign audit (BRAND_AUDIT.md K3).
+ */
+async function getLatest() {
+  try {
+    await dbConnect();
+    const sources = await LatestSourceModel.find({ active: true }).sort({ order: 1 }).lean();
+    const items = await Promise.all(
+      sources.map(async (source) => {
         if (source.rssUrl) {
-          // Support storing a bare YouTube channel ID in rssUrl
-          const feedUrl = YT_CHANNEL_ID_RE.test(source.rssUrl)
-            ? youtubeRssUrl(source.rssUrl)
-            : source.rssUrl;
-          const items = await getCachedFeed(feedUrl);
-          const first = items?.[0];
+          const feedUrl = YT_CHANNEL_ID_RE.test(source.rssUrl) ? youtubeRssUrl(source.rssUrl) : source.rssUrl;
+          const first = (await getCachedFeed(feedUrl))?.[0];
           if (first) return { source, item: first };
         }
         if (source.manualUrl && source.manualTitle) {
@@ -125,81 +49,51 @@ export default async function LinksPage() {
         }
         return null;
       })
-    )
-  ).filter((x): x is NonNullable<typeof x> => x !== null);
+    );
+    return items.filter((x): x is NonNullable<typeof x> => x !== null);
+  } catch {
+    return [];
+  }
+}
 
-  const imgSrc = profileImage ?? '/portraits/portrait-hero.png';
+export default async function LinksPage() {
+  const locale: Locale = 'en';
+  const dict = getDictionary(locale);
+  const latestItems = await getLatest();
 
   return (
-    <main className="relative min-h-[100dvh] flex flex-col items-center justify-start bg-bg-0 overflow-hidden px-5 py-12 sm:py-20">
-      {/* Matrix rain background */}
-      <div className="fixed inset-0 pointer-events-none" aria-hidden>
-        <MatrixRain opacity={0.04} speed={0.6} density={0.7} />
-      </div>
+    <main className="min-h-[100dvh] bg-ink px-4 py-12 sm:py-20">
+      <div className="mx-auto flex w-full max-w-md flex-col gap-10">
+        <ProfileHeader />
 
-      {/* Ambient top glow */}
-      <div
-        className="fixed top-0 left-1/2 -translate-x-1/2 w-[480px] h-[240px] pointer-events-none"
-        style={{
-          background:
-            'radial-gradient(ellipse at center top, rgba(var(--matrix-rgb), 0.07) 0%, transparent 70%)',
-        }}
-        aria-hidden
-      />
+        <section aria-labelledby="links" className="flex flex-col gap-3">
+          <Eyebrow as="h2" id="links">
+            {dict.home.quick_links.eyebrow}
+          </Eyebrow>
+          <QuickLinkList dict={dict} />
+        </section>
 
-      {/* Avatar pulse-ring animation — paused under prefers-reduced-motion via globals.css */}
-      <style>{`
-        @keyframes pulse-ring {
-          0%, 100% { opacity: 0.3; transform: scale(1.18); }
-          50%       { opacity: 0.8; transform: scale(1.22); }
-        }
-        .animate-pulse-ring {
-          animation: pulse-ring 3s ease-in-out infinite;
-        }
-      `}</style>
+        <LatestSection items={latestItems} label={dict.links_page.latest} />
 
-      <div className="relative z-10 w-full max-w-sm flex flex-col items-center gap-8">
-        <ProfileHeader
-          name={profile.name}
-          tagline={profile.tagline}
-          statusLine={profile.statusLine}
-          statusEnabled={profile.statusEnabled}
-          subscriberCount={profile.subscriberCount}
-          socials={socialEntries}
-          profileImage={imgSrc}
-        />
+        <NewsletterCard dict={dict} locale={locale} />
 
-        <SponsoredSection
-          cards={sponsoredToShow.map(toCardProps)}
-          isFallback={sponsored.length === 0}
-        />
-
-        <LatestSection items={latestItems} />
-
-        <ResourcesSection cards={resources.map(toCardProps)} />
-
-        <NewsletterCard subscriberCount={profile.subscriberCount} dict={dict} locale={locale} />
-
-        <ServicesSection cards={services.map(toCardProps)} />
-
-        {/* Footer CTAs */}
-        <div className="flex gap-3 w-full">
-          <Link
-            href="/en/contact"
-            className="flex-1 glass rounded-[var(--radius-md)] py-3 text-center text-sm font-medium text-text-1 hover:border-matrix/40 hover:text-text-0 transition-all duration-[var(--duration-fast)]"
+        <div className="flex w-full gap-3">
+          <a
+            href={BRAND.mailto}
+            className="flex min-h-[44px] flex-1 items-center justify-center rounded-[var(--radius-md)] border border-line text-sm text-paper hover:border-paper/60"
           >
-            Get in touch
-          </Link>
+            {dict.links_page.cta_contact}
+          </a>
           <Link
-            href="/en"
-            className="flex-1 flex items-center justify-center gap-1.5 bg-matrix text-bg-0 rounded-[var(--radius-md)] py-3 text-sm font-semibold hover:bg-matrix/90 transition-colors"
+            href={`/${locale}`}
+            className="flex min-h-[44px] flex-1 items-center justify-center gap-1.5 rounded-[var(--radius-md)] bg-signal text-sm font-medium text-ink hover:bg-signal/90"
           >
-            Visit website <ArrowUpRight size={13} />
+            {dict.links_page.cta_home} <ArrowUpRight size={14} aria-hidden />
           </Link>
         </div>
 
-        <p className="font-mono text-[10px] text-text-2 tracking-[0.12em] pb-4">
-          © {new Date().getFullYear()} Riyad Ketami
+        <p className="font-mono text-[11px] tracking-[0.08em] text-muted">
+          © {new Date().getFullYear()} {BRAND.name} · {BRAND.tagline}
         </p>
       </div>
     </main>

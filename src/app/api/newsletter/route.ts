@@ -5,7 +5,6 @@ import dbConnect from '@/lib/db/connect';
 import Subscriber from '@/models/Subscriber';
 import { syncToKit } from '@/lib/kit';
 import { rateLimit } from '@/lib/rate-limit';
-import type { Locale } from '@/i18n/config';
 
 const SOURCES = ['homepage', 'blog-cta', 'links-page', 'import', 'other'] as const;
 

@@ -3,9 +3,9 @@ import { notFound } from 'next/navigation';
 import { isValidLocale } from '@/i18n/config';
 import { getDictionary } from '@/lib/dictionaries';
 import { localizedAlternates } from '@/lib/seo';
-import { Reveal } from '@/components/ui';
-import MatrixText from '@/components/ui/MatrixText';
-import MatrixRain from '@/components/ui/MatrixRain';
+import Eyebrow from '@/components/ui/Eyebrow';
+import SocialRow from '@/components/ui/SocialRow';
+import { BRAND } from '@/lib/brand';
 import ContactForm from '@/components/contact/ContactForm';
 
 export async function generateMetadata({
@@ -17,7 +17,8 @@ export async function generateMetadata({
   if (!isValidLocale(lang)) return {};
   const dict = getDictionary(lang);
   return {
-    title: dict.contact.headline,
+    title: dict.contact.eyebrow,
+    description: dict.meta.contact_description,
     alternates: localizedAlternates(lang, 'contact'),
   };
 }
@@ -44,44 +45,29 @@ export default async function ContactPage({
   };
 
   return (
-    <section className="relative pt-32 pb-24 px-5 sm:px-8 overflow-hidden">
-      <MatrixRain opacity={0.08} />
-      <div className="relative z-10 max-w-2xl mx-auto flex flex-col gap-10">
-        <div className="flex flex-col gap-4">
-          <Reveal direction="up">
-            <MatrixText text={t.eyebrow} className="text-xs tracking-[0.2em] text-matrix" />
-          </Reveal>
-          <Reveal direction="up" delay={0.08}>
-            <h1 className="font-display font-bold text-[clamp(2.5rem,6vw,4rem)] tracking-[-0.02em] text-text-0 leading-[1.05]">
-              {t.headline}
-            </h1>
-          </Reveal>
+    <section className="px-4 pb-24 pt-32 sm:px-8">
+      <div className="mx-auto grid max-w-[1200px] gap-12 md:grid-cols-[1fr_1.2fr]">
+        <div className="flex flex-col gap-5">
+          <Eyebrow>{t.eyebrow}</Eyebrow>
+          <h1 className="font-display text-[clamp(2.5rem,6vw,4rem)] font-bold leading-[1.05] text-paper">
+            {t.headline}
+          </h1>
+          {/* Brief §2.3 Contact: address shown as selectable text */}
+          <div className="flex flex-col gap-2 pt-2">
+            <Eyebrow>{t.email_eyebrow}</Eyebrow>
+            <a
+              href={BRAND.mailto}
+              className="w-fit select-text font-mono text-lg text-paper underline decoration-signal underline-offset-[6px] hover:text-signal"
+            >
+              {BRAND.email}
+            </a>
+            <p className="text-sm text-muted">{t.email_response}</p>
+          </div>
+          <p className="text-muted">{t.location}</p>
+          <SocialRow className="-ms-2" />
         </div>
 
-        <Reveal direction="up" delay={0.16}>
-          <ContactForm labels={formLabels} />
-        </Reveal>
-
-        {/* Direct email */}
-        <Reveal direction="up" delay={0.24}>
-          <div className="pt-8 border-t border-white/[0.06] text-center flex flex-col items-center gap-3">
-            <MatrixText
-              text={t.email_eyebrow}
-              className="text-xs tracking-[0.2em] text-matrix"
-            />
-            <a
-              href="mailto:riyad@ketami.net"
-              className="inline-flex items-center gap-2 text-matrix font-mono text-sm hover:opacity-80 transition-opacity duration-[var(--duration-fast)]"
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
-                <rect x="2" y="4" width="20" height="16" rx="2" />
-                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-              </svg>
-              {t.email_address}
-            </a>
-            <p className="text-xs text-text-2 font-mono">{t.email_response}</p>
-          </div>
-        </Reveal>
+        <ContactForm labels={formLabels} />
       </div>
     </section>
   );

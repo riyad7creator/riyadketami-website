@@ -269,13 +269,13 @@ Cost rule: estimate first; under $1 per request and $3 total → go; above → a
 ### 6.5 Manifest status (keep this table updated)
 | ID | Status | File | Approved by Riyad |
 |---|---|---|---|
-| V01 | todo | — | — |
-| V02 | todo | — | — |
-| V03 | todo | — | — |
-| V04 | todo (replace with real ECSEL photo when available) | — | — |
-| V05 | todo | — | — |
-| V06 | todo | — | — |
-| V07 | optional | — | — |
+| V01 | placeholder (A07 stands in on mobile hero) | — | — |
+| V02 | placeholder `[VISUAL V02]` on "What I do" card 1 | — | — |
+| V03 | placeholder `[VISUAL V03]` on "What I do" card 2 | — | — |
+| V04 | placeholder `[VISUAL V04]` on "What I do" card 3 (replace with real ECSEL photo when available) | — | — |
+| V05 | placeholder `[VISUAL V05]` on /about | — | — |
+| V06 | slot marked (`data-visual="V06"`, ABB section) | — | — |
+| V07 | optional — slot marked on hero (poster = A05) | — | — |
 
 ---
 

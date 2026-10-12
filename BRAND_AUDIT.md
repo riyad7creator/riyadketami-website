@@ -239,3 +239,56 @@ No V08+ needed. The blog keeps post cover images from the CMS, and every other s
 13. **Testimonials:** do any real, attributable quotes exist? If not, the section goes and "Trusted by AI teams" takes its place.
 14. **Brief in repo:** may I commit `KETAMI_BRAND_REVIEW.md` to the project root so future sessions read the same source of truth?
 15. **Blog category "Digital Marketing":** rename (e.g. "Marketing & AI") or keep? Existing posts in the DB use the slug.
+
+---
+
+## Changelog — Phase 2 (12 Oct 2026)
+
+Branch `claude/ketami-brand-audit-update-0218ac`. Not pushed, not deployed.
+
+### Base (Open question 1)
+Rebuilt on **`origin/main` (afe5c8f)** with the five July commits cherry-picked on top (`dcf0377`…`7f912fb`), followed by `2967011` to reconcile them. This replaces the 73-file merge with a linear history and keeps both lines:
+- From `origin/main`: `/rk-studio` admin, campaigns/analytics, `lib/json-ld.ts`, `lib/seo.ts`.
+- From the July branch: Brand Book tokens, Radix a11y, MotionConfig, and the newsletter fixes (re-subscribe, Kit sync on import, server-side CSV).
+
+The three newsletter API routes were merged by hand. The rest of `audit-fixes-2026-07` was not brought over, except its ESLint config fix (`2a4fae0`).
+
+### Commits
+| Commit | Area | Fixes |
+|---|---|---|
+| `22c5c38` | docs | Brief + this audit committed to the repo root (Q14) |
+| `2e06a40` | tokens | T1–T13 — brief colour tokens (legacy names alias them); Space Grotesk / JetBrains Mono / IBM Plex Sans Arabic 500/600 only; headings -0.02em + balance; `.glass`/`.glow` flattened; ink-on-signal button, no glow; reduced motion stops CSS animation |
+| `7bef4e3` | assets | I10 — A01–A08 in `public/brand/` (A05–A07 re-encoded to JPEG q88, ~300 KB each); M9 — favicon.ico 16/32/48, icon 512, apple-icon 180, icon-192/512 |
+| `2a4fae0` | tooling | `npm run lint` no longer crashes (FlatCompat → native flat config) |
+| `761ac43` | copy | C1–C23, L1, K1, K2, K4–K9, A2, A3 — one `BRAND` constant (`src/lib/brand.ts`); §2.3 copy; home in brief order; About/Services/Contact/links rebuilt; testimonials, follower counts, invented stats, unverified FAQ claim removed |
+| `b13742f` | meta | M1–M12 — §5.1 title/description, OG `profile` + A02 card, §5.2 Person JSON-LD (7 sameAs, worksFor ABB), ketami.net everywhere, manifest |
+| `2f813c4` | layout | L2–L12, I1–I9, A4–A6 — `RIYAD KETAMI_` wordmark, solid header, flat menu, Matrix/parallax/glow components and retired images deleted, robots.txt 500 fixed |
+
+### Decisions taken with "approved" (open questions not answered)
+| Q | Default applied | Swap |
+|---|---|---|
+| 2 Title | `AI Expert` + proof line | `TITLE` in `src/lib/brand.ts` (one line) |
+| 3 LinkedIn | Removed from footer; quick link shows `[MISSING: LinkedIn URL]` | `BRAND.linkedinUrl` |
+| 4 ABB stats | 233 / 69 / 101 hard-coded with a visible `[VERIFY with ABB before launch]` | `BRAND.abb.stats` (`verified: true` hides the flag) |
+| 5 Partners | Names shown as text with a visible `[VERIFY permission…]` | `BRAND.partners` |
+| 6 Wordmark | Brief wins: `RIYAD KETAMI_` in header/footer, `RK_` monogram as favicon (supersedes July "RK.") | `components/ui/Wordmark.tsx` |
+| 7 Arabic | Whole `/ar` locale drafted in Algiers Darija (تاع، درك، راني; no ديال/دابا) — **needs Riyad's read** | `src/i18n/dictionaries/ar.json` |
+| 8 Extras | Blog teaser + newsletter kept below Contact; `/services` = "What I do" + A08 speaker card + process + FAQ; pricing keys deleted | — |
+| 9 Link targets | Media kit `[MISSING]`; "Invite me to speak" → `mailto:` with subject; sponsor slot `[MISSING: sponsor URL]`; ECSEL 26 text only | `BRAND.mediaKitUrl`, `BRAND.partnerLink` |
+| 10 Sender | Resend FROM stays `noreply@riyadketami.com` until ketami.net is verified | env `FROM_EMAIL` |
+| 12 Arabic font | IBM Plex Sans Arabic 500/600 (no licensed Montserrat Arabic file) | `src/lib/fonts.ts` |
+| 13 Testimonials | Removed; "Trusted by AI teams" in its place | — |
+| 15 Blog category | "Digital Marketing" left as is (existing posts use the slug) | `lib/constants.ts` |
+
+Copy-provenance note: EN is verbatim §2.3; FR H1 and the Arabic hero line are verbatim; all other FR and AR are translations and need review. Brand lines (title, proof line, tagline, manifesto, eyebrow) stay in English in every locale so the title swap stays one line.
+
+### Verified
+- `tsc --noEmit` clean; `next build` exit 0 (80 pages) with Atlas paused
+- Dev preview: `/en /fr /ar`, about, services, contact, blog, `/links`, robots, sitemap, manifest all 200; no console errors; 375px has no horizontal scroll
+- Rendered `<head>` matches §5.1; JSON-LD matches §5.2 field for field
+
+### Still open
+- **K3** — Atlas is paused, so the `/links` DB cards are unaudited. Sponsored/resource/service cards are not rendered until then
+- **V01–V07** — placeholders on site; generation waits for cost approval (Step 3)
+- Pre-existing, out of scope: 26 lint errors in admin/API code from `origin/main` (mostly `react-hooks/set-state-in-effect`); Next 16 `middleware` → `proxy` rename; the rk-studio newsletter page doesn't show the July "unsubscribed" badge
+- The blog-translation prompt still asks for MSA in Arabic posts (editorial call)

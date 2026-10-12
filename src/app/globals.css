@@ -3,7 +3,13 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  /* Colors */
+  /* Colors — brief §3.1 */
+  --color-ink: var(--ink);
+  --color-signal: var(--signal);
+  --color-paper: var(--paper);
+  --color-muted: var(--muted);
+  --color-panel: var(--panel);
+  --color-line: var(--line);
   --color-bg-0: var(--bg-0);
   --color-bg-1: var(--bg-1);
   --color-bg-2: var(--bg-2);
@@ -24,7 +30,7 @@
      their next/font variables (--font-mono, --font-arabic) would collide with
      Tailwind v4 @theme keys of the same name. */
   --font-display: var(--font-display-face), ui-sans-serif, system-ui, sans-serif;
-  --font-sans: var(--font-sans-face), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-display-face), ui-sans-serif, system-ui, sans-serif;
 
   /* Breakpoints */
   --breakpoint-xs: 375px;
@@ -91,9 +97,12 @@ html {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-marquee,
-  .animate-pulse-ring {
-    animation: none !important;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
 
@@ -105,10 +114,11 @@ body {
   min-height: 100dvh;
 }
 
-/* Arabic locale — one geometric family for headings and body, so Arabic and
-   Latin share a single geometry (brand book, Typography Core). */
+/* Arabic — brief §3.2: Montserrat Arabic is licensed and not on Google Fonts,
+   so the web face is IBM Plex Sans Arabic 500 (body) / 600 (headings). */
 :lang(ar) body {
-  font-family: var(--font-arabic-body), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-arabic), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 500;
   direction: rtl;
   text-align: right;
   word-spacing: normal;
@@ -120,8 +130,8 @@ body {
 :lang(ar) h4,
 :lang(ar) h5,
 :lang(ar) h6 {
-  font-family: var(--font-arabic-body), ui-sans-serif, system-ui, sans-serif;
-  font-weight: 900;
+  font-family: var(--font-arabic), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 600;
   line-height: 1.4;
   letter-spacing: 0 !important;
 }
@@ -133,7 +143,7 @@ body {
 :lang(ar) a:not(.font-mono),
 :lang(ar) button:not(.font-mono),
 :lang(ar) label {
-  font-family: var(--font-arabic-body), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-arabic), ui-sans-serif, system-ui, sans-serif;
   line-height: 1.7;
   letter-spacing: 0 !important;
   word-spacing: normal;
@@ -163,12 +173,11 @@ body {
   font-family: var(--font-mono), ui-monospace, monospace !important;
 }
 
-/* JetBrains Mono carries no Arabic, so terminal-style Arabic lines fall back
-   to IBM Plex Sans Arabic. */
-:lang(ar) .font-mono {
-  font-family: var(--font-arabic), ui-monospace, monospace;
-  font-weight: 400;
-  direction: ltr;
+/* Any explicit Arabic run (<Ar>) on any page */
+.font-arabic {
+  font-family: var(--font-arabic), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0 !important;
 }
 
 /* Flip arrow icons for RTL */
@@ -177,8 +186,8 @@ body {
 }
 
 ::selection {
-  background: rgba(var(--matrix-rgb), 0.2);
-  color: var(--matrix);
+  background: var(--signal);
+  color: var(--ink);
 }
 
 :focus-visible {
@@ -212,9 +221,9 @@ body {
 
   /* Optical sizing: tighten more as type grows, less as it shrinks.
      A single blanket value over-tightens small headings. */
-  h1, h2 { letter-spacing: -0.025em; }
-  h3     { letter-spacing: -0.015em; }
-  h4, h5, h6 { letter-spacing: -0.01em; }
+  /* Brief §3.2: headings tight (-0.02em), balanced wrap */
+  h1, h2, h3 { letter-spacing: -0.02em; text-wrap: balance; }
+  h4, h5, h6 { letter-spacing: -0.01em; text-wrap: balance; }
 
   p {
     line-height: 1.7;
@@ -226,33 +235,27 @@ body {
   .font-display { font-family: var(--font-display-face), ui-sans-serif, system-ui, sans-serif; }
   .font-mono { font-family: var(--font-mono), ui-monospace, monospace; }
 
-  /* Rule-breaker faces (brand book 07). Max ONE per composition, titles and
-     accents only — never body text, never subtitles, never client documents. */
-  .font-ruqaa { font-family: var(--font-ruqaa), serif; }
-  .font-marker { font-family: var(--font-marker), cursive; }
-
-  /* Rule R3: in documents and UI, green stays FLAT — no gradients. These
-     utilities are kept as flat colour so existing markup stays on-brand. */
-  .text-gradient-matrix {
-    color: var(--matrix);
-  }
-
+  /* Brief §3.4: no gradients, glassmorphism or glows. These legacy class
+     names now resolve to the flat panel treatment so old markup stays on-brand. */
+  .text-gradient-matrix,
   .text-gradient-accent {
-    color: var(--accent);
+    color: var(--signal);
   }
 
   .glass {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: var(--panel);
+    border: 1px solid var(--line);
   }
 
-  .glow-matrix {
-    box-shadow: var(--glow-matrix);
-  }
-
+  .glow-matrix,
   .glow-accent {
-    box-shadow: var(--glow-accent);
+    box-shadow: none;
+  }
+
+  /* The only decorative graphic (brief §3.3): a thin horizontal green light line */
+  .signal-rule {
+    height: 1px;
+    background: var(--signal);
+    opacity: 0.6;
   }
 }

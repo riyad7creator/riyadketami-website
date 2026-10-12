@@ -1,14 +1,6 @@
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
-import {
-  spaceGrotesk,
-  montserrat,
-  jetbrainsMono,
-  ibmPlexArabic,
-  cairo,
-  arefRuqaa,
-  permanentMarker,
-} from '@/lib/fonts';
+import { spaceGrotesk, jetbrainsMono, ibmPlexArabic } from '@/lib/fonts';
 import { ClarityScript } from '@/components/ClarityScript';
 import ScrollControl from '@/components/ScrollControl';
 import MotionProvider from '@/components/MotionProvider';
@@ -50,12 +42,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       suppressHydrationWarning
       className={[
         spaceGrotesk.variable,
-        montserrat.variable,
         jetbrainsMono.variable,
         ibmPlexArabic.variable,
-        cairo.variable,
-        arefRuqaa.variable,
-        permanentMarker.variable,
       ].join(' ')}
     >
       <body suppressHydrationWarning>

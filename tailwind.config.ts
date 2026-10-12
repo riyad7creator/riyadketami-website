@@ -8,15 +8,12 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      // KETAMI Brand Identity Book v1.0 — section 06.
+      // KETAMI_BRAND_REVIEW.md §3.2
       fontFamily: {
         display: ['var(--font-display-face)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        sans: ['var(--font-sans-face)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-display-face)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         mono: ['var(--font-mono)', 'ui-monospace', 'monospace'],
         arabic: ['var(--font-arabic)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        // Rule-breakers — accents only, max one per composition (section 07)
-        ruqaa: ['var(--font-ruqaa)', 'serif'],
-        marker: ['var(--font-marker)', 'cursive'],
       },
     },
   },

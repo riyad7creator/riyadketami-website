@@ -19,15 +19,16 @@ interface ButtonProps extends ComponentPropsWithoutRef<'button'> {
 }
 
 const variants: Record<Variant, string> = {
-  primary: 'bg-matrix text-bg-0 hover:bg-matrix/90 font-semibold hover:shadow-[0_0_20px_rgba(0,255,102,0.25)]',
-  secondary: 'glass border-border text-text-0 hover:border-border-hover',
+  // Ink text on Signal Green — white on green fails contrast (brief §3.1)
+  primary: 'bg-signal text-ink hover:bg-signal/90 font-medium',
+  secondary: 'bg-transparent border border-line text-paper hover:border-paper/60',
   ghost: 'text-text-1 hover:text-text-0 hover:bg-surface',
   danger: 'bg-danger/10 border border-danger/30 text-danger hover:bg-danger/20',
 };
 
 const sizes: Record<Size, string> = {
   sm: 'h-8 px-3 text-sm rounded-[var(--radius-sm)]',
-  md: 'h-10 px-5 text-sm rounded-[var(--radius-md)]',
+  md: 'min-h-[44px] px-5 text-sm rounded-[var(--radius-md)]',
   lg: 'h-12 px-7 text-base rounded-[var(--radius-md)]',
 };
 

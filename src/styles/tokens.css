@@ -1,52 +1,44 @@
-/* KETAMI Brand Identity Book v1.0 (July 2026) — section 05, Color System.
-   Two colors carry the brand: Terminal Ink and Signal Green. Everything else
-   supports. Green is a signal, not a surface — keep it near 10% of any view. */
+/* KETAMI_BRAND_REVIEW.md §3.1 — the brief's tokens are the source of truth.
+   Two colours carry the brand: --ink and --signal. Signal Green is an accent
+   only (cursor, eyebrows, primary button, focus ring, thin rules): never body
+   text on light, never a large fill, and never white text on top of it. */
 :root {
-  /* Terminal Ink #111111 — ~80% of every composition */
-  --bg-0: #111111;
-  --bg-1: #181818; /* derived elevation step between ink and panel */
-  --bg-2: #1E1E1E; /* Panel Grey — cards, code blocks */
+  /* Brief tokens */
+  --ink: #111111;     /* Terminal Ink — page background */
+  --signal: #00CD29;  /* Signal Green — accent only */
+  --paper: #F2F2EE;   /* primary text on ink; light section background */
+  --muted: #A3A39C;   /* secondary text on ink (≥4.5:1 on --ink) */
+  --panel: #1A1A1A;   /* cards on ink */
+  --line: #2A2A2A;    /* hairlines, borders */
+  --signal-rgb: 0, 205, 41;
 
-  /* Text */
-  --text-0: #F4F4EF; /* Paper White — body text on ink */
-  --text-1: #C6C6C0; /* derived mid step */
-  --text-2: #9A9A94; /* Cool Grey — secondary text, captions */
+  /* Legacy names, kept as aliases so existing markup resolves to brief values */
+  --bg-0: var(--ink);
+  --bg-1: var(--panel);
+  --bg-2: var(--panel);
+  --text-0: var(--paper);
+  --text-1: #CFCFC9; /* derived mid step between paper and muted */
+  --text-2: var(--muted);
+  --matrix: var(--signal);
+  --matrix-rgb: var(--signal-rgb);
+  --matrix-dim: #00A021; /* derived, de-emphasised green */
+  --accent: var(--signal);
 
-  /* Signal Green #00CD29 — accents, CTAs, highlights, cursor. Scarcity is its power. */
-  --matrix: #00CD29;
-  --matrix-rgb: 0, 205, 41;
-  --matrix-dim: #00A021; /* derived, for de-emphasised green */
-
-  /* The brand is two-color; there is no separate blue accent. Focus rings and
-     informational states reuse Signal Green so nothing off-palette appears. */
-  --accent: #00CD29;
-
-  /* Alert Red — errors and banned items ONLY, never decorative (rule R4) */
+  /* Errors only, never decorative */
   --danger: #E0402E;
+  /* Placeholder flags ([VERIFY] / [MISSING]) */
   --warning: #FFB020;
 
-  /* Matrix rain (visual world M2/M3) uses Signal Green as practical light. */
-  --matrix-rain: #00CD29;
-  --matrix-rain-rgb: 0, 205, 41;
-
-  /* Borders */
-  --border: rgba(244, 244, 239, 0.10);
-  --border-hover: rgba(244, 244, 239, 0.20);
-
-  /* Surfaces */
-  --surface: rgba(244, 244, 239, 0.04);
-  --surface-hover: rgba(244, 244, 239, 0.07);
+  --border: var(--line);
+  --border-hover: #3A3A3A;
+  --surface: var(--panel);
+  --surface-hover: #202020;
 
   /* Radii */
   --radius-sm: 6px;
   --radius-md: 12px;
   --radius-lg: 20px;
   --radius-xl: 32px;
-
-  /* Shadows. Rule R3: in UI, green stays flat — glow is reserved for imagery
-     and video, so these stay subtle and are used sparingly. */
-  --glow-matrix: 0 0 20px rgba(var(--matrix-rgb), 0.25);
-  --glow-accent: 0 0 20px rgba(var(--matrix-rgb), 0.25);
 
   /* Transitions */
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);

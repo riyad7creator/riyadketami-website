@@ -1,7 +1,6 @@
 'use client';
 
 import { useRef, useState, useEffect, type ComponentType } from 'react';
-import Link from 'next/link';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { Brain, Handshake, Mic, Check, type LucideProps } from 'lucide-react';
 import { Button } from '@/components/ui';
@@ -24,6 +23,7 @@ interface ServiceCardProps {
 
 export default function ServiceCard({ item, lang, index = 0 }: ServiceCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
+  const [sheenPos, setSheenPos] = useState({ x: 50, y: 50 });
   const [hovered, setHovered] = useState(false);
   // Mobile-only: tap-selected state, distinct from transient hover/touch press.
   // Workshop card (index 2) only shows its strong CTA when hovered (desktop)
@@ -39,24 +39,30 @@ export default function ServiceCard({ item, lang, index = 0 }: ServiceCardProps)
     return () => document.removeEventListener('pointerdown', handleOutside);
   }, [selected]);
 
-  // Tilt + sheen are pure motion values — mousemove never triggers a React re-render
+  // Framer Motion spring values for tilt
   const rawX = useMotionValue(0);
   const rawY = useMotionValue(0);
-  const rotateY = useSpring(useTransform(rawX, [-0.5, 0.5], [-5, 5]), { stiffness: 300, damping: 20 });
-  const rotateX = useSpring(useTransform(rawY, [-0.5, 0.5], [5, -5]), { stiffness: 300, damping: 20 });
-  const sheenX = useMotionValue(50);
-  const sheenY = useMotionValue(50);
-  const sheen = useMotionTemplate`radial-gradient(circle at ${sheenX}% ${sheenY}%, rgba(var(--matrix-rgb), 0.1) 0%, transparent 55%)`;
+  const rotateY = useSpring(useTransform(rawX, [-0.5, 0.5], [-8, 8]), { stiffness: 300, damping: 20 });
+  const rotateX = useSpring(useTransform(rawY, [-0.5, 0.5], [8, -8]), { stiffness: 300, damping: 20 });
+
+  function getRelativePos(clientX: number, clientY: number) {
+    const rect = cardRef.current?.getBoundingClientRect();
+    if (!rect) return { xNorm: 0, yNorm: 0, xPct: 50, yPct: 50 };
+    const xPct = ((clientX - rect.left) / rect.width) * 100;
+    const yPct = ((clientY - rect.top) / rect.height) * 100;
+    return {
+      xNorm: xPct / 100 - 0.5,
+      yNorm: yPct / 100 - 0.5,
+      xPct,
+      yPct,
+    };
+  }
 
   function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
-    const rect = cardRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    const xPct = ((e.clientX - rect.left) / rect.width) * 100;
-    const yPct = ((e.clientY - rect.top) / rect.height) * 100;
-    rawX.set(xPct / 100 - 0.5);
-    rawY.set(yPct / 100 - 0.5);
-    sheenX.set(xPct);
-    sheenY.set(yPct);
+    const { xNorm, yNorm, xPct, yPct } = getRelativePos(e.clientX, e.clientY);
+    rawX.set(xNorm);
+    rawY.set(yNorm);
+    setSheenPos({ x: xPct, y: yPct });
   }
 
   function handleMouseEnter() {
@@ -97,10 +103,12 @@ export default function ServiceCard({ item, lang, index = 0 }: ServiceCardProps)
         onMouseMove={handleMouseMove}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className="relative flex flex-col gap-6 h-full rounded-[var(--radius-lg)] p-8 border border-white/10 bg-white/[0.02] hover:border-matrix/40 hover:bg-matrix/[0.04] hover:shadow-[0_0_60px_rgba(var(--matrix-rgb),0.06)] transition-colors duration-200 cursor-default select-none"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        className="relative flex flex-col gap-6 h-full rounded-[var(--radius-lg)] p-8 border border-white/10 bg-white/[0.02] hover:border-matrix/40 hover:bg-matrix/[0.04] hover:shadow-[0_0_60px_rgba(0,255,102,0.06)] transition-colors duration-200 cursor-default select-none"
       >
         {/* Radial sheen that follows the cursor */}
-        <motion.div
+        <div
           className="pointer-events-none absolute inset-0 rounded-[var(--radius-lg)] transition-opacity duration-200"
           style={{
             opacity: emphasized ? 1 : 0,
@@ -139,16 +147,15 @@ export default function ServiceCard({ item, lang, index = 0 }: ServiceCardProps)
 
         {/* CTA */}
         <div className="pt-2">
-          <Link href={`/${lang}/contact`}>
-            <Button
-              variant="secondary"
+          <Button
+            href={`/${lang}/contact`}
+            variant="secondary"
               className={`w-full hover:bg-matrix hover:text-bg-0 hover:border-matrix hover:shadow-[0_0_20px_rgba(0,255,102,0.25)] ${
                 selected ? 'bg-matrix text-bg-0 border-matrix shadow-[0_0_20px_rgba(0,255,102,0.25)]' : ''
               }`}
             >
               {item.cta}
             </Button>
-          </Link>
         </div>
       </motion.div>
     </div>

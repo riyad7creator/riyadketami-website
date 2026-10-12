@@ -10,8 +10,8 @@ import {
   permanentMarker,
 } from '@/lib/fonts';
 import { ClarityScript } from '@/components/ClarityScript';
-        <ScrollControl />
-        <MotionProvider>{children}</MotionProvider>
+import ScrollControl from '@/components/ScrollControl';
+import MotionProvider from '@/components/MotionProvider';
 import './globals.css';
 
 export const metadata: Metadata = {

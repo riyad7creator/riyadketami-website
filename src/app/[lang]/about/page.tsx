@@ -183,11 +183,9 @@ export default async function AboutPage({
               >
                 {t.cta_email}
               </a>
-              <Link href={`/${lang}/contact`}>
-                <Button variant="secondary" size="lg">
-                  {t.cta_secondary}
-                </Button>
-              </Link>
+              <Button href={`/${lang}/contact`} variant="secondary" size="lg">
+                {t.cta_secondary}
+              </Button>
             </div>
           </Reveal>
         </div>

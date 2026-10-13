@@ -292,3 +292,49 @@ Copy-provenance note: EN is verbatim §2.3; FR H1 and the Arabic hero line are v
 - **V01–V07** — placeholders on site; generation waits for cost approval (Step 3)
 - Pre-existing, out of scope: 23 lint errors (+1 warning) in admin/API/utility files from `origin/main`, none in files this pass rewrote (mostly `react-hooks/set-state-in-effect`); Next 16 `middleware` → `proxy` rename; the rk-studio newsletter page doesn't show the July "unsubscribed" badge
 - The blog-translation prompt still asks for MSA in Arabic posts (editorial call)
+
+---
+
+## Changelog — QA pass (13 Oct 2026)
+
+Full functional test of the public site and the admin (`/rk-studio`). Admin create/update/delete flows ran against a **throwaway local MongoDB** seeded with test data and a test admin. Email, Kit, AI and analytics keys were blanked for that run, so nothing touched production data or real services. Then `next build` and a `next start` smoke test ran against the real `.env.local`, with Atlas still paused.
+
+### Bugs found and fixed
+| # | Area | Bug | Fix | Commit |
+|---|---|---|---|---|
+| Q1 | Admin login | `/rk-studio/auth` redirected to itself forever, so **nobody could sign in** (same on `origin/main`) | Studio pages moved into an `(studio)` route group that carries the session guard; the login page sits outside it | `98ac710` |
+| Q2 | Dashboard | "Published" and "Drafts" both showed the total post count (`/api/posts` ignored `status`) | Status filter for admins; page/limit clamped | `8d442e1` |
+| Q3 | Admin links | Dashboard cards, post editor redirects, AI tools and analytics linked to `/admin/...` (404 since the move) | Paths fixed + permanent redirects `/admin/*` → `/rk-studio/*`, `/login` → `/rk-studio/auth` | `8d442e1` |
+| Q4 | Team (security) | "Remove" only hid the row in the browser; **the account could still sign in** | Real `DELETE /api/team`; refuses removing yourself or the last admin | `8d442e1` |
+| Q5 | Contact / newsletter | Admin notifications were **never created** (an HTTP call to a session-protected route → 401). With no `RESEND_API_KEY`, contact messages were silently lost | `notifyAdmin()` writes straight to the DB; the contact notification holds the full message + reply link; the POST route now requires admin | `8d442e1` |
+| Q6 | API | Any malformed `:id` returned 500 | `serverError()` maps CastError → 404 | `8d442e1` |
+| Q7 | Posts | Arabic-only titles couldn't get a slug; the slug requirement contradicted the route's own fallback | Slug optional on create, with a generated fallback | `8d442e1` |
+| Q8 | Newsletter | Stats counted unsubscribed rows as subscribers; the CSV export had no status column (risk of re-mailing opt-outs) | Active-only stats + `unsubscribed` total; `status` column added | `8d442e1` |
+| Q9 | Privacy | Public `/api/social` exposed follower counts | Counts stripped from the public response | `8d442e1` |
+| Q10 | i18n | Contact placeholders and validation were English-only; the Arabic newsletter confirmation was MSA with no `lang`/`dir` | Localised EN/FR/AR (Darija) | `8d442e1` |
+| Q11 | Admin mobile | Fixed 224px sidebar left ~150px of content on a phone | Slide-in drawer below `md` | `ca589e7` |
+| Q12 | Links admin | Profile fields edited data /links no longer reads; the note promised public follower counts | Read-only identity from BRAND; status line kept and rendered on /links; card tabs say they're hidden until K3 | `ca589e7` |
+| Q13 | Analytics | CSP blocked Microsoft Clarity (`scripts.clarity.ms`); **analytics never ran** | CSP allows `*.clarity.ms`; verified `collect` → 204 | `f20d07e` |
+| Q14 | robots | `public/robots.txt` conflicted with `app/robots.ts` → `/robots.txt` 500 | Merged into the route | `2f813c4` |
+
+### Verified working
+Public, all three locales: home, about, services, contact, blog list + category filter, blog post, /links, 404, sitemap, robots, manifest, favicons, OG image, AVIF/WebP images.
+Admin flows, end to end:
+- login, wrong-password message, sign-out, guard after sign-out;
+- dashboard; posts create → publish → visible on the public blog + sitemap → delete (UI editor and API);
+- media upload/edit/delete; newsletter signup (2-step UI), duplicate, re-subscribe, CSV export, rate limit, invalid unsubscribe token;
+- contact form (UI, AR, validation) → notification;
+- links cards/sources/profile; team add/remove; settings save/read; analytics; AI tools (clear "key not configured" message);
+- notifications.
+
+`next build`: 0 errors. `next start`: every page renders with the DB down; no failed requests on the home page.
+
+### Visuals (Step 3)
+V01–V06 generated (~$0.54); V01–V05 live on the branch. **Not approved yet** (`BRAND.visuals.*.approved = false`). V06 is not placed (dark texture vs. light ABB section, a conflict in the brief). V07 was not generated.
+
+### Needs Riyad (cannot be done from code)
+1. **Resume Atlas** — production is down for every DB feature until then; then run the K3 audit of `/links` cards.
+2. **`RESEND_API_KEY`** is not in `.env.local`. If Vercel lacks it too, newsletter sends, welcome emails and contact emails don't go out (contact messages now at least land in Studio → Notifications).
+3. Approve or reject each visual likeness (V01–V05); decide on V06/V07.
+4. Push/deploy this branch (the branch is based on `origin/main`); DNS for ketami.net.
+5. Remaining lint: 17 pre-existing `react-hooks/set-state-in-effect`-style findings in admin data loaders (behaviour verified correct).

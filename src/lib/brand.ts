@@ -114,23 +114,27 @@ export const BRAND = {
     // Kit assets (brief §6.1) live in /public/brand
     avatar: '/brand/profile-picture_800.jpg',
     og: '/brand/og-image_1200x630.jpg',
-    heroDesktop: '/brand/hero_2816x1584.jpg',
+    // A05 (hero_2816x1584.jpg) stays in public/brand as a kit asset; V08 is the desktop hero
     // A07 (hero-vertical) stays in public/brand as a kit asset; V01 is the mobile hero
     oranPlate: '/brand/oran-plate_2816x1584.jpg',
     speakerCard: '/brand/story-speaker-card_1080x1920.jpg',
   },
 
   /**
-   * Generated visuals (brief §6.2), grok-imagine-2 with Riyad's reference photo.
+   * Generated visuals (brief §6.2). V01–V05: Flux 2 Pro with five of Riyad's
+   * real photos as references (glasses, hair, beard match); V06: grok-imagine-2.
    * `approved` records Riyad's likeness sign-off (brief §6.4 step 1) — flip it
    * per image once approved; nothing here should ship before that.
    */
   visuals: {
-    V01: { src: '/brand/V01_mobile-hero.jpg', width: 1776, height: 2368, alt: 'Riyad Ketami, portrait at night in Oran', approved: false },
-    V02: { src: '/brand/V02_card-darija.jpg', width: 2368, height: 1776, alt: 'Riyad recording an AI breakdown at his desk', approved: false },
-    V03: { src: '/brand/V03_card-launch.jpg', width: 2368, height: 1776, alt: 'Riyad filming a vertical video with a phone rig', approved: false },
-    V04: { src: '/brand/V04_card-talks.jpg', width: 2368, height: 1776, alt: 'Riyad speaking on stage', approved: false },
-    V05: { src: '/brand/V05_about-oran.jpg', width: 2496, height: 1664, alt: 'Riyad on the Oran seafront', approved: false },
+    V01: { src: '/brand/V01_mobile-hero.jpg', width: 1440, height: 1920, alt: 'Riyad Ketami, portrait at night in Oran', approved: false },
+    V02: { src: '/brand/V02_card-darija.jpg', width: 1920, height: 1440, alt: 'Riyad recording an AI breakdown at his desk', approved: false },
+    V03: { src: '/brand/V03_card-launch.jpg', width: 1920, height: 1440, alt: 'Riyad filming himself with his phone', approved: false },
+    V04: { src: '/brand/V04_card-talks.jpg', width: 1920, height: 1440, alt: 'Riyad speaking on stage', approved: false },
+    V05: { src: '/brand/V05_about-oran.jpg', width: 1920, height: 1280, alt: 'Riyad on the Oran seafront', approved: false },
+    // V08 (new slot): desktop hero in the same Flux set, so desktop and mobile match.
+    // Kit A05 (hero_2816x1584.jpg) remains in public/brand as the fallback.
+    V08: { src: '/brand/V08_desktop-hero.jpg', width: 1920, height: 1088, alt: 'Riyad Ketami, portrait at night in Oran', approved: false },
     V06: { src: '/brand/V06_abb-texture.jpg', width: 2816, height: 1584, alt: '', approved: false },
   },
 } as const;

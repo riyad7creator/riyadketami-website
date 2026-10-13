@@ -17,11 +17,11 @@ const HERO_ALT = BRAND.visuals.V01.alt;
 export default function Hero({ locale, dict }: HeroProps) {
   const t = dict.home.hero;
 
-  // Art direction: A05 (subject right, text left) on desktop, V01 (3:4, space on top) on mobile.
+  // Art direction: V08 (subject right, text left) on desktop, V01 (3:4) on mobile.
   const common = { alt: HERO_ALT, sizes: '100vw', fetchPriority: 'high' as const, loading: 'eager' as const };
   const {
     props: { srcSet: desktopSrcSet },
-  } = getImageProps({ ...common, src: BRAND.images.heroDesktop, width: 2816, height: 1584 });
+  } = getImageProps({ ...common, src: BRAND.visuals.V08.src, width: BRAND.visuals.V08.width, height: BRAND.visuals.V08.height });
   const {
     props: { srcSet: mobileSrcSet, ...img },
   } = getImageProps({ ...common, src: BRAND.visuals.V01.src, width: BRAND.visuals.V01.width, height: BRAND.visuals.V01.height });
@@ -60,9 +60,9 @@ export default function Hero({ locale, dict }: HeroProps) {
       </div>
 
       {/* Mobile: portrait below the copy, in flow. Desktop: full-bleed background, subject right.
-          [VISUAL V07] (optional loop) would use A05 as its poster. */}
+          [VISUAL V07] (optional loop) would use V08 as its poster. */}
       <div
-        data-visual="A05 V01"
+        data-visual="V08 V01"
         className="relative order-2 aspect-[3/4] w-full md:absolute md:inset-0 md:-z-10 md:aspect-auto"
       >
         <picture>

@@ -30,9 +30,13 @@ export async function GET(req: Request) {
   }
 }
 
-/** POST /api/admin/notifications — create notification (internal use) */
+/** POST /api/admin/notifications — create a notification by hand (admin only).
+ *  Server code should call notifyAdmin() from @/lib/notify instead. */
 export async function POST(req: Request) {
   try {
+    const check = await requireAdmin();
+    if (!check.ok) return check.response;
+
     await dbConnect();
     const body = await req.json() as { type: NotificationType; title: string; body: string; link?: string };
     const { type, title, body: bodyText, link } = body;

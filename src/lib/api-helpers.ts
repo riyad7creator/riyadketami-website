@@ -22,6 +22,11 @@ export function zodFail(error: ZodError): NextResponse {
 }
 
 export function serverError(message: string, error: unknown): NextResponse {
+  // A malformed :id reaches Mongoose as a CastError — that's a missing
+  // resource, not a server fault, so answer 404 instead of 500.
+  if ((error as { name?: string })?.name === 'CastError') {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  }
   console.error(`[API] ${message}:`, error);
   return NextResponse.json({ error: message }, { status: 500 });
 }

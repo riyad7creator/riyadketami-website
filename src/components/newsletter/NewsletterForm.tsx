@@ -81,7 +81,14 @@ export default function NewsletterForm({
         className={`flex items-center gap-3 glass border border-matrix/30 rounded-[var(--radius-md)] px-6 py-4 ${className}`}
       >
         <Check size={18} className="text-matrix shrink-0" />
-        <p className="text-sm text-text-0">{confirmationMsg}</p>
+        {/* The message is in the chosen language, whatever the page locale */}
+        <p
+          className="text-sm text-text-0"
+          lang={preferredLanguage}
+          dir={preferredLanguage === 'ar' ? 'rtl' : 'ltr'}
+        >
+          {confirmationMsg}
+        </p>
       </motion.div>
     );
   }
@@ -110,6 +117,8 @@ export default function NewsletterForm({
                 if (error) setError('');
               }}
               placeholder={t.placeholder}
+              aria-label={dict.contact.fields.email}
+              autoComplete="email"
               className={`w-full px-4 rounded-[var(--radius-md)] bg-bg-2 border border-border text-text-0 placeholder:text-text-2 text-sm focus:outline-none focus:border-matrix transition-colors duration-[var(--duration-fast)] ${isInline ? 'h-11' : 'py-3.5'}`}
             />
             <button

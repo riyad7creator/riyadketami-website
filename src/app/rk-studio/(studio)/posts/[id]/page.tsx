@@ -241,7 +241,7 @@ export default function PostEditorPage({ params }: { params: Promise<{ id: strin
 
     // For new posts: navigate after translations are done
     if (isNew) {
-      router.replace(`/admin/posts/${savedId}`);
+      router.replace(`/rk-studio/posts/${savedId}`);
     }
 
     setSaving(false);

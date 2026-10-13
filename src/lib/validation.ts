@@ -11,7 +11,8 @@ export const contactFormSchema = z.object({
 
 export const postSchema = z.object({
   title: z.string().min(3).max(100),
-  slug: z.string().min(3).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Invalid slug format'),
+  // Optional on create: POST /api/posts derives it from the title when omitted
+  slug: z.string().min(3).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Invalid slug format').optional(),
   content: z.string().min(10),
   excerpt: z.string().max(300).optional().or(z.literal('')),
   category: z.enum(BLOG_CATEGORY_VALUES).optional(),

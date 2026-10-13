@@ -1,4 +1,3 @@
-import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db/connect';
 import Subscriber from '@/models/Subscriber';
 import { requireAdmin, serverError } from '@/lib/api-helpers';
@@ -20,15 +19,16 @@ export async function GET(req: Request) {
 
     const subscribers = await Subscriber.find(query)
       .sort({ createdAt: -1 })
-      .select('email preferredLanguage createdAt')
+      .select('email preferredLanguage createdAt unsubscribed')
       .lean();
 
     const csv =
-      'email,preferredLanguage,subscriptionDate\n' +
+      // status column: an import elsewhere must be able to skip unsubscribed rows
+      'email,preferredLanguage,subscriptionDate,status\n' +
       subscribers
         .map(
           (s) =>
-            `${s.email},${s.preferredLanguage ?? ''},${new Date(s.createdAt).toISOString().slice(0, 10)}`
+            `${s.email},${s.preferredLanguage ?? ''},${new Date(s.createdAt).toISOString().slice(0, 10)},${s.unsubscribed ? 'unsubscribed' : 'active'}`
         )
         .join('\n');
 

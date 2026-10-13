@@ -30,6 +30,7 @@ export default function AdminTeamPage() {
   const [adding, setAdding] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [removeError, setRemoveError] = useState('');
 
   const { register, handleSubmit, reset } = useForm<MemberForm>({ defaultValues: { role: 'editor' } });
 
@@ -58,6 +59,19 @@ export default function AdminTeamPage() {
       setError(err.error ?? 'Failed to add member.');
     }
     setSaving(false);
+  };
+
+  // Removal happens on the server first; the row only disappears once the
+  // account is really gone (it used to vanish locally while still able to sign in).
+  const removeMember = async (id: string) => {
+    setRemoveError('');
+    const res = await fetch(`/api/team?id=${id}`, { method: 'DELETE' });
+    if (res.ok) {
+      setMembers((prev) => prev.filter((x) => x._id !== id));
+    } else {
+      const err = (await res.json().catch(() => ({}))) as { error?: string };
+      setRemoveError(err.error ?? 'Failed to remove member.');
+    }
   };
 
   const roleBadge = (role: string) => {
@@ -121,6 +135,8 @@ export default function AdminTeamPage() {
         </form>
       )}
 
+      {removeError && <p role="alert" className="text-xs text-danger">{removeError}</p>}
+
       {loading ? (
         <p className="font-mono text-xs text-text-2 py-8">Loading...</p>
       ) : members.length === 0 ? (
@@ -145,7 +161,7 @@ export default function AdminTeamPage() {
                   <td className="px-4 py-3">
                     <InlineDeleteConfirm
                       label={`Remove ${m.name}`}
-                      onConfirm={() => setMembers((prev) => prev.filter((x) => x._id !== m._id))}
+                      onConfirm={() => void removeMember(m._id)}
                     />
                   </td>
                 </tr>

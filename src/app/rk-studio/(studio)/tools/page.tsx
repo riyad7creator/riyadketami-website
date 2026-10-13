@@ -144,7 +144,7 @@ function PostIdeasTool() {
               <div className="flex items-start gap-1 shrink-0">
                 <CopyButton text={idea.title} />
                 <Link
-                  href={`/admin/posts/new?title=${encodeURIComponent(idea.title)}`}
+                  href={`/rk-studio/posts/new?title=${encodeURIComponent(idea.title)}`}
                   className="p-1.5 text-text-2 hover:text-matrix transition-colors text-xs"
                   title="Create post"
                 >
@@ -219,7 +219,7 @@ function NewsletterDraftTool() {
             <pre className="text-xs font-mono text-text-2 bg-surface px-3 py-2 rounded-[var(--radius-md)] overflow-x-auto whitespace-pre-wrap max-h-48">{draft.htmlBody}</pre>
           </div>
           <Link
-            href={`/admin/newsletter`}
+            href={`/rk-studio/newsletter`}
             className="inline-flex items-center gap-1.5 text-xs text-matrix hover:underline"
           >
             Open Newsletter → paste and send
@@ -352,7 +352,7 @@ function TranslationGapsTool() {
           {gaps.map(gap => (
             <div key={gap._id} className="flex items-center gap-3 py-1.5 border-b border-border/50 last:border-0">
               <Link
-                href={`/admin/posts/${gap._id}`}
+                href={`/rk-studio/posts/${gap._id}`}
                 className="flex-1 text-sm text-text-0 hover:text-matrix transition-colors truncate"
               >
                 {gap.title}

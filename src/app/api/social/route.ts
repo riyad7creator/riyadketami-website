@@ -16,7 +16,10 @@ export async function GET(req: Request) {
     }
 
     const query = isAdmin ? {} : { visible: true };
-    const accounts = await SocialAccount.find(query).sort({ order: 1 });
+    // Follower counts are admin-only: the public site never shows them (brief §2.1)
+    const accounts = await SocialAccount.find(query)
+      .sort({ order: 1 })
+      .select(isAdmin ? '' : '-follower_count -last_updated');
     return NextResponse.json(accounts);
   } catch (error) {
     return serverError('Failed to fetch social accounts', error);

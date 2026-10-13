@@ -3,6 +3,7 @@ import { getResend, FROM_EMAIL, ADMIN_EMAIL, escHtml, emailShell } from '@/lib/r
 import { contactFormSchema } from '@/lib/validation';
 import { rateLimit } from '@/lib/rate-limit';
 import { zodFail, serverError } from '@/lib/api-helpers';
+import { notifyAdmin } from '@/lib/notify';
 
 export async function POST(req: Request) {
   try {
@@ -18,7 +19,7 @@ export async function POST(req: Request) {
     const resend = getResend();
     if (resend) {
       const budgetRow = budget
-        ? `<tr><td style="padding:8px 0;color:#9ca3af;">Budget</td><td style="padding:8px 0;color:#00ff66;">${escHtml(budget)}</td></tr>`
+        ? `<tr><td style="padding:8px 0;color:#A3A39C;">Budget</td><td style="padding:8px 0;color:#00CD29;">${escHtml(budget)}</td></tr>`
         : '';
 
       await resend.emails.send({
@@ -27,15 +28,15 @@ export async function POST(req: Request) {
         replyTo: email,
         subject: `[ketami.net] ${escHtml(subject)}`,
         html: emailShell('// new contact form submission', `
-          <h2 style="color:#fff;margin:0 0 24px;font-size:20px;">${escHtml(subject)}</h2>
+          <h2 style="color:#F2F2EE;margin:0 0 24px;font-size:20px;">${escHtml(subject)}</h2>
           <table style="width:100%;border-collapse:collapse;">
-            <tr><td style="padding:8px 0;color:#9ca3af;width:100px;">From</td><td style="padding:8px 0;color:#fff;">${escHtml(name)} &lt;${escHtml(email)}&gt;</td></tr>
+            <tr><td style="padding:8px 0;color:#A3A39C;width:100px;">From</td><td style="padding:8px 0;color:#F2F2EE;">${escHtml(name)} &lt;${escHtml(email)}&gt;</td></tr>
             ${budgetRow}
           </table>
-          <hr style="border:none;border-top:1px solid #1f2937;margin:20px 0;" />
-          <p style="color:#d1d5db;white-space:pre-wrap;line-height:1.6;">${escHtml(message)}</p>
-          <hr style="border:none;border-top:1px solid #1f2937;margin:20px 0;" />
-          <p style="color:#6b7280;font-size:11px;">Reply directly to this email to reach ${escHtml(name)}.</p>
+          <hr style="border:none;border-top:1px solid #2A2A2A;margin:20px 0;" />
+          <p style="color:#CFCFC9;white-space:pre-wrap;line-height:1.6;">${escHtml(message)}</p>
+          <hr style="border:none;border-top:1px solid #2A2A2A;margin:20px 0;" />
+          <p style="color:#A3A39C;font-size:11px;">Reply directly to this email to reach ${escHtml(name)}.</p>
         `),
       }).catch((err) => {
         // Email delivery failure is non-fatal — the submission was valid
@@ -43,17 +44,14 @@ export async function POST(req: Request) {
       });
     }
 
-    // Fire-and-forget admin notification for new contact
-    fetch(`${process.env.NEXTAUTH_URL ?? 'http://localhost:3000'}/api/admin/notifications`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        type: 'contact_new',
-        title: `New message: ${result.data.subject}`,
-        body: `From ${result.data.name} <${result.data.email}>${result.data.budget ? ` — Budget: ${result.data.budget}` : ''}`,
-        link: '/admin',
-      }),
-    }).catch(() => {});
+    // The notification carries the whole message, so it survives even when
+    // email delivery isn't configured (no RESEND_API_KEY) or fails.
+    await notifyAdmin({
+      type: 'contact_new',
+      title: `Message: ${subject}`,
+      body: `From ${name} <${email}>${budget ? ` · Budget: ${budget}` : ''}\n\n${message}`,
+      link: `mailto:${email}?subject=${encodeURIComponent(`Re: ${subject}`)}`,
+    });
 
     return NextResponse.json({ message: 'Message received' });
   } catch (error) {

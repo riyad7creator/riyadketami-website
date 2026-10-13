@@ -125,12 +125,13 @@ export default function AdminShell({ user, children }: AdminShellProps) {
         {/* Sidebar */}
         <aside className="w-56 shrink-0 flex flex-col border-r border-border bg-bg-1/60">
           <div className="px-5 py-5 border-b border-border">
-            {/* "RK." minimal mark + terminal cursor */}
-            <span className="font-display font-bold text-text-0 tracking-tight">
-              RK.<span className="text-matrix">_</span>
+            {/* RK_ monogram (brief §4) */}
+            <span dir="ltr" className="inline-flex items-baseline font-display font-bold text-text-0 tracking-[0.02em]">
+              RK
+              <span aria-hidden className="ms-[0.08em] inline-block h-[0.14em] w-[0.6em] bg-signal" />
             </span>
-            <span className="block font-mono text-[10px] text-text-2 tracking-[0.15em] mt-0.5">
-              // admin
+            <span className="block font-mono text-[10px] uppercase text-text-2 tracking-[0.12em] mt-0.5">
+              Studio
             </span>
           </div>
 

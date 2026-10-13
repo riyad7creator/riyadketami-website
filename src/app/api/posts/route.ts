@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db/connect';
 import Post from '@/models/Post';
 import { postSchema } from '@/lib/validation';
+import { POST_STATUSES } from '@/lib/constants';
 import DOMPurify from 'isomorphic-dompurify';
 import { requireAdmin, zodFail, serverError, generateSlug, escapeRegex } from '@/lib/api-helpers';
 
@@ -9,8 +10,9 @@ export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const isAdmin = searchParams.get('admin') === 'true';
-    const page = parseInt(searchParams.get('page') ?? '1');
-    const limit = parseInt(searchParams.get('limit') ?? '12');
+    const page = Math.max(1, parseInt(searchParams.get('page') ?? '1') || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(searchParams.get('limit') ?? '12') || 12));
+    const status = searchParams.get('status') ?? '';
     const search = searchParams.get('search') ?? '';
     const tag = searchParams.get('tag') ?? '';
     const category = searchParams.get('category') ?? '';
@@ -24,7 +26,9 @@ export async function GET(req: Request) {
     await dbConnect();
 
     const query: Record<string, unknown> = {};
+    // Public requests only ever see published posts; admins may filter by status
     if (!isAdmin) query['status'] = 'published';
+    else if ((POST_STATUSES as readonly string[]).includes(status)) query['status'] = status;
     if (language) query['language'] = language;
     if (search) {
       const safeSearch = escapeRegex(search);
@@ -66,7 +70,8 @@ export async function POST(req: Request) {
 
     const data = result.data;
     if (data.content) data.content = DOMPurify.sanitize(data.content);
-    if (!data.slug && data.title) data.slug = generateSlug(data.title);
+    // Arabic-only titles slugify to '' — fall back to a timestamped slug
+    if (!data.slug && data.title) data.slug = generateSlug(data.title) || `post-${Date.now().toString(36)}`;
 
     const post = await Post.create({ ...data, author: check.session.user.id });
     return NextResponse.json(post, { status: 201 });

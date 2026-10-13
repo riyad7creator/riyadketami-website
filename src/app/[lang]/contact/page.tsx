@@ -42,6 +42,8 @@ export default async function ContactPage({
     submit: t.submit,
     success: t.success,
     error: t.error,
+    placeholders: t.placeholders,
+    validation: t.validation,
   };
 
   return (

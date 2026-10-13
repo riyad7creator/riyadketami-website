@@ -220,7 +220,7 @@ export default function NotificationsPage() {
                 ) : (
                   <p className="text-sm font-medium text-text-0">{n.title}</p>
                 )}
-                <p className="text-xs text-text-2 mt-0.5">{n.body}</p>
+                <p className="text-xs text-text-2 mt-0.5 whitespace-pre-line">{n.body}</p>
                 <div className="flex items-center gap-3 mt-1.5">
                   <span className="text-[10px] font-mono text-text-2/50">{timeAgo(n.createdAt)}</span>
                   <span className="text-[10px] font-mono text-text-2/40 uppercase tracking-wider">{TYPE_LABEL[n.type] ?? n.type}</span>

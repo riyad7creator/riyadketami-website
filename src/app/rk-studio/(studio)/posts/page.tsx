@@ -37,7 +37,7 @@ function TransBadge({
 }) {
   return (
     <Link
-      href={`/admin/posts/${postId}#translations`}
+      href={`/rk-studio/posts/${postId}#translations`}
       title={exists ? `${lang.toUpperCase()} translated` : `${lang.toUpperCase()} missing — click to translate`}
       className={`inline-flex items-center px-1.5 py-0.5 rounded font-mono text-[10px] tracking-widest border transition-colors duration-[var(--duration-fast)]
         ${exists
@@ -188,7 +188,7 @@ export default function AdminPostsPage() {
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2 justify-end">
-                        <Link href={`/admin/posts/${post._id}`} className="text-text-2 hover:text-matrix transition-colors duration-[var(--duration-fast)]">
+                        <Link href={`/rk-studio/posts/${post._id}`} className="text-text-2 hover:text-matrix transition-colors duration-[var(--duration-fast)]">
                           <Pencil size={14} />
                         </Link>
                         <InlineDeleteConfirm

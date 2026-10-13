@@ -15,7 +15,8 @@ const AdminNotificationSchema = new mongoose.Schema(
   {
     type: { type: String, required: true, enum: ['subscriber_new', 'contact_new', 'send_failure', 'storage_warning'] },
     title: { type: String, required: true, maxlength: 120 },
-    body: { type: String, required: true, maxlength: 400 },
+    // Long enough for a full contact message (form max 1000 chars + sender line)
+    body: { type: String, required: true, maxlength: 1500 },
     link: { type: String },
     read: { type: Boolean, default: false },
   },

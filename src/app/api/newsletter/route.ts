@@ -5,6 +5,7 @@ import dbConnect from '@/lib/db/connect';
 import Subscriber from '@/models/Subscriber';
 import { syncToKit } from '@/lib/kit';
 import { rateLimit } from '@/lib/rate-limit';
+import { notifyAdmin } from '@/lib/notify';
 
 const SOURCES = ['homepage', 'blog-cta', 'links-page', 'import', 'other'] as const;
 
@@ -64,18 +65,14 @@ export async function POST(req: Request) {
     // Runs for both new signups and re-subscribes (Kit reactivates on re-create).
     syncToKit({ email_address: email }).catch(() => {});
 
-    // Fire-and-forget admin notification for new subscriber
+    // Admin notification for a genuinely new subscriber
     if (isNew) {
-      fetch(`${process.env.NEXTAUTH_URL ?? 'http://localhost:3000'}/api/admin/notifications`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: 'subscriber_new',
-          title: 'New subscriber',
-          body: `${email} just joined${preferredLanguage ? ` (${preferredLanguage.toUpperCase()})` : ''}.`,
-          link: '/admin/newsletter',
-        }),
-      }).catch(() => {});
+      void notifyAdmin({
+        type: 'subscriber_new',
+        title: 'New subscriber',
+        body: `${email} just joined${preferredLanguage ? ` (${preferredLanguage.toUpperCase()})` : ''}.`,
+        link: '/rk-studio/newsletter',
+      });
     }
 
     // Fire-and-forget welcome email — only for genuinely new subscribers

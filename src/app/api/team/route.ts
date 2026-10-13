@@ -52,3 +52,35 @@ export async function POST(req: Request) {
     return serverError('Failed to create team member', error);
   }
 }
+
+export async function DELETE(req: Request) {
+  try {
+    const check = await requireAdmin();
+    if (!check.ok) return check.response;
+
+    const id = new URL(req.url).searchParams.get('id') ?? '';
+    if (!/^[0-9a-fA-F]{24}$/.test(id)) {
+      return NextResponse.json({ error: 'Invalid member id' }, { status: 400 });
+    }
+    if (id === check.session.user.id) {
+      return NextResponse.json({ error: "You can't remove your own account" }, { status: 400 });
+    }
+
+    await dbConnect();
+    const member = await User.findById(id);
+    if (!member) return NextResponse.json({ error: 'Member not found' }, { status: 404 });
+
+    // Never lock everyone out: keep at least one active admin
+    if (member.role === 'admin') {
+      const admins = await User.countDocuments({ role: 'admin', isActive: true });
+      if (admins <= 1) {
+        return NextResponse.json({ error: "Can't remove the last admin" }, { status: 400 });
+      }
+    }
+
+    await member.deleteOne();
+    return NextResponse.json({ ok: true });
+  } catch (error) {
+    return serverError('Failed to remove team member', error);
+  }
+}

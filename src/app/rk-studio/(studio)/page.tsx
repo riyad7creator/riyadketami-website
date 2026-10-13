@@ -146,12 +146,12 @@ export default function AdminDashboard() {
   const storageUsedPct = mediaStats ? Math.min(100, (mediaStats.totalSizeBytes / STORAGE_BUDGET) * 100) : 0;
 
   const statCards = [
-    { label: 'Published posts', value: stats?.published ?? '—', icon: Eye, href: '/admin/posts', accent: true },
-    { label: 'Drafts', value: stats?.drafts ?? '—', icon: PenLine, href: '/admin/posts', accent: false },
-    { label: 'Subscribers', value: subscribers ?? '—', icon: Mail, href: '/admin/newsletter', accent: false },
-    { label: 'Links', value: linkCount ?? '—', icon: Link2, href: '/admin/links', accent: false },
-    { label: 'Views this week', value: viewsThisWeek ?? '—', icon: TrendingUp, href: '/admin/analytics/posts', accent: false },
-    { label: 'AI Tools', value: '→', icon: Wand2, href: '/admin/tools', accent: false },
+    { label: 'Published posts', value: stats?.published ?? '—', icon: Eye, href: '/rk-studio/posts', accent: true },
+    { label: 'Drafts', value: stats?.drafts ?? '—', icon: PenLine, href: '/rk-studio/posts', accent: false },
+    { label: 'Subscribers', value: subscribers ?? '—', icon: Mail, href: '/rk-studio/newsletter', accent: false },
+    { label: 'Links', value: linkCount ?? '—', icon: Link2, href: '/rk-studio/links', accent: false },
+    { label: 'Views this week', value: viewsThisWeek ?? '—', icon: TrendingUp, href: '/rk-studio/analytics/posts', accent: false },
+    { label: 'AI Tools', value: '→', icon: Wand2, href: '/rk-studio/tools', accent: false },
   ];
 
   return (
@@ -209,7 +209,7 @@ export default function AdminDashboard() {
         <div className="glass border border-border rounded-[var(--radius-lg)] p-4">
           <p className="text-[10px] font-mono text-text-2 mb-2">Top post this week</p>
           {topPost ? (
-            <Link href={`/admin/posts`} className="block">
+            <Link href={`/rk-studio/posts`} className="block">
               <p className="text-xs text-text-0 font-medium truncate hover:text-matrix transition-colors">{topPost.title}</p>
               <p className="text-[10px] text-matrix font-mono mt-0.5">{topPost.views} views</p>
             </Link>
@@ -281,7 +281,7 @@ export default function AdminDashboard() {
             {posts.map((post) => (
               <Link
                 key={post._id}
-                href={`/admin/posts/${post._id}`}
+                href={`/rk-studio/posts/${post._id}`}
                 className="flex items-center gap-4 px-5 py-3 hover:bg-bg-1 transition-colors duration-[var(--duration-fast)]"
               >
                 <div className="w-10 h-10 shrink-0 rounded-[var(--radius-sm)] overflow-hidden bg-bg-1 border border-border">

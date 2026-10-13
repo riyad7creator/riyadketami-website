@@ -12,9 +12,13 @@ export async function GET() {
 
     const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 3600 * 1000);
 
-    const [total, byLanguage, recentCount] = await Promise.all([
-      Subscriber.countDocuments(),
+    // Stats describe the live audience: unsubscribed rows are reported
+    // separately and never counted as subscribers (matches GET /api/newsletter).
+    const active = { unsubscribed: { $ne: true } };
+    const [total, byLanguage, recentCount, unsubscribed] = await Promise.all([
+      Subscriber.countDocuments(active),
       Subscriber.aggregate([
+        { $match: active },
         {
           $group: {
             _id: '$preferredLanguage',
@@ -22,7 +26,8 @@ export async function GET() {
           },
         },
       ]),
-      Subscriber.countDocuments({ createdAt: { $gte: sevenDaysAgo } }),
+      Subscriber.countDocuments({ ...active, createdAt: { $gte: sevenDaysAgo } }),
+      Subscriber.countDocuments({ unsubscribed: true }),
     ]);
 
     const languageCounts: Record<string, number> = {};
@@ -35,6 +40,7 @@ export async function GET() {
     return NextResponse.json({
       total,
       recentCount,
+      unsubscribed,
       byLanguage: {
         ar: languageCounts.ar ?? 0,
         en: languageCounts.en ?? 0,

@@ -115,7 +115,7 @@
       "confirmation": {
         "en": "You're in. Your newsletter will arrive in English.",
         "fr": "C'est noté. Vous recevrez la newsletter en français.",
-        "ar": "تم التسجيل. ستصلك النشرة البريدية باللغة العربية."
+        "ar": "صايي، راك معانا. النيوزلتر توصلك بالعربية."
       },
       "error": "Something went wrong. Try again."
     }
@@ -205,7 +205,24 @@
     "email_eyebrow": "Prefer email?",
     "email_address": "riyad@ketami.net",
     "email_response": "I respond within 48 hours.",
-    "location": "Oran, Algeria"
+    "location": "Oran, Algeria",
+    "placeholders": {
+      "name": "Your name",
+      "email": "you@example.com",
+      "subject": "What's this about?",
+      "message": "Tell me what you're working on...",
+      "budget": "e.g. $5k–$10k"
+    },
+    "validation": {
+      "required": "This field is required",
+      "min2": "At least 2 characters",
+      "min5": "At least 5 characters",
+      "min10": "At least 10 characters",
+      "max50": "Max 50 characters",
+      "max100": "Max 100 characters",
+      "max1000": "Max 1000 characters",
+      "email": "Invalid email address"
+    }
   },
   "footer": {
     "rights": "All rights reserved."

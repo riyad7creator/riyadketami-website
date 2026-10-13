@@ -24,7 +24,18 @@ const CSP = [
 
 const nextConfig: NextConfig = {
   images: {
+    // Brief §3.5: AVIF first, WebP second, original JPEG as the fallback
+    formats: ['image/avif', 'image/webp'],
     remotePatterns: [{ protocol: 'https', hostname: '**' }],
+  },
+  async redirects() {
+    // The admin moved to /rk-studio; old bookmarks and notification links
+    // already stored in the database still point at /admin and /login.
+    return [
+      { source: '/admin', destination: '/rk-studio', permanent: true },
+      { source: '/admin/:path*', destination: '/rk-studio/:path*', permanent: true },
+      { source: '/login', destination: '/rk-studio/auth', permanent: true },
+    ];
   },
   async headers() {
     return [

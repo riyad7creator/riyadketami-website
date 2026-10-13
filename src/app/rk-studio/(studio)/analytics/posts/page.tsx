@@ -145,7 +145,7 @@ export default function PostAnalyticsPage() {
               <div key={post._id} className="flex items-center gap-3 py-1.5 border-b border-border/50 last:border-0">
                 <span className="w-5 text-xs font-mono text-text-2 shrink-0">#{i + 1}</span>
                 <Link
-                  href={`/admin/posts/${post._id}`}
+                  href={`/rk-studio/posts/${post._id}`}
                   className="flex-1 text-sm text-text-0 hover:text-matrix transition-colors truncate"
                 >
                   {post.title ?? post.slug}
@@ -169,7 +169,7 @@ export default function PostAnalyticsPage() {
               <div key={post._id} className="flex items-center gap-3 py-1.5 border-b border-border/50 last:border-0">
                 <span className="w-5 text-xs font-mono text-text-2 shrink-0">#{i + 1}</span>
                 <Link
-                  href={`/admin/posts/${post._id}`}
+                  href={`/rk-studio/posts/${post._id}`}
                   className="flex-1 text-sm text-text-0 hover:text-matrix transition-colors truncate"
                 >
                   {post.title ?? post.slug}
@@ -193,7 +193,7 @@ export default function PostAnalyticsPage() {
               return (
                 <div key={post._id} className="flex items-center gap-3 py-1.5 border-b border-border/50 last:border-0">
                   <Link
-                    href={`/admin/posts/${post._id}`}
+                    href={`/rk-studio/posts/${post._id}`}
                     className="flex-1 text-sm text-text-0 hover:text-matrix transition-colors truncate"
                   >
                     {post.title}
@@ -221,7 +221,7 @@ export default function PostAnalyticsPage() {
             {data.zeroViewPosts.map(post => (
               <div key={post._id} className="flex items-center gap-3 py-1.5 border-b border-border/50 last:border-0">
                 <Link
-                  href={`/admin/posts/${post._id}`}
+                  href={`/rk-studio/posts/${post._id}`}
                   className="flex-1 text-sm text-text-0 hover:text-matrix transition-colors truncate"
                 >
                   {post.title}

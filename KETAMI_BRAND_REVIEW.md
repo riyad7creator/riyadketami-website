@@ -269,13 +269,13 @@ Cost rule: estimate first; under $1 per request and $3 total → go; above → a
 ### 6.5 Manifest status (keep this table updated)
 | ID | Status | File | Approved by Riyad |
 |---|---|---|---|
-| V01 | regenerated 13 Oct 2026 with Flux 2 Pro + 5 real reference photos — live as mobile hero | `public/brand/V01_mobile-hero.jpg` | pending |
-| V02 | regenerated (Flux 2) — live on "What I do" card 1; no label on the mic | `public/brand/V02_card-darija.jpg` | pending |
-| V03 | regenerated (Flux 2) — live on "What I do" card 2; handheld phone (no rig), no logo | `public/brand/V03_card-launch.jpg` | pending |
-| V04 | regenerated (Flux 2) — live on "What I do" card 3 (replace with real ECSEL photo when available) | `public/brand/V04_card-talks.jpg` | pending |
-| V05 | regenerated (Flux 2) — live on /about | `public/brand/V05_about-oran.jpg` | pending |
+| V01 | v3 (13 Oct): Flux 2 Pro, 6 real-photo refs (4 face close-ups), editorial framing, under-eye retouch — live as mobile hero | `public/brand/V01_mobile-hero.jpg` | pending |
+| V02 | v3: Flux 2, under-eye retouch — card 1; no logo on laptop, no label on mic | `public/brand/V02_card-darija.jpg` | pending |
+| V03 | v3: Flux 2, under-eye retouch — card 2; single handheld phone, no logo | `public/brand/V03_card-launch.jpg` | pending |
+| V04 | v3: Flux 2 + under-eye retouch — card 3 (replace with a real event photo when available) | `public/brand/V04_card-talks.jpg` | pending |
+| V05 | v3: Flux 2 + under-eye retouch — /about | `public/brand/V05_about-oran.jpg` | pending |
 | V06 | generated (grok) — not placed: the brief asks for a dark texture on the ABB block, which §3.1 makes the light `--paper` section | `public/brand/V06_abb-texture.jpg` | n/a (no person) |
-| V08 | **new slot** — desktop hero (16:9, subject right), Flux 2, so desktop matches mobile; replaces A05 on the site (A05 kept in public/brand) | `public/brand/V08_desktop-hero.jpg` | pending |
+| V08 | **new slot** v3: desktop hero (16:9, subject right), Flux 2 + under-eye retouch; replaces A05 on the site (A05 kept in public/brand) | `public/brand/V08_desktop-hero.jpg` | pending |
 | V07 | not generated (optional; held until stills are approved) | — | — |
 
 ---

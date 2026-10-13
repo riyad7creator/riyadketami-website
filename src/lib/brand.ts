@@ -103,12 +103,16 @@ export const BRAND = {
   /** Quick link 3 — "This week's tool". Max one, always labelled PARTNER. [sponsor URL] */
   partnerLink: null as { label: string; url: string } | null,
 
-  // Brief §2.3 "Trusted by AI teams" — text wordmarks only, no logo images.
-  // [VERIFY] permission to show each name (brief §8).
-  partners: {
-    verified: false,
-    names: ['Moonshot AI · Kimi', 'MiniMax', 'Pollo AI', 'Higgsfield', 'Emergent'],
-  },
+  // "Trusted by AI teams" — shown as logos (Riyad, 13 Oct 2026; MiniMax replaced
+  // by Dreamina). Logos are the brands' own files, never AI-drawn (brief §6.2);
+  // `logo: null` falls back to the name until the official file is supplied.
+  partners: [
+    { name: 'Moonshot AI · Kimi', logo: '/partners/kimi.svg', width: 64, height: 24 },
+    { name: 'Dreamina', logo: null },
+    { name: 'Pollo AI', logo: '/partners/pollo-ai.png', width: 1000, height: 277 },
+    { name: 'Higgsfield', logo: null },
+    { name: 'Emergent', logo: null },
+  ] as ReadonlyArray<{ name: string; logo: string | null; width?: number; height?: number }>,
 
   images: {
     // Kit assets (brief §6.1) live in /public/brand
@@ -121,8 +125,9 @@ export const BRAND = {
   },
 
   /**
-   * Generated visuals (brief §6.2). V01–V05: Flux 2 Pro with five of Riyad's
-   * real photos as references (glasses, hair, beard match); V06: grok-imagine-2.
+   * Generated visuals (brief §6.2). V01–V05 + V08: Flux 2 Pro with six refs of
+   * Riyad's real photos (4 face close-ups + 2 full), then an under-eye retouch
+   * pass (dark circles removed, nothing else changed); V06: grok-imagine-2.
    * `approved` records Riyad's likeness sign-off (brief §6.4 step 1) — flip it
    * per image once approved; nothing here should ship before that.
    */

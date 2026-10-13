@@ -1,16 +1,12 @@
 import Eyebrow from '@/components/ui/Eyebrow';
 import Flag from '@/components/ui/Flag';
-import VisualPlaceholder from '@/components/ui/VisualPlaceholder';
+import Image from 'next/image';
 import { withArabic } from '@/components/ui/Ar';
 import { BRAND } from '@/lib/brand';
 import type { Dictionary } from '@/lib/dictionaries';
 
-// Brief §6.2 manifest: slot → visual ID + final alt text
-const VISUALS = [
-  { id: 'V02', alt: 'Riyad recording an AI breakdown at his desk' },
-  { id: 'V03', alt: 'Riyad filming a vertical video with a phone rig' },
-  { id: 'V04', alt: 'Riyad speaking on stage' },
-] as const;
+// Brief §6.2 manifest: one visual per card (V04 gives way to real ECSEL photos)
+const VISUALS = [BRAND.visuals.V02, BRAND.visuals.V03, BRAND.visuals.V04] as const;
 
 const LINKS: Array<{ href: string | null; external: boolean; missing?: string }> = [
   { href: BRAND.youtubeUrl, external: true },
@@ -34,7 +30,15 @@ export function WhatIDoCards({ dict, headingLevel = 'h3' }: WhatIDoProps) {
         const visual = VISUALS[i]!;
         return (
           <li key={card.title} className="flex flex-col gap-5 rounded-[var(--radius-md)] border border-line bg-panel p-5">
-            <VisualPlaceholder id={visual.id} alt={visual.alt} label={visual.alt} ratio="4 / 3" />
+            <div className="relative aspect-[4/3] overflow-hidden rounded-[var(--radius-sm)]">
+              <Image
+                src={visual.src}
+                alt={visual.alt}
+                fill
+                sizes="(min-width: 768px) 360px, 100vw"
+                className="object-cover"
+              />
+            </div>
             <Eyebrow>{withArabic(card.eyebrow)}</Eyebrow>
             <H className="font-display text-xl font-bold text-paper">{card.title}</H>
             <p className="flex-1 text-sm leading-relaxed text-text-1">{card.body}</p>

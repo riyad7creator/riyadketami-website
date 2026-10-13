@@ -7,7 +7,6 @@ import { localizedAlternates } from '@/lib/seo';
 import { BRAND } from '@/lib/brand';
 import { Button } from '@/components/ui';
 import Eyebrow from '@/components/ui/Eyebrow';
-import VisualPlaceholder from '@/components/ui/VisualPlaceholder';
 import SocialRow from '@/components/ui/SocialRow';
 
 export async function generateMetadata({
@@ -61,7 +60,16 @@ export default async function AboutPage({
           </div>
 
           {/* V05 — About: OFFLINE / Oran daytime portrait (brief §6.2) */}
-          <VisualPlaceholder id="V05" alt="Riyad on the Oran seafront" label="Riyad on the Oran seafront" ratio="3 / 2" />
+          <div className="relative aspect-[3/2] w-full overflow-hidden rounded-[var(--radius-md)] border border-line">
+            <Image
+              src={BRAND.visuals.V05.src}
+              alt={BRAND.visuals.V05.alt}
+              fill
+              preload
+              sizes="(min-width: 768px) 560px, 100vw"
+              className="object-cover"
+            />
+          </div>
         </div>
       </section>
 

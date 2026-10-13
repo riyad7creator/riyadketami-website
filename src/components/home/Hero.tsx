@@ -11,20 +11,20 @@ interface HeroProps {
   dict: Dictionary;
 }
 
-// Brief §6.2 V01 alt text; A05/A07 stand in until V01 is generated and approved.
-const HERO_ALT = 'Riyad Ketami, portrait at night in Oran';
+// Brief §6.2 V01 alt text
+const HERO_ALT = BRAND.visuals.V01.alt;
 
 export default function Hero({ locale, dict }: HeroProps) {
   const t = dict.home.hero;
 
-  // Art direction: A05 (subject right, text left) on desktop, A07 vertical on mobile.
+  // Art direction: A05 (subject right, text left) on desktop, V01 (3:4, space on top) on mobile.
   const common = { alt: HERO_ALT, sizes: '100vw', fetchPriority: 'high' as const, loading: 'eager' as const };
   const {
     props: { srcSet: desktopSrcSet },
   } = getImageProps({ ...common, src: BRAND.images.heroDesktop, width: 2816, height: 1584 });
   const {
     props: { srcSet: mobileSrcSet, ...img },
-  } = getImageProps({ ...common, src: BRAND.images.heroMobile, width: 1584, height: 2816 });
+  } = getImageProps({ ...common, src: BRAND.visuals.V01.src, width: BRAND.visuals.V01.width, height: BRAND.visuals.V01.height });
 
   return (
     <section className="relative isolate flex flex-col overflow-hidden bg-ink md:block md:min-h-[100svh]">
@@ -60,10 +60,10 @@ export default function Hero({ locale, dict }: HeroProps) {
       </div>
 
       {/* Mobile: portrait below the copy, in flow. Desktop: full-bleed background, subject right.
-          [VISUAL V01] replaces the mobile source; [VISUAL V07] (optional loop) uses A05 as poster. */}
+          [VISUAL V07] (optional loop) would use A05 as its poster. */}
       <div
-        data-visual="A05 A07 V01 V07"
-        className="relative order-2 aspect-[4/5] w-full md:absolute md:inset-0 md:-z-10 md:aspect-auto"
+        data-visual="A05 V01"
+        className="relative order-2 aspect-[3/4] w-full md:absolute md:inset-0 md:-z-10 md:aspect-auto"
       >
         <picture>
           <source media="(min-width: 768px)" srcSet={desktopSrcSet} />
@@ -71,7 +71,7 @@ export default function Hero({ locale, dict }: HeroProps) {
           <img
             {...img}
             alt={HERO_ALT}
-            className="absolute inset-0 h-full w-full object-cover object-[center_75%] md:object-right"
+            className="absolute inset-0 h-full w-full object-cover object-bottom md:object-right"
           />
         </picture>
         {/* Darken behind the copy until text contrast clears 4.5:1 (brief §6.4) */}

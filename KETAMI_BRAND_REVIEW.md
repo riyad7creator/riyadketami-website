@@ -269,13 +269,13 @@ Cost rule: estimate first; under $1 per request and $3 total → go; above → a
 ### 6.5 Manifest status (keep this table updated)
 | ID | Status | File | Approved by Riyad |
 |---|---|---|---|
-| V01 | placeholder (A07 stands in on mobile hero) | — | — |
-| V02 | placeholder `[VISUAL V02]` on "What I do" card 1 | — | — |
-| V03 | placeholder `[VISUAL V03]` on "What I do" card 2 | — | — |
-| V04 | placeholder `[VISUAL V04]` on "What I do" card 3 (replace with real ECSEL photo when available) | — | — |
-| V05 | placeholder `[VISUAL V05]` on /about | — | — |
-| V06 | slot marked (`data-visual="V06"`, ABB section) | — | — |
-| V07 | optional — slot marked on hero (poster = A05) | — | — |
+| V01 | generated 13 Oct 2026 — live as mobile hero | `public/brand/V01_mobile-hero.jpg` | pending |
+| V02 | generated — live on "What I do" card 1 (note: small printed label on the mic body) | `public/brand/V02_card-darija.jpg` | pending |
+| V03 | generated — live on "What I do" card 2 (note: small emblem on the phone back) | `public/brand/V03_card-launch.jpg` | pending |
+| V04 | generated — live on "What I do" card 3 (replace with real ECSEL photo when available) | `public/brand/V04_card-talks.jpg` | pending |
+| V05 | generated — live on /about | `public/brand/V05_about-oran.jpg` | pending |
+| V06 | generated — not placed: the brief asks for a dark texture on the ABB block, which §3.1 makes the light `--paper` section | `public/brand/V06_abb-texture.jpg` | n/a (no person) |
+| V07 | not generated (optional; held until stills are approved) | — | — |
 
 ---
 

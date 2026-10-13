@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
-  FileText, Link2, Mail, ArrowRight, PenLine, Eye, BookOpen, Users,
+  Link2, Mail, ArrowRight, PenLine, Eye, BookOpen, Users,
   TrendingUp, TrendingDown, Bell, HardDrive, Wand2,
 } from 'lucide-react';
 

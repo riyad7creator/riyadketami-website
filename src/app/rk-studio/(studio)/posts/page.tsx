@@ -16,12 +16,6 @@ interface Post {
   updatedAt: string;
 }
 
-interface Translation {
-  _id: string;
-  translated_from: string;
-  language: string;
-}
-
 const LANG_OPTIONS = ['', 'en', 'fr', 'ar'];
 const STATUS_OPTIONS = ['', 'published', 'draft'];
 

@@ -4,9 +4,11 @@ const isDev = process.env.NODE_ENV === 'development';
 
 // `unsafe-eval` is only needed for React DevTools / Next.js HMR in dev.
 // Prod must not allow eval-class XSS sinks.
+// Clarity loads its script from scripts.clarity.ms and posts to <n>.clarity.ms;
+// allowing only www.clarity.ms blocked it entirely (CSP violation in console).
 const scriptSrc = isDev
-  ? "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.clarity.ms"
-  : "script-src 'self' 'unsafe-inline' https://www.clarity.ms";
+  ? "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.clarity.ms"
+  : "script-src 'self' 'unsafe-inline' https://*.clarity.ms";
 
 const CSP = [
   "default-src 'self'",
@@ -15,7 +17,7 @@ const CSP = [
   // data: for base64 images stored in MongoDB; blob: for canvas/object URLs
   "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
-  "connect-src 'self' https://www.clarity.ms https://dc.services.visualstudio.com",
+  "connect-src 'self' https://*.clarity.ms https://dc.services.visualstudio.com",
   "media-src 'self'",
   "frame-ancestors 'none'",
   "base-uri 'self'",

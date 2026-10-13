@@ -37,7 +37,7 @@ export async function POST(req: Request) {
 
     const model = await getModel('alttext');
     let updated = 0;
-    let totalTokens = { prompt: 0, completion: 0 };
+    const totalTokens = { prompt: 0, completion: 0 };
 
     for (const img of images) {
       try {

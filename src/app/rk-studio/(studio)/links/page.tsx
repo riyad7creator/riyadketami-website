@@ -27,6 +27,7 @@ import {
   useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { BRAND } from '@/lib/brand';
 import { useToast } from '@/components/ui/Toast';
 import InlineDeleteConfirm from '@/components/admin/InlineDeleteConfirm';
 import type { LinkCardSection, PillVariant } from '@/models/LinkCard';
@@ -943,36 +944,17 @@ function ProfileTab() {
     <div className="flex flex-col gap-6 max-w-lg">
       <h2 className="font-display font-bold text-lg text-text-0">Profile</h2>
 
-      {/* Basic info */}
-      <div className="flex flex-col gap-3">
-        <div>
-          <label className={labelCls}>Display name</label>
-          <input
-            value={profile.name}
-            onChange={(e) => setProfile((p) => ({ ...p, name: e.target.value }))}
-            className={inputCls}
-            maxLength={100}
-          />
-        </div>
-        <div>
-          <label className={labelCls}>Tagline</label>
-          <input
-            value={profile.tagline}
-            onChange={(e) => setProfile((p) => ({ ...p, tagline: e.target.value }))}
-            className={inputCls}
-            maxLength={200}
-          />
-        </div>
-        <div>
-          <label className={labelCls}>Newsletter subscriber count</label>
-          <input
-            type="number"
-            min={0}
-            value={profile.subscriberCount}
-            onChange={(e) => setProfile((p) => ({ ...p, subscriberCount: parseInt(e.target.value) || 0 }))}
-            className={inputCls}
-          />
-        </div>
+      {/* Identity is not editable here: it comes from BRAND (src/lib/brand.ts),
+          the single source of truth from the brand brief. */}
+      <div className="flex flex-col gap-1 p-4 rounded-[var(--radius-md)] bg-bg-1 border border-border">
+        <p className="text-xs font-semibold text-text-1 font-mono">Identity (read-only)</p>
+        <p className="text-sm text-text-0">{BRAND.name}</p>
+        <p className="text-xs text-text-2">
+          {BRAND.title} · {BRAND.proofLine}
+        </p>
+        <p className="text-xs text-text-2 mt-1">
+          Name, title, quick links and socials come from <code className="font-mono">src/lib/brand.ts</code>.
+        </p>
       </div>
 
       {/* Status line */}
@@ -992,7 +974,7 @@ function ProfileTab() {
             <input
               value={profile.statusLine ?? ''}
               onChange={(e) => setProfile((p) => ({ ...p, statusLine: e.target.value }))}
-              placeholder="Currently: building in public"
+              placeholder="Speaking at ECSEL 26"
               className={inputCls}
               maxLength={200}
             />
@@ -1000,15 +982,11 @@ function ProfileTab() {
         )}
       </div>
 
-      {/* Socials */}
+      {/* Brief §2.1: no follower or subscriber counts anywhere on the public site */}
       <div className="p-4 rounded-[var(--radius-md)] bg-bg-1 border border-border flex flex-col gap-2">
-        <p className="text-xs font-semibold text-text-1 font-mono">Social follower counts</p>
+        <p className="text-xs font-semibold text-text-1 font-mono">Follower counts</p>
         <p className="text-xs text-text-2">
-          Follower counts shown on the links page are now managed centrally in{' '}
-          <a href="/rk-studio/social" className="text-matrix hover:underline">
-            Content Stats
-          </a>
-          . Update them there and they will appear on both the home page and the links page.
+          Never shown publicly. Content Stats keeps them for your own tracking only.
         </p>
       </div>
 
@@ -1058,6 +1036,13 @@ export default function AdminLinksPage() {
           </button>
         ))}
       </div>
+
+      {(tab === 'sponsored' || tab === 'resources' || tab === 'services') && (
+        <p className="text-xs text-warning border border-warning/40 rounded-[var(--radius-md)] px-4 py-3">
+          Cards here are saved but not shown on /links yet. The public page shows the five brief quick
+          links (one PARTNER slot) until stored cards are checked for expired campaigns (BRAND_AUDIT K3).
+        </p>
+      )}
 
       {/* Tab content */}
       <div className="min-h-[400px]">

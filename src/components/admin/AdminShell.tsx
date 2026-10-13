@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState, useCallback } from 'react';
 import {
   LayoutDashboard, FileText, Link2, BarChart2, Users, Mail,
-  Activity, ImageIcon, Settings, Bell, Wand2, X, Check,
+  Activity, ImageIcon, Settings, Bell, Wand2, X, Check, Menu,
 } from 'lucide-react';
 import SignOutButton from './SignOutButton';
 import { ToastProvider } from '@/components/ui/Toast';
@@ -66,6 +66,13 @@ export default function AdminShell({ user, children }: AdminShellProps) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [bellOpen, setBellOpen] = useState(false);
+  // Phones: the sidebar is a slide-in drawer (it used to eat 224px of a 375px screen)
+  const [navOpen, setNavOpen] = useState(false);
+  const [navPath, setNavPath] = useState(pathname);
+  if (navPath !== pathname) {
+    setNavPath(pathname);
+    setNavOpen(false);
+  }
   const bellRef = useRef<HTMLDivElement>(null);
 
   const fetchNotifications = useCallback(async () => {
@@ -122,8 +129,21 @@ export default function AdminShell({ user, children }: AdminShellProps) {
   return (
     <ToastProvider>
       <div className="flex h-screen bg-bg-0 overflow-hidden">
-        {/* Sidebar */}
-        <aside className="w-56 shrink-0 flex flex-col border-r border-border bg-bg-1/60">
+        {navOpen && (
+          <button
+            aria-label="Close menu"
+            onClick={() => setNavOpen(false)}
+            className="fixed inset-0 z-40 bg-ink/70 md:hidden"
+          />
+        )}
+
+        {/* Sidebar — static from md up, drawer below */}
+        <aside
+          id="studio-nav"
+          className={`fixed inset-y-0 start-0 z-50 w-64 flex flex-col border-e border-border bg-bg-1 transition-transform duration-200 md:static md:z-auto md:w-56 md:shrink-0 md:translate-x-0 md:bg-bg-1/60 ${
+            navOpen ? 'translate-x-0' : '-translate-x-full rtl:translate-x-full'
+          }`}
+        >
           <div className="px-5 py-5 border-b border-border">
             {/* RK_ monogram (brief §4) */}
             <span dir="ltr" className="inline-flex items-baseline font-display font-bold text-text-0 tracking-[0.02em]">
@@ -166,7 +186,16 @@ export default function AdminShell({ user, children }: AdminShellProps) {
         {/* Main area */}
         <div className="flex-1 flex flex-col overflow-hidden">
           {/* Top header bar */}
-          <header className="h-12 shrink-0 border-b border-border bg-bg-1/40 flex items-center justify-end px-6 gap-3">
+          <header className="h-12 shrink-0 border-b border-border bg-bg-1/40 flex items-center justify-between md:justify-end px-4 md:px-6 gap-3">
+            <button
+              onClick={() => setNavOpen(true)}
+              aria-label="Open menu"
+              aria-expanded={navOpen}
+              aria-controls="studio-nav"
+              className="md:hidden min-w-[44px] min-h-[44px] -ms-2 flex items-center justify-center text-text-2 hover:text-text-0"
+            >
+              <Menu size={18} aria-hidden />
+            </button>
             {/* Bell */}
             <div ref={bellRef} className="relative">
               <button
@@ -183,7 +212,7 @@ export default function AdminShell({ user, children }: AdminShellProps) {
               </button>
 
               {bellOpen && (
-                <div className="absolute right-0 top-full mt-2 w-80 glass border border-border rounded-[var(--radius-lg)] shadow-2xl z-[var(--z-modal)] overflow-hidden">
+                <div className="absolute right-0 top-full mt-2 w-[min(20rem,calc(100vw-2rem))] glass border border-border rounded-[var(--radius-lg)] shadow-2xl z-[var(--z-modal)] overflow-hidden">
                   <div className="flex items-center justify-between px-4 py-3 border-b border-border">
                     <span className="text-sm font-semibold text-text-0">Notifications</span>
                     {unreadCount > 0 && (
@@ -251,7 +280,7 @@ export default function AdminShell({ user, children }: AdminShellProps) {
             </div>
           </header>
 
-          <main className="flex-1 overflow-y-auto p-6 lg:p-8">
+          <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
             {children}
           </main>
         </div>

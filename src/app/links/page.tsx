@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import dbConnect from '@/lib/db/connect';
 import LatestSourceModel from '@/models/LatestSource';
+import SiteProfileModel from '@/models/SiteProfile';
 import { getCachedFeed, youtubeRssUrl } from '@/lib/rss-fetcher';
 import { getDictionary } from '@/lib/dictionaries';
 import { BRAND } from '@/lib/brand';
@@ -56,15 +57,33 @@ async function getLatest() {
   }
 }
 
+/** Optional status line set in Studio → Links → Profile. Non-fatal like getLatest. */
+async function getStatusLine(): Promise<string | null> {
+  try {
+    await dbConnect();
+    const profile = await SiteProfileModel.findById('links-profile').select('statusEnabled statusLine').lean();
+    return profile?.statusEnabled && profile.statusLine ? profile.statusLine : null;
+  } catch {
+    return null;
+  }
+}
+
 export default async function LinksPage() {
   const locale: Locale = 'en';
   const dict = getDictionary(locale);
-  const latestItems = await getLatest();
+  const [latestItems, statusLine] = await Promise.all([getLatest(), getStatusLine()]);
 
   return (
     <main className="min-h-[100dvh] bg-ink px-4 py-12 sm:py-20">
       <div className="mx-auto flex w-full max-w-md flex-col gap-10">
         <ProfileHeader />
+
+        {statusLine && (
+          <p className="flex items-center gap-3 text-sm text-paper">
+            <span aria-hidden className="h-px w-4 bg-signal" />
+            {statusLine}
+          </p>
+        )}
 
         <section aria-labelledby="links" className="flex flex-col gap-3">
           <Eyebrow as="h2" id="links">

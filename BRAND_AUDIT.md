@@ -338,3 +338,15 @@ V01–V06 generated (~$0.54); V01–V05 live on the branch. **Not approved yet**
 3. Approve or reject each visual likeness (V01–V05); decide on V06/V07.
 4. Push/deploy this branch (the branch is based on `origin/main`); DNS for ketami.net.
 5. Remaining lint: 17 pre-existing `react-hooks/set-state-in-effect`-style findings in admin data loaders (behaviour verified correct).
+
+---
+
+## Changelog — 13 Oct 2026 (Riyad's follow-ups)
+
+- **Visuals v3:** V01–V05 and the new desktop hero V08 were regenerated with Flux 2 Pro from six of Riyad's real photos (four face close-ups + `IMG_2038` + a studio still). The retouched kit headshot was dropped as a reference. Each image then had an under-eye retouch pass (dark circles removed, nothing else changed). Rejected outputs: an Apple logo on the laptop, two phones / a third hand, and retouches that added skin spots or pink/blue light. All remain `approved: false` for Riyad's sign-off. This round cost about $2.30.
+- **"Speaking at ECSEL 26" removed** from the Now strip in EN/FR/AR and from the Links-admin placeholder; the event is no longer mentioned anywhere on the site.
+- **Trusted by:** MiniMax replaced by **Dreamina** (MiniMax was never a partner). The section now shows **logos**, monochrome and at equal height:
+  - Kimi: official wordmark SVG;
+  - Pollo AI: official wordmark, light monochrome version for the dark background;
+  - Dreamina, Higgsfield, Emergent: no official logo file available yet, so the name stands in. Each switches to a logo by setting `logo` in `BRAND.partners`.
+- Asking for logos is treated as confirmation of permission to show the partners, so the `[VERIFY permission]` tag is removed.

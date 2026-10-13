@@ -5,7 +5,7 @@ import { withArabic } from '@/components/ui/Ar';
 import { BRAND } from '@/lib/brand';
 import type { Dictionary } from '@/lib/dictionaries';
 
-// Brief §6.2 manifest: one visual per card (V04 gives way to real ECSEL photos)
+// Brief §6.2 manifest: one visual per card (V04 gives way to real event photos)
 const VISUALS = [BRAND.visuals.V02, BRAND.visuals.V03, BRAND.visuals.V04] as const;
 
 const LINKS: Array<{ href: string | null; external: boolean; missing?: string }> = [

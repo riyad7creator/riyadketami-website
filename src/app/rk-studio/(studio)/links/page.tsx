@@ -974,7 +974,7 @@ function ProfileTab() {
             <input
               value={profile.statusLine ?? ''}
               onChange={(e) => setProfile((p) => ({ ...p, statusLine: e.target.value }))}
-              placeholder="Speaking at ECSEL 26"
+              placeholder="Building Algeria Business Bay"
               className={inputCls}
               maxLength={200}
             />

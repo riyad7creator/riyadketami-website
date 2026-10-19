@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db/connect';
 import Post from '@/models/Post';
 import { requireAdmin, serverError, readJson } from '@/lib/api-helpers';
-import { getOpenRouterKey, getModel, checkBudget, openRouterJson } from '@/lib/ai-config';
+import { getAIKey, missingKeyMessage, getModel, checkBudget, aiJson } from '@/lib/ai-config';
 
 interface SEOResult {
   score: number;
@@ -18,9 +18,9 @@ export async function POST(req: Request) {
     const check = await requireAdmin();
     if (!check.ok) return check.response;
 
-    const apiKey = await getOpenRouterKey();
+    const apiKey = await getAIKey();
     if (!apiKey) {
-      return NextResponse.json({ error: 'OpenRouter key not configured.' }, { status: 500 });
+      return NextResponse.json({ error: await missingKeyMessage() }, { status: 500 });
     }
 
     const overBudget = await checkBudget();
@@ -75,7 +75,7 @@ Return JSON with:
   "suggestedTags": ["up to 5 relevant tags"]
 }`;
 
-    const ai = await openRouterJson<Partial<SEOResult>>({
+    const ai = await aiJson<Partial<SEOResult>>({
       apiKey,
       model,
       route: 'seo-doctor',

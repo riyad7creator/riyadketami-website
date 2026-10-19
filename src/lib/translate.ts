@@ -1,5 +1,5 @@
 import { BRAND } from '@/lib/brand';
-import { getOpenRouterKey, getModel, openRouterJson } from '@/lib/ai-config';
+import { getAIKey, missingKeyMessage, getModel, aiJson } from '@/lib/ai-config';
 
 // Identity comes from BRAND so the prompt follows the title swap (brief §1).
 const WHO = `${BRAND.name} (${BRAND.title}, ${BRAND.proofLine}), based in ${BRAND.location.city}, ${BRAND.location.country}`;
@@ -22,11 +22,11 @@ export async function translatePostContent({
 }): Promise<{ title: string; excerpt: string; content: string }> {
   // Same key resolution (env first, then the key saved in Settings > AI) and
   // the same configured translation model as the rest of the studio.
-  const apiKey = await getOpenRouterKey();
-  if (!apiKey) throw new Error('OpenRouter key not configured. Set it in Settings > AI.');
+  const apiKey = await getAIKey();
+  if (!apiKey) throw new Error(await missingKeyMessage());
   const model = await getModel('translation');
 
-  const result = await openRouterJson<{ title?: unknown; excerpt?: unknown; content?: unknown }>({
+  const result = await aiJson<{ title?: unknown; excerpt?: unknown; content?: unknown }>({
     apiKey,
     model,
     route: 'translate-post',

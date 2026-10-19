@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Loader2, Wand2, ImageIcon, Lightbulb, Mail, Stethoscope, Languages, ChevronDown, ChevronUp, Copy, Check } from 'lucide-react';
+import { Loader2, Wand2, ImageIcon, Lightbulb, Mail, Stethoscope, Languages, ChevronDown, ChevronUp, Copy, Check, Sparkles, Network } from 'lucide-react';
+import { PROVIDER_INFO, type AIProvider } from '@/lib/ai-models';
 import { useToast } from '@/components/ui/Toast';
 import Link from 'next/link';
 
@@ -386,27 +387,105 @@ function TranslationGapsTool() {
 }
 
 // ── Main page ─────────────────────────────────────────────────────────────────
-export default function AIToolsPage() {
-  const [hasKey, setHasKey] = useState<boolean | null>(null);
+interface AIState {
+  provider: AIProvider;
+  locked: boolean;
+  keys: Record<AIProvider, 'env' | 'saved' | null>;
+  models: { writing: string; translation: string; alttext: string; agents: string };
+}
 
-  useEffect(() => {
-    fetch('/api/admin/ai-settings').then(r => r.json()).then((d: Record<string, string | null>) => {
-      setHasKey(!!d.ai_openrouter_key);
-    }).catch(() => setHasKey(false));
+const PROVIDER_ICONS: Record<AIProvider, typeof Sparkles> = { claude: Sparkles, openrouter: Network };
+
+/** Model ID without the vendor prefix, for the tool cards */
+const short = (id?: string) => (id ? id.split('/').pop() ?? id : '...');
+
+export default function AIToolsPage() {
+  const { toast } = useToast();
+  const [ai, setAi] = useState<AIState | null>(null);
+  const [failed, setFailed] = useState(false);
+  const [switching, setSwitching] = useState<AIProvider | null>(null);
+
+  const load = useCallback(async () => {
+    try {
+      const res = await fetch('/api/admin/ai-settings');
+      if (!res.ok) throw new Error();
+      const d = await res.json() as {
+        ai_provider: AIProvider;
+        ai_provider_locked?: boolean;
+        ai_key_sources: Record<AIProvider, 'env' | 'saved' | null>;
+        ai_active_models: AIState['models'];
+      };
+      setAi({ provider: d.ai_provider, locked: !!d.ai_provider_locked, keys: d.ai_key_sources, models: d.ai_active_models });
+    } catch {
+      setFailed(true);
+    }
   }, []);
+
+  // load() only sets state after its fetch resolves
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => { load(); }, [load]);
+
+  const switchTo = async (next: AIProvider) => {
+    if (!ai || next === ai.provider || ai.locked) return;
+    setSwitching(next);
+    try {
+      const res = await fetch('/api/admin/ai-settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ai_provider: next }),
+      });
+      if (!res.ok) throw new Error();
+      toast(`AI tools now use ${PROVIDER_INFO[next].label}`, 'success');
+      await load();
+    } catch {
+      toast('Could not switch provider', 'error');
+    } finally {
+      setSwitching(null);
+    }
+  };
+
+  const keyMissing = failed || (ai !== null && !ai.keys[ai.provider]);
+  const label = ai ? PROVIDER_INFO[ai.provider].label : '';
 
   return (
     <div className="max-w-2xl space-y-6">
       <div>
         <span className="font-mono text-xs text-matrix tracking-[0.15em]">// ai-tools</span>
         <h1 className="font-display font-bold text-2xl text-text-0 mt-1">AI Tools</h1>
-        <p className="text-sm text-text-2 mt-1">One-button agentic helpers. All manual-trigger — nothing runs automatically.</p>
+        <p className="text-sm text-text-2 mt-1">One-button agentic helpers. All manual-trigger, nothing runs automatically.</p>
       </div>
 
-      {hasKey === false && (
+      {ai && (
+        <div className="glass border border-border rounded-[var(--radius-lg)] p-2 flex flex-wrap items-center gap-2" role="radiogroup" aria-label="AI provider">
+          <span className="px-2 text-xs text-text-2">Provider</span>
+          {(Object.keys(PROVIDER_INFO) as AIProvider[]).map(p => {
+            const Icon = PROVIDER_ICONS[p];
+            const active = p === ai.provider;
+            return (
+              <button
+                key={p}
+                type="button"
+                role="radio"
+                aria-checked={active}
+                onClick={() => switchTo(p)}
+                disabled={!!switching || ai.locked}
+                className={`flex items-center gap-1.5 rounded-[var(--radius-md)] px-3 py-1.5 text-sm transition-colors disabled:cursor-not-allowed ${
+                  active ? 'bg-matrix text-bg-0 font-semibold' : 'text-text-1 hover:bg-surface hover:text-text-0'
+                }`}
+              >
+                {switching === p ? <Loader2 size={14} className="animate-spin" /> : <Icon size={14} />}
+                {active ? `Using ${PROVIDER_INFO[p].label}` : `Switch to ${PROVIDER_INFO[p].label}`}
+              </button>
+            );
+          })}
+          <Link href="/rk-studio/settings/ai" className="ms-auto px-2 text-xs text-text-2 underline hover:text-text-0">Keys & models</Link>
+        </div>
+      )}
+
+      {keyMissing && (
         <div className="glass border border-warning/30 rounded-[var(--radius-lg)] px-4 py-3 text-sm text-warning flex items-center gap-2">
-          ⚠ OpenRouter key not configured.{' '}
-          <Link href="/rk-studio/settings/ai" className="underline hover:text-warning/80">Set it in AI Settings →</Link>
+          ⚠ {label ? `${label} API key not configured.` : 'AI key not configured.'}{' '}
+          <Link href="/rk-studio/settings/ai" className="underline hover:text-warning/80">Add it in AI Settings →</Link>
         </div>
       )}
 
@@ -415,7 +494,7 @@ export default function AIToolsPage() {
           icon={ImageIcon}
           title="Auto Alt Text"
           description="Generate alt text for images missing descriptions (max 20 per run)"
-          model="gemini-flash-1.5"
+          model={short(ai?.models.alttext)}
         >
           <AltTextTool />
         </ToolCard>
@@ -424,7 +503,7 @@ export default function AIToolsPage() {
           icon={Lightbulb}
           title="Post Ideas"
           description="Get 5 fresh blog post ideas based on your recent content"
-          model="kimi-k2"
+          model={short(ai?.models.agents)}
         >
           <PostIdeasTool />
         </ToolCard>
@@ -433,7 +512,7 @@ export default function AIToolsPage() {
           icon={Mail}
           title="Newsletter Draft"
           description="Draft a newsletter from your 3 most recent published posts"
-          model="kimi-k2"
+          model={short(ai?.models.agents)}
         >
           <NewsletterDraftTool />
         </ToolCard>
@@ -442,7 +521,7 @@ export default function AIToolsPage() {
           icon={Stethoscope}
           title="SEO Doctor"
           description="Analyze a post for SEO issues and get improvement suggestions"
-          model="llama-3.1-8b"
+          model={short(ai?.models.agents)}
         >
           <SEODoctorTool />
         </ToolCard>

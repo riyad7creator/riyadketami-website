@@ -1,14 +1,14 @@
 import { requireAdmin, serverError, readJson } from '@/lib/api-helpers';
-import { getOpenRouterKey, getModel, checkBudget, OPENROUTER_URL } from '@/lib/ai-config';
+import { getAIKey, missingKeyMessage, getModel, checkBudget, aiStream } from '@/lib/ai-config';
 
 export async function POST(req: Request) {
   try {
     const check = await requireAdmin();
     if (!check.ok) return check.response;
 
-    const apiKey = await getOpenRouterKey();
+    const apiKey = await getAIKey();
     if (!apiKey) {
-      return new Response(JSON.stringify({ error: 'OpenRouter API key is not configured. Set it in Admin > Settings > AI.' }), {
+      return new Response(JSON.stringify({ error: await missingKeyMessage() }), {
         status: 500,
         headers: { 'Content-Type': 'application/json' },
       });
@@ -31,38 +31,14 @@ Write in a clear, authoritative, and practical style. Aim for 600-1000 words.`;
       ? `Write a blog post about: ${prompt}`
       : `Write a blog post with the title: "${title ?? 'Untitled'}"`;
 
-    const upstream = await fetch(OPENROUTER_URL, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://ketami.net',
-        'X-Title': 'Riyad Ketami Admin',
-      },
-      body: JSON.stringify({
-        model,
-        stream: true,
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userMessage },
-        ],
-      }),
-    });
-
-    if (!upstream.ok) {
-      const text = await upstream.text();
-      return new Response(JSON.stringify({ error: `OpenRouter error: ${text}` }), {
-        status: upstream.status,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
-
-    return new Response(upstream.body, {
-      headers: {
-        'Content-Type': 'text/event-stream',
-        'Cache-Control': 'no-cache',
-        'X-Accel-Buffering': 'no',
-      },
+    return await aiStream({
+      apiKey,
+      model,
+      route: 'generate',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userMessage },
+      ],
     });
   } catch (error) {
     return serverError('AI generation failed', error);

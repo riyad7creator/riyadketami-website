@@ -15,7 +15,7 @@ const PUBLIC_KEYS = new Set(['hero_image', 'profile_image']);
 const WRITABLE_KEYS = new Set(['hero_image', 'profile_image']);
 
 /** Never returned by the "all settings" listing */
-const SECRET_KEYS = new Set(['ai_openrouter_key']);
+const SECRET_KEYS = new Set(['ai_openrouter_key', 'ai_anthropic_key']);
 
 /** GET /api/admin/settings: all settings (admin) or ?key=xxx (public for whitelisted keys) */
 export async function GET(req: Request) {

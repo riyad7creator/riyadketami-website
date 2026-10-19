@@ -1,36 +1,53 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Eye, EyeOff, Loader2, Check, X, Zap, DollarSign, Cpu } from 'lucide-react';
+import { Eye, EyeOff, Loader2, Check, X, Zap, DollarSign, Cpu, Sparkles, Network } from 'lucide-react';
 import { useToast } from '@/components/ui/Toast';
-import { MODEL_OPTIONS, MODEL_PRESETS } from '@/lib/ai-models';
+import {
+  MODEL_OPTIONS, MODEL_PRESETS, CLAUDE_MODEL_OPTIONS, CLAUDE_PRESETS, PROVIDER_INFO, type AIProvider,
+} from '@/lib/ai-models';
 
-const MODELS = MODEL_OPTIONS;
+type ModelOption = { id: string; label: string; tier: string; vision?: boolean };
 
-const TASK_LABELS: Record<string, string> = {
-  ai_model_writing: 'Blog writing',
-  ai_model_translation: 'Translation',
-  ai_model_alttext: 'Alt-text generation',
-  ai_model_agents: 'Agentic tools (SEO, post ideas, newsletter)',
+const TASKS = [
+  { task: 'writing', label: 'Blog writing' },
+  { task: 'translation', label: 'Translation' },
+  { task: 'alttext', label: 'Alt-text generation' },
+  { task: 'agents', label: 'Agentic tools (SEO, post ideas, newsletter)' },
+] as const;
+
+const PROVIDER_CONFIG: Record<AIProvider, {
+  models: ModelOption[];
+  presets: Record<string, string>;
+  keyField: 'ai_anthropic_key' | 'ai_openrouter_key';
+  prefix: 'ai_claude_' | 'ai_';
+  icon: typeof Sparkles;
+  blurb: string;
+}> = {
+  claude: {
+    models: CLAUDE_MODEL_OPTIONS,
+    presets: CLAUDE_PRESETS,
+    keyField: 'ai_anthropic_key',
+    prefix: 'ai_claude_',
+    icon: Sparkles,
+    blurb: 'Claude API (Opus, Sonnet, Haiku), billed per use on your Claude Console account.',
+  },
+  openrouter: {
+    models: MODEL_OPTIONS,
+    presets: MODEL_PRESETS,
+    keyField: 'ai_openrouter_key',
+    prefix: 'ai_',
+    icon: Network,
+    blurb: 'One key for Kimi, MiniMax, Gemini, DeepSeek, GPT and more.',
+  },
 };
 
-const TASK_PRESETS: Record<string, string> = {
-  ai_model_writing: MODEL_PRESETS.writing,
-  ai_model_translation: MODEL_PRESETS.translation,
-  ai_model_alttext: MODEL_PRESETS.alttext,
-  ai_model_agents: MODEL_PRESETS.agents,
+type Settings = {
+  [key: string]: unknown;
+  ai_provider?: AIProvider;
+  ai_provider_locked?: boolean;
+  ai_key_sources?: Record<AIProvider, 'env' | 'saved' | null>;
 };
-
-interface Settings {
-  ai_openrouter_key: string | null;
-  ai_default_model: string | null;
-  ai_model_writing: string | null;
-  ai_model_translation: string | null;
-  ai_model_alttext: string | null;
-  ai_model_agents: string | null;
-  ai_budget_usd: string | null;
-  ai_key_source: 'env' | 'saved' | null;
-}
 
 interface Usage {
   totalPrompt: number;
@@ -41,7 +58,7 @@ interface Usage {
   monthStart: string;
 }
 
-function ModelSelect({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+function ModelSelect({ value, onChange, models }: { value: string; onChange: (v: string) => void; models: ModelOption[] }) {
   return (
     <select
       value={value}
@@ -49,10 +66,10 @@ function ModelSelect({ value, onChange }: { value: string; onChange: (v: string)
       className="w-full bg-bg-0 border border-border rounded-[var(--radius-md)] px-3 py-2 text-sm text-text-0 focus:outline-none focus:border-matrix/50 transition-colors"
     >
       <option value="">Use default model</option>
-      {MODELS.map(m => (
+      {models.map(m => (
         <option key={m.id} value={m.id}>{m.label} ({m.tier}{m.vision ? ', vision' : ''})</option>
       ))}
-      {value && !MODELS.some(m => m.id === value) && <option value={value}>{value} (saved)</option>}
+      {value && !models.some(m => m.id === value) && <option value={value}>{value} (saved)</option>}
     </select>
   );
 }
@@ -67,6 +84,10 @@ export default function AISettingsPage() {
   const [testResult, setTestResult] = useState<{ ok: boolean; message: string } | null>(null);
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [switching, setSwitching] = useState<AIProvider | null>(null);
+  const provider: AIProvider = settings.ai_provider ?? 'claude';
+  const cfg = PROVIDER_CONFIG[provider];
+  const val = (k: string) => (typeof settings[k] === 'string' ? (settings[k] as string) : '');
 
   const load = useCallback(async () => {
     try {
@@ -92,7 +113,7 @@ export default function AISettingsPage() {
       const res = await fetch('/api/admin/ai-settings', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ key: keyInput || undefined }),
+        body: JSON.stringify({ key: keyInput || undefined, provider }),
       });
       const data = await res.json() as { ok: boolean; source?: string; label?: string | null; error?: string };
       const from = data.source === 'env' ? 'environment key' : data.source === 'saved' ? 'saved key' : 'typed key';
@@ -107,17 +128,35 @@ export default function AISettingsPage() {
     }
   };
 
+  const switchProvider = async (next: AIProvider) => {
+    if (next === provider || settings.ai_provider_locked) return;
+    setSwitching(next);
+    try {
+      const res = await fetch('/api/admin/ai-settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ai_provider: next }),
+      });
+      if (!res.ok) throw new Error('Switch failed');
+      setKeyInput('');
+      setTestResult(null);
+      toast(`AI tools now use ${PROVIDER_INFO[next].label}`, 'success');
+      await load();
+    } catch {
+      toast('Could not switch provider', 'error');
+    } finally {
+      setSwitching(null);
+    }
+  };
+
   const save = async () => {
     setSaving(true);
     try {
       const body: Record<string, string> = {};
-      if (keyInput) body['ai_openrouter_key'] = keyInput;
-      if (settings.ai_default_model !== undefined) body['ai_default_model'] = settings.ai_default_model ?? '';
-      if (settings.ai_model_writing !== undefined) body['ai_model_writing'] = settings.ai_model_writing ?? '';
-      if (settings.ai_model_translation !== undefined) body['ai_model_translation'] = settings.ai_model_translation ?? '';
-      if (settings.ai_model_alttext !== undefined) body['ai_model_alttext'] = settings.ai_model_alttext ?? '';
-      if (settings.ai_model_agents !== undefined) body['ai_model_agents'] = settings.ai_model_agents ?? '';
-      if (settings.ai_budget_usd !== undefined) body['ai_budget_usd'] = settings.ai_budget_usd ?? '';
+      if (keyInput) body[cfg.keyField] = keyInput;
+      for (const field of [`${cfg.prefix}default_model`, ...TASKS.map(t => `${cfg.prefix}model_${t.task}`), 'ai_budget_usd']) {
+        if (settings[field] !== undefined) body[field] = (settings[field] as string | null) ?? '';
+      }
 
       const res = await fetch('/api/admin/ai-settings', {
         method: 'POST',
@@ -143,24 +182,63 @@ export default function AISettingsPage() {
     );
   }
 
-  const keyIsSet = settings.ai_openrouter_key === '••••••••';
-  const keySource = settings.ai_key_source ?? null;
+  const keyIsSet = settings[cfg.keyField] === '••••••••';
+  const keySource = settings.ai_key_sources?.[provider] ?? null;
+  const info = PROVIDER_INFO[provider];
 
   return (
     <div className="max-w-2xl space-y-6">
       <div>
         <h1 className="font-display text-2xl font-bold text-text-0">AI Settings</h1>
-        <p className="text-sm text-text-2 mt-1">Configure OpenRouter API key and model preferences.</p>
+        <p className="text-sm text-text-2 mt-1">Pick the AI provider, add its API key and choose models.</p>
+      </div>
+
+      {/* Provider switch */}
+      <div className="glass border border-border rounded-[var(--radius-lg)] p-5 space-y-3">
+        <h2 className="font-semibold text-text-0 text-sm">AI provider</h2>
+        <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label="AI provider">
+          {(Object.keys(PROVIDER_CONFIG) as AIProvider[]).map(p => {
+            const Icon = PROVIDER_CONFIG[p].icon;
+            const active = p === provider;
+            return (
+              <button
+                key={p}
+                type="button"
+                role="radio"
+                aria-checked={active}
+                onClick={() => switchProvider(p)}
+                disabled={!!switching || !!settings.ai_provider_locked}
+                className={`flex items-start gap-3 rounded-[var(--radius-md)] border p-3 text-left transition-colors disabled:cursor-not-allowed ${
+                  active ? 'border-matrix bg-matrix/10' : 'border-border hover:border-border-hover'
+                }`}
+              >
+                {switching === p ? <Loader2 size={16} className="mt-0.5 animate-spin text-matrix" /> : <Icon size={16} className={`mt-0.5 ${active ? 'text-matrix' : 'text-text-2'}`} />}
+                <span>
+                  <span className={`block text-sm font-semibold ${active ? 'text-text-0' : 'text-text-1'}`}>
+                    {active ? `Using ${PROVIDER_INFO[p].label}` : `Switch to ${PROVIDER_INFO[p].label}`}
+                  </span>
+                  <span className="mt-0.5 block text-[11px] leading-snug text-text-2">{PROVIDER_CONFIG[p].blurb}</span>
+                  <span className="mt-1 block font-mono text-[10px] text-text-2/80">
+                    key: {settings.ai_key_sources?.[p] === 'env' ? 'environment' : settings.ai_key_sources?.[p] === 'saved' ? 'saved' : 'missing'}
+                  </span>
+                </span>
+              </button>
+            );
+          })}
+        </div>
+        {settings.ai_provider_locked && (
+          <p className="text-[11px] text-warning">The AI_PROVIDER environment variable fixes the provider; remove it to switch here.</p>
+        )}
       </div>
 
       {/* API Key */}
       <div className="glass border border-border rounded-[var(--radius-lg)] p-5 space-y-4">
         <div className="flex items-center gap-2">
           <Zap size={15} className="text-matrix" />
-          <h2 className="font-semibold text-text-0">OpenRouter API Key</h2>
+          <h2 className="font-semibold text-text-0">{info.label} API Key</h2>
           {keySource && (
             <span className="ml-auto text-[11px] font-mono bg-matrix/10 text-matrix px-2 py-0.5 rounded-full">
-              {keySource === 'env' ? 'active: environment (OPENROUTER_API_KEY)' : 'active: saved key'}
+              {keySource === 'env' ? `active: environment (${info.envVar})` : 'active: saved key'}
             </span>
           )}
         </div>
@@ -171,7 +249,7 @@ export default function AISettingsPage() {
               type={showKey ? 'text' : 'password'}
               value={keyInput}
               onChange={e => setKeyInput(e.target.value)}
-              placeholder={keyIsSet ? 'Enter new key to replace' : 'sk-or-...'}
+              placeholder={keyIsSet ? 'Enter new key to replace' : info.keyPlaceholder}
               className="w-full bg-bg-0 border border-border rounded-[var(--radius-md)] px-3 py-2 pr-9 text-sm text-text-0 placeholder:text-text-2/50 focus:outline-none focus:border-matrix/50 transition-colors font-mono"
             />
             <button
@@ -200,12 +278,12 @@ export default function AISettingsPage() {
 
         {keySource === 'env' && keyIsSet && (
           <p className="text-[11px] text-warning">
-            A saved key also exists, but OPENROUTER_API_KEY in the environment takes precedence.
+            A saved key also exists, but {info.envVar} in the environment takes precedence.
           </p>
         )}
         <p className="text-[11px] text-text-2">
           Key is stored encrypted in the database. Get yours at{' '}
-          <span className="text-matrix font-mono">openrouter.ai/keys</span>.
+          <span className="text-matrix font-mono">{info.keysUrl}</span>.
         </p>
       </div>
 
@@ -213,30 +291,35 @@ export default function AISettingsPage() {
       <div className="glass border border-border rounded-[var(--radius-lg)] p-5 space-y-4">
         <div className="flex items-center gap-2">
           <Cpu size={15} className="text-matrix" />
-          <h2 className="font-semibold text-text-0">Model Selection</h2>
+          <h2 className="font-semibold text-text-0">{info.label} models</h2>
         </div>
 
         <div className="space-y-3">
           <div>
             <label className="block text-xs text-text-2 mb-1.5">Default model (fallback for writing, translation and agent tasks)</label>
             <ModelSelect
-              value={settings.ai_default_model ?? ''}
-              onChange={v => setSettings(s => ({ ...s, ai_default_model: v }))}
+              models={cfg.models}
+              value={val(`${cfg.prefix}default_model`)}
+              onChange={v => setSettings(s => ({ ...s, [`${cfg.prefix}default_model`]: v }))}
             />
           </div>
 
-          {Object.entries(TASK_LABELS).map(([key, label]) => (
-            <div key={key}>
-              <label className="block text-xs text-text-2 mb-1.5">
-                {label}
-                <span className="ms-2 font-mono text-[10px] text-text-2/70">preset: {TASK_PRESETS[key]}</span>
-              </label>
-              <ModelSelect
-                value={(settings as Record<string, string | null>)[key] ?? ''}
-                onChange={v => setSettings(s => ({ ...s, [key]: v || null }))}
-              />
-            </div>
-          ))}
+          {TASKS.map(({ task, label }) => {
+            const field = `${cfg.prefix}model_${task}`;
+            return (
+              <div key={field}>
+                <label className="block text-xs text-text-2 mb-1.5">
+                  {label}
+                  <span className="ms-2 font-mono text-[10px] text-text-2/70">preset: {cfg.presets[task]}</span>
+                </label>
+                <ModelSelect
+                  models={cfg.models}
+                  value={val(field)}
+                  onChange={v => setSettings(s => ({ ...s, [field]: v || null }))}
+                />
+              </div>
+            );
+          })}
         </div>
       </div>
 
@@ -252,7 +335,7 @@ export default function AISettingsPage() {
             type="number"
             min="0"
             step="0.5"
-            value={settings.ai_budget_usd ?? ''}
+            value={val('ai_budget_usd')}
             onChange={e => setSettings(s => ({ ...s, ai_budget_usd: e.target.value }))}
             placeholder="10.00"
             className="w-32 bg-bg-0 border border-border rounded-[var(--radius-md)] px-3 py-2 text-sm text-text-0 focus:outline-none focus:border-matrix/50 transition-colors"

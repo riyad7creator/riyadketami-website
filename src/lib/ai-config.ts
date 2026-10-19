@@ -3,41 +3,83 @@ import dbConnect from '@/lib/db/connect';
 import SiteSettings from '@/models/SiteSettings';
 import AIUsage from '@/models/AIUsage';
 import { decrypt, isEncrypted } from '@/lib/encrypt';
-import { MODEL_PRESETS, type ModelTask } from '@/lib/ai-models';
+import {
+  MODEL_PRESETS, CLAUDE_PRESETS, CLAUDE_MODEL_OPTIONS, AI_PROVIDERS, DEFAULT_PROVIDER, PROVIDER_INFO,
+  isClaudeModel, type ModelTask, type AIProvider,
+} from '@/lib/ai-models';
 
-export { MODEL_PRESETS, type ModelTask } from '@/lib/ai-models';
+export { MODEL_PRESETS, CLAUDE_PRESETS, type ModelTask, type AIProvider } from '@/lib/ai-models';
 
 export const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
 const MODELS_URL = 'https://openrouter.ai/api/v1/models';
+export const ANTHROPIC_URL = 'https://api.anthropic.com/v1/messages';
+export const ANTHROPIC_VERSION = '2023-06-01';
+const CLAUDE_MAX_TOKENS = 8192;
 
 export type KeySource = 'env' | 'saved' | null;
 
-async function savedKey(): Promise<string | null> {
+const KEY_SETTING: Record<AIProvider, string> = {
+  claude: 'ai_anthropic_key',
+  openrouter: 'ai_openrouter_key',
+};
+
+async function readSetting(key: string): Promise<string | null> {
   try {
     await dbConnect();
-    const doc = await SiteSettings.findOne({ key: 'ai_openrouter_key' }).lean() as { value?: string } | null;
-    if (!doc?.value || typeof doc.value !== 'string') return null;
-    if (isEncrypted(doc.value)) return decrypt(doc.value);
-    return doc.value;
+    const doc = await SiteSettings.findOne({ key }).lean() as { value?: unknown } | null;
+    return doc?.value && typeof doc.value === 'string' ? doc.value : null;
   } catch {
     return null;
   }
 }
 
-/** Resolve the OpenRouter API key: env var takes precedence, then DB. */
-export async function getOpenRouterKey(): Promise<string | null> {
-  if (process.env.OPENROUTER_API_KEY) return process.env.OPENROUTER_API_KEY;
-  return savedKey();
+async function savedKey(provider: AIProvider): Promise<string | null> {
+  const value = await readSetting(KEY_SETTING[provider]);
+  if (!value) return null;
+  try {
+    return isEncrypted(value) ? decrypt(value) : value;
+  } catch {
+    return null;
+  }
 }
 
-/** Where the active key comes from, for Settings > AI. */
-export async function getKeySource(): Promise<KeySource> {
-  if (process.env.OPENROUTER_API_KEY) return 'env';
-  return (await savedKey()) ? 'saved' : null;
+/** Active provider: AI_PROVIDER env var, then Settings > AI switch, then Claude. */
+export async function getProvider(): Promise<AIProvider> {
+  const env = process.env.AI_PROVIDER as AIProvider | undefined;
+  if (env && AI_PROVIDERS.includes(env)) return env;
+  const saved = (await readSetting('ai_provider')) as AIProvider | null;
+  return saved && AI_PROVIDERS.includes(saved) ? saved : DEFAULT_PROVIDER;
+}
+
+/** API key for a provider: env var takes precedence, then the saved (encrypted) key. */
+export async function getProviderKey(provider: AIProvider): Promise<string | null> {
+  return process.env[PROVIDER_INFO[provider].envVar] || savedKey(provider);
+}
+
+/** Key of the active provider (what every AI route uses). */
+export async function getAIKey(): Promise<string | null> {
+  return getProviderKey(await getProvider());
+}
+
+/** @deprecated kept for older imports; use getProviderKey('openrouter') */
+export async function getOpenRouterKey(): Promise<string | null> {
+  return getProviderKey('openrouter');
+}
+
+/** Where a provider's key comes from, for Settings > AI. */
+export async function getKeySource(provider: AIProvider = 'openrouter'): Promise<KeySource> {
+  if (process.env[PROVIDER_INFO[provider].envVar]) return 'env';
+  return (await savedKey(provider)) ? 'saved' : null;
+}
+
+/** Error text when the active provider has no key. */
+export async function missingKeyMessage(): Promise<string> {
+  const p = PROVIDER_INFO[await getProvider()];
+  return `${p.label} API key is not configured. Add it in Settings > AI.`;
 }
 
 // ---------------------------------------------------------------------------
-// Public model catalogue (no key needed), cached per server instance
+// Model catalogue: OpenRouter public list (cached) + the Claude list
 // ---------------------------------------------------------------------------
 
 export interface ModelInfo {
@@ -64,31 +106,39 @@ async function loadCatalogue(): Promise<Map<string, ModelInfo> | null> {
   }
 }
 
-/** Model metadata from the public list, or null when unknown / list unavailable. */
+function claudeInfo(model: string): ModelInfo | null {
+  const m = CLAUDE_MODEL_OPTIONS.find((o) => o.id === model);
+  if (!m) return null;
+  return {
+    id: m.id,
+    architecture: { input_modalities: m.vision ? ['text', 'image'] : ['text'] },
+    pricing: { prompt: String(m.inPerM / 1e6), completion: String(m.outPerM / 1e6) },
+  };
+}
+
+/** Model metadata, or null when unknown / list unavailable. */
 export async function getModelInfo(model: string): Promise<ModelInfo | null> {
+  if (isClaudeModel(model)) return claudeInfo(model);
   const byId = await loadCatalogue();
   return byId?.get(model) ?? null;
 }
 
-/** Resolve the model for a given task from DB prefs, falling back to MODEL_PRESETS. */
+function taskSetting(task: ModelTask): string {
+  return task === 'alttext' ? 'alttext' : task === 'seo' ? 'agents' : task;
+}
+
+/** Model for a task under the active provider: saved choice, then default, then preset. */
 export async function getModel(task: ModelTask): Promise<string> {
-  let chosen: string | null = null;
-  try {
-    await dbConnect();
-    const settingKey = task === 'alttext' ? 'ai_model_alttext'
-      : task === 'seo' ? 'ai_model_agents'
-      : `ai_model_${task}`;
-    const doc = await SiteSettings.findOne({ key: settingKey }).lean() as { value?: string } | null;
-    if (doc?.value && typeof doc.value === 'string') chosen = doc.value;
-    // alt text needs a vision model: the general default is not a safe fallback
-    if (!chosen && task !== 'alttext') {
-      const def = await SiteSettings.findOne({ key: 'ai_default_model' }).lean() as { value?: string } | null;
-      if (def?.value && typeof def.value === 'string') chosen = def.value;
-    }
-  } catch {
-    // ignore
+  const provider = await getProvider();
+  const prefix = provider === 'claude' ? 'ai_claude_' : 'ai_';
+  let chosen = await readSetting(`${prefix}model_${taskSetting(task)}`);
+  // alt text needs a vision model: the general default is not a safe fallback
+  if (!chosen && task !== 'alttext') chosen = await readSetting(`${prefix}default_model`);
+
+  if (provider === 'claude') {
+    return chosen && CLAUDE_MODEL_OPTIONS.some((m) => m.id === chosen) ? chosen : CLAUDE_PRESETS[task];
   }
-  if (chosen) {
+  if (chosen && !isClaudeModel(chosen)) {
     // A saved ID that OpenRouter no longer lists (retired model) falls back to the preset
     const byId = await loadCatalogue();
     if (!byId || byId.has(chosen)) return chosen;
@@ -157,7 +207,7 @@ export async function checkBudget(): Promise<NextResponse | null> {
 }
 
 // ---------------------------------------------------------------------------
-// JSON calls
+// Chat calls (provider picked from the model ID)
 // ---------------------------------------------------------------------------
 
 /** Parse JSON from model text: strips ``` fences and surrounding prose. */
@@ -180,25 +230,84 @@ export function parseJsonFromText<T = unknown>(raw: string): T | null {
   }
 }
 
-type ChatMessage = { role: 'system' | 'user' | 'assistant'; content: string };
+export type ChatMessage = { role: 'system' | 'user' | 'assistant'; content: string };
 
-export type JsonCallResult<T> =
-  | { ok: true; data: T }
+export type ChatResult =
+  | { ok: true; text: string }
   | { ok: false; status: number; error: string };
 
+function upstreamError(provider: string, status: number, text: string): ChatResult {
+  return {
+    ok: false,
+    status: status >= 400 && status < 600 ? status : 502,
+    error: `${provider} error (${status}): ${text.slice(0, 300)}`,
+  };
+}
+
+/** Anthropic Messages API body: system prompts move to `system`, an optional image joins the last user turn. */
+function claudeBody(model: string, messages: ChatMessage[], imageUrl?: string, stream = false) {
+  const system = messages.filter((m) => m.role === 'system').map((m) => m.content).join('\n\n');
+  const turns = messages
+    .filter((m) => m.role !== 'system')
+    .map((m) => ({ role: m.role, content: [{ type: 'text', text: m.content }] as Record<string, unknown>[] }));
+  if (imageUrl) {
+    const lastUser = [...turns].reverse().find((t) => t.role === 'user');
+    lastUser?.content.unshift({ type: 'image', source: { type: 'url', url: imageUrl } });
+  }
+  return { model, max_tokens: CLAUDE_MAX_TOKENS, ...(system ? { system } : {}), messages: turns, ...(stream ? { stream: true } : {}) };
+}
+
+function claudeHeaders(apiKey: string) {
+  return { 'x-api-key': apiKey, 'anthropic-version': ANTHROPIC_VERSION, 'content-type': 'application/json' };
+}
+
 /**
- * Chat completion that must answer JSON. Sends response_format only when the
- * model lists it in supported_parameters; otherwise parses JSON from the text.
+ * One chat completion with the provider that owns `model` (claude-* IDs go to
+ * Anthropic, everything else to OpenRouter). Logs usage. `json` asks
+ * OpenRouter for JSON mode when the model supports it.
  */
-export async function openRouterJson<T>(opts: {
+export async function aiChat(opts: {
   apiKey: string;
   model: string;
   messages: ChatMessage[];
   route: string;
   temperature?: number;
-}): Promise<JsonCallResult<T>> {
-  const info = await getModelInfo(opts.model);
-  const jsonMode = info?.supported_parameters?.includes('response_format') ?? false;
+  imageUrl?: string;
+  json?: boolean;
+  timeoutMs?: number;
+}): Promise<ChatResult> {
+  const signal = AbortSignal.timeout(opts.timeoutMs ?? 120_000);
+
+  if (isClaudeModel(opts.model)) {
+    const res = await fetch(ANTHROPIC_URL, {
+      method: 'POST',
+      headers: claudeHeaders(opts.apiKey),
+      body: JSON.stringify(claudeBody(opts.model, opts.messages, opts.imageUrl)),
+      signal,
+    });
+    if (!res.ok) return upstreamError('Claude', res.status, await res.text().catch(() => ''));
+    const data = (await res.json()) as {
+      content?: { type: string; text?: string }[];
+      usage?: { input_tokens?: number; output_tokens?: number };
+    };
+    logUsage({
+      model: opts.model,
+      promptTokens: data.usage?.input_tokens ?? 0,
+      completionTokens: data.usage?.output_tokens ?? 0,
+      route: opts.route,
+    });
+    return { ok: true, text: (data.content ?? []).filter((b) => b.type === 'text').map((b) => b.text ?? '').join('') };
+  }
+
+  const jsonMode = opts.json
+    ? (await getModelInfo(opts.model))?.supported_parameters?.includes('response_format') ?? false
+    : false;
+  const messages = opts.imageUrl
+    ? opts.messages.map((m, i, all) =>
+        i === all.length - 1 && m.role === 'user'
+          ? { role: m.role, content: [{ type: 'text', text: m.content }, { type: 'image_url', image_url: { url: opts.imageUrl } }] }
+          : m)
+    : opts.messages;
 
   const res = await fetch(OPENROUTER_URL, {
     method: 'POST',
@@ -213,16 +322,11 @@ export async function openRouterJson<T>(opts: {
       stream: false,
       ...(opts.temperature !== undefined ? { temperature: opts.temperature } : {}),
       ...(jsonMode ? { response_format: { type: 'json_object' } } : {}),
-      messages: opts.messages,
+      messages,
     }),
-    signal: AbortSignal.timeout(120_000),
+    signal,
   });
-
-  if (!res.ok) {
-    const text = await res.text().catch(() => '');
-    return { ok: false, status: res.status >= 400 && res.status < 600 ? res.status : 502, error: `AI error (${res.status}): ${text.slice(0, 300)}` };
-  }
-
+  if (!res.ok) return upstreamError('OpenRouter', res.status, await res.text().catch(() => ''));
   const data = (await res.json()) as {
     choices?: { message?: { content?: string } }[];
     usage?: { prompt_tokens?: number; completion_tokens?: number };
@@ -233,8 +337,117 @@ export async function openRouterJson<T>(opts: {
     completionTokens: data.usage?.completion_tokens ?? 0,
     route: opts.route,
   });
+  return { ok: true, text: data.choices?.[0]?.message?.content ?? '' };
+}
 
-  const parsed = parseJsonFromText<T>(data.choices?.[0]?.message?.content ?? '');
+export type JsonCallResult<T> =
+  | { ok: true; data: T }
+  | { ok: false; status: number; error: string };
+
+/** Chat completion that must answer JSON (either provider). */
+export async function aiJson<T>(opts: {
+  apiKey: string;
+  model: string;
+  messages: ChatMessage[];
+  route: string;
+  temperature?: number;
+}): Promise<JsonCallResult<T>> {
+  const result = await aiChat({ ...opts, json: true });
+  if (!result.ok) return result;
+  const parsed = parseJsonFromText<T>(result.text);
   if (parsed === null) return { ok: false, status: 502, error: 'The AI answer was not valid JSON. Try again or pick another model.' };
   return { ok: true, data: parsed };
+}
+
+/** @deprecated name kept for older imports; works with both providers */
+export const openRouterJson = aiJson;
+
+/**
+ * Streaming chat for the blog writer. Always returns OpenAI-style SSE
+ * (`data: {"choices":[{"delta":{"content":"..."}}]}`), so the client reads
+ * Claude and OpenRouter the same way. Returns an error Response on failure.
+ */
+export async function aiStream(opts: {
+  apiKey: string;
+  model: string;
+  messages: ChatMessage[];
+  route: string;
+}): Promise<Response> {
+  const sseHeaders = { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', 'X-Accel-Buffering': 'no' };
+  const errorResponse = (provider: string, status: number, text: string) =>
+    new Response(JSON.stringify({ error: `${provider} error: ${text.slice(0, 300)}` }), {
+      status: status >= 400 && status < 600 ? status : 502,
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+  if (!isClaudeModel(opts.model)) {
+    const upstream = await fetch(OPENROUTER_URL, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${opts.apiKey}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': 'https://ketami.net',
+        'X-Title': 'Riyad Ketami Admin',
+      },
+      body: JSON.stringify({ model: opts.model, stream: true, messages: opts.messages }),
+    });
+    if (!upstream.ok || !upstream.body) return errorResponse('OpenRouter', upstream.status, await upstream.text().catch(() => ''));
+    return new Response(upstream.body, { headers: sseHeaders });
+  }
+
+  const upstream = await fetch(ANTHROPIC_URL, {
+    method: 'POST',
+    headers: claudeHeaders(opts.apiKey),
+    body: JSON.stringify(claudeBody(opts.model, opts.messages, undefined, true)),
+  });
+  if (!upstream.ok || !upstream.body) return errorResponse('Claude', upstream.status, await upstream.text().catch(() => ''));
+
+  const encoder = new TextEncoder();
+  const decoder = new TextDecoder();
+  const reader = upstream.body.getReader();
+  let buffer = '';
+  let inputTokens = 0;
+  let outputTokens = 0;
+
+  const stream = new ReadableStream<Uint8Array>({
+    async pull(controller) {
+      const { done, value } = await reader.read();
+      if (done) {
+        logUsage({ model: opts.model, promptTokens: inputTokens, completionTokens: outputTokens, route: opts.route });
+        controller.enqueue(encoder.encode('data: [DONE]\n\n'));
+        controller.close();
+        return;
+      }
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop() ?? '';
+      for (const line of lines) {
+        if (!line.startsWith('data:')) continue;
+        try {
+          const evt = JSON.parse(line.slice(5).trim()) as {
+            type?: string;
+            delta?: { type?: string; text?: string };
+            message?: { usage?: { input_tokens?: number } };
+            usage?: { output_tokens?: number };
+            error?: { message?: string };
+          };
+          if (evt.type === 'message_start') inputTokens = evt.message?.usage?.input_tokens ?? 0;
+          else if (evt.type === 'message_delta') outputTokens = evt.usage?.output_tokens ?? outputTokens;
+          else if (evt.type === 'content_block_delta' && evt.delta?.type === 'text_delta' && evt.delta.text) {
+            const chunk = { choices: [{ delta: { content: evt.delta.text } }] };
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify(chunk)}\n\n`));
+          } else if (evt.type === 'error') {
+            const chunk = { choices: [{ delta: { content: `\n\n[Claude error: ${evt.error?.message ?? 'stream failed'}]` } }] };
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify(chunk)}\n\n`));
+          }
+        } catch {
+          // skip malformed lines
+        }
+      }
+    },
+    cancel() {
+      void reader.cancel();
+    },
+  });
+  return new Response(stream, { headers: sseHeaders });
 }

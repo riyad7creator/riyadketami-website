@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db/connect';
 import Post from '@/models/Post';
 import { requireAdmin, serverError, readJson } from '@/lib/api-helpers';
-import { getOpenRouterKey, getModel, checkBudget, openRouterJson } from '@/lib/ai-config';
+import { getAIKey, missingKeyMessage, getModel, checkBudget, aiJson } from '@/lib/ai-config';
 import { BLOG_CATEGORY_VALUES } from '@/lib/constants';
 
 interface PostIdea {
@@ -19,9 +19,9 @@ export async function POST(req: Request) {
     const check = await requireAdmin();
     if (!check.ok) return check.response;
 
-    const apiKey = await getOpenRouterKey();
+    const apiKey = await getAIKey();
     if (!apiKey) {
-      return NextResponse.json({ error: 'OpenRouter key not configured.' }, { status: 500 });
+      return NextResponse.json({ error: await missingKeyMessage() }, { status: 500 });
     }
     const overBudget = await checkBudget();
     if (overBudget) return overBudget;
@@ -51,7 +51,7 @@ Language: ${language === 'fr' ? 'French' : language === 'ar' ? 'Arabic' : 'Engli
 
 Respond with a JSON object: {"ideas": [{"title": "...", "hook": "one sentence teaser", "category": "${CATEGORIES.join('|')}"}]}`;
 
-    const result = await openRouterJson<PostIdea[] | { ideas?: PostIdea[] }>({
+    const result = await aiJson<PostIdea[] | { ideas?: PostIdea[] }>({
       apiKey,
       model,
       route: 'post-ideas',

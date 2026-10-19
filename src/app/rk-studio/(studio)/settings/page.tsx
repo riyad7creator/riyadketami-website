@@ -21,7 +21,7 @@ export default function AdminSettingsPage() {
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold text-text-0">AI Settings</p>
-            <p className="text-xs text-text-2 mt-0.5">OpenRouter key, models, usage</p>
+            <p className="text-xs text-text-2 mt-0.5">Claude or OpenRouter: keys, models, usage</p>
           </div>
           <ChevronRight size={14} className="text-text-2 shrink-0" />
         </Link>

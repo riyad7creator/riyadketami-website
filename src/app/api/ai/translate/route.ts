@@ -1,5 +1,5 @@
 import { requireAdmin, serverError, readJson } from '@/lib/api-helpers';
-import { getOpenRouterKey, getModel, checkBudget, openRouterJson } from '@/lib/ai-config';
+import { getAIKey, missingKeyMessage, getModel, checkBudget, aiJson } from '@/lib/ai-config';
 
 const LANG_LABELS: Record<string, string> = {
   fr: 'French',
@@ -12,9 +12,9 @@ export async function POST(req: Request) {
     const check = await requireAdmin();
     if (!check.ok) return check.response;
 
-    const apiKey = await getOpenRouterKey();
+    const apiKey = await getAIKey();
     if (!apiKey) {
-      return new Response(JSON.stringify({ error: 'OpenRouter API key is not configured. Set it in Admin > Settings > AI.' }), {
+      return new Response(JSON.stringify({ error: await missingKeyMessage() }), {
         status: 500,
         headers: { 'Content-Type': 'application/json' },
       });
@@ -57,7 +57,7 @@ Excerpt: ${excerpt ?? ''}
 Content:
 ${content}`;
 
-    const result = await openRouterJson<{ title?: string; excerpt?: string; content?: string }>({
+    const result = await aiJson<{ title?: string; excerpt?: string; content?: string }>({
       apiKey,
       model,
       route: 'translate',

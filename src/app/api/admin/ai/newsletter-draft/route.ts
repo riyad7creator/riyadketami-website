@@ -3,7 +3,7 @@ import DOMPurify from 'isomorphic-dompurify';
 import dbConnect from '@/lib/db/connect';
 import Post from '@/models/Post';
 import { requireAdmin, serverError, readJson } from '@/lib/api-helpers';
-import { getOpenRouterKey, getModel, checkBudget, openRouterJson } from '@/lib/ai-config';
+import { getAIKey, missingKeyMessage, getModel, checkBudget, aiJson } from '@/lib/ai-config';
 
 type Lang = 'en' | 'fr' | 'ar';
 const LANGS: Lang[] = ['en', 'fr', 'ar'];
@@ -15,9 +15,9 @@ export async function POST(req: Request) {
     const check = await requireAdmin();
     if (!check.ok) return check.response;
 
-    const apiKey = await getOpenRouterKey();
+    const apiKey = await getAIKey();
     if (!apiKey) {
-      return NextResponse.json({ error: 'OpenRouter key not configured.' }, { status: 500 });
+      return NextResponse.json({ error: await missingKeyMessage() }, { status: 500 });
     }
     const overBudget = await checkBudget();
     if (overBudget) return overBudget;
@@ -61,7 +61,7 @@ Return a JSON object with these fields:
 - "previewText": email preview text (under 90 chars)
 - "htmlBody": HTML content using only <p>, <h2>, <ul>, <li>, <a>, <strong>, <em> tags. Include brief summaries of each post with links (use the URLs exactly as given). Close with a short personal note from Riyad. Max 400 words.`;
 
-    const result = await openRouterJson<{ subject?: string; previewText?: string; htmlBody?: string }>({
+    const result = await aiJson<{ subject?: string; previewText?: string; htmlBody?: string }>({
       apiKey,
       model,
       route: 'newsletter-draft',

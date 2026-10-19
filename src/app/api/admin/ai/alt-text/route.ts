@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db/connect';
 import MediaFileModel from '@/models/MediaFile';
 import { requireAdmin, serverError, readJson } from '@/lib/api-helpers';
-import { getOpenRouterKey, getModel, getModelInfo, logUsage, checkBudget, OPENROUTER_URL } from '@/lib/ai-config';
+import { getAIKey, missingKeyMessage, getModel, getModelInfo, checkBudget, aiChat } from '@/lib/ai-config';
 
 const MAX_BATCH = 20;
 const OBJECT_ID = /^[0-9a-fA-F]{24}$/;
@@ -21,9 +21,9 @@ export async function POST(req: Request) {
     const check = await requireAdmin();
     if (!check.ok) return check.response;
 
-    const apiKey = await getOpenRouterKey();
+    const apiKey = await getAIKey();
     if (!apiKey) {
-      return NextResponse.json({ error: 'OpenRouter key not configured. Set it in Settings > AI.' }, { status: 500 });
+      return NextResponse.json({ error: await missingKeyMessage() }, { status: 500 });
     }
     const overBudget = await checkBudget();
     if (overBudget) return overBudget;
@@ -70,52 +70,25 @@ export async function POST(req: Request) {
         continue;
       }
       try {
-        const res = await fetch(OPENROUTER_URL, {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${apiKey}`,
-            'Content-Type': 'application/json',
-            'HTTP-Referer': 'https://ketami.net',
-            'X-Title': 'Riyad Ketami Admin',
-          },
-          body: JSON.stringify({
-            model,
-            stream: false,
-            messages: [
-              {
-                role: 'user',
-                content: [
-                  {
-                    type: 'text',
-                    text: `Write a concise, descriptive alt text (max 125 characters) for this image. The image is in the "${img.folder}" folder on a personal brand website for a content creator. Respond with ONLY the alt text, no quotes, no explanation.`,
-                  },
-                  { type: 'image_url', image_url: { url: img.url } },
-                ],
-              },
-            ],
-          }),
-          signal: AbortSignal.timeout(60_000),
+        const result = await aiChat({
+          apiKey,
+          model,
+          route: 'alt-text',
+          timeoutMs: 60_000,
+          imageUrl: img.url,
+          messages: [
+            {
+              role: 'user',
+              content: `Write a concise, descriptive alt text (max 125 characters) for this image. The image is in the "${img.folder}" folder on a personal brand website for a content creator. Respond with ONLY the alt text, no quotes, no explanation.`,
+            },
+          ],
         });
-
-        if (!res.ok) {
-          const text = await res.text().catch(() => '');
-          fail(`AI error ${res.status}: ${text.slice(0, 160)}`);
+        if (!result.ok) {
+          fail(result.error.slice(0, 200));
           continue;
         }
 
-        const data = await res.json() as {
-          choices?: { message?: { content?: string } }[];
-          usage?: { prompt_tokens?: number; completion_tokens?: number };
-        };
-        // Every answered call costs tokens, even when the text is unusable
-        logUsage({
-          model,
-          promptTokens: data.usage?.prompt_tokens ?? 0,
-          completionTokens: data.usage?.completion_tokens ?? 0,
-          route: 'alt-text',
-        });
-
-        const altText = (data.choices?.[0]?.message?.content ?? '').trim().replace(/^["']|["']$/g, '').slice(0, 125);
+        const altText = result.text.trim().replace(/^["']|["']$/g, '').slice(0, 125);
         if (!altText) {
           fail('Empty answer from the model');
           continue;

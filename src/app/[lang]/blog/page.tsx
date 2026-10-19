@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import { isValidLocale } from '@/i18n/config';
-import { getDictionary } from '@/lib/dictionaries';
+import { getSiteDictionary } from '@/lib/site-content';
 import { getBlogPosts } from '@/lib/blog-data';
 import { localizedAlternates } from '@/lib/seo';
 import { BlogCard, Reveal } from '@/components/ui';
@@ -22,7 +22,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { lang } = await params;
   if (!isValidLocale(lang)) return {};
-  const dict = getDictionary(lang);
+  const dict = await getSiteDictionary(lang);
   return {
     title: dict.blog.headline,
     description: dict.blog.subheadline,
@@ -44,7 +44,7 @@ export default async function BlogPage({
   const [{ lang }, { category }] = await Promise.all([params, searchParams]);
   if (!isValidLocale(lang)) notFound();
 
-  const dict = getDictionary(lang);
+  const dict = await getSiteDictionary(lang);
   const t = dict.blog;
 
   const activeCategory = isValidCategory(category) ? category : undefined;

@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState, useCallback } from 'react';
 import {
   LayoutDashboard, FileText, Link2, BarChart2, Users, Mail,
-  Activity, ImageIcon, Settings, Bell, Wand2, X, Check, Menu,
+  Activity, ImageIcon, Settings, Bell, Wand2, X, Check, Menu, PencilLine,
 } from 'lucide-react';
 import SignOutButton from './SignOutButton';
 import { ToastProvider } from '@/components/ui/Toast';
@@ -33,6 +33,7 @@ interface Notification {
 
 const NAV = [
   { href: '/rk-studio', label: 'Dashboard', icon: LayoutDashboard, exact: true },
+  { href: '/rk-studio/content', label: 'Content', icon: PencilLine, exact: false },
   { href: '/rk-studio/analytics', label: 'Analytics', icon: Activity, exact: false },
   { href: '/rk-studio/posts', label: 'Posts', icon: FileText, exact: false },
   { href: '/rk-studio/links', label: 'Links', icon: Link2, exact: false },

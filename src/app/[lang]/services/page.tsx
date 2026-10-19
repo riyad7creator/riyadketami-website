@@ -2,10 +2,9 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { isValidLocale } from '@/i18n/config';
-import { getDictionary } from '@/lib/dictionaries';
 import { localizedAlternates } from '@/lib/seo';
 import { BRAND } from '@/lib/brand';
-import { getSiteImages } from '@/lib/site-content';
+import { getSiteDictionary, getSiteImages } from '@/lib/site-content';
 import { Accordion, Button } from '@/components/ui';
 import type { AccordionItem } from '@/components/ui';
 import Eyebrow from '@/components/ui/Eyebrow';
@@ -18,7 +17,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { lang } = await params;
   if (!isValidLocale(lang)) return {};
-  const dict = getDictionary(lang);
+  const dict = await getSiteDictionary(lang);
   return {
     title: dict.services.headline,
     description: dict.meta.services_description,
@@ -34,7 +33,7 @@ export default async function ServicesPage({
   const img = await getSiteImages();
   const { lang } = await params;
   if (!isValidLocale(lang)) notFound();
-  const dict = getDictionary(lang);
+  const dict = await getSiteDictionary(lang);
   const t = dict.services;
 
   const faqItems: AccordionItem[] = t.faq.map((item, i) => ({

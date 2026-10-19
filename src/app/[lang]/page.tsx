@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { isValidLocale } from '@/i18n/config';
-import { getDictionary } from '@/lib/dictionaries';
+import { getSiteDictionary } from '@/lib/site-content';
 import { getHomeData } from '@/lib/home-data';
 import { jsonLdString } from '@/lib/json-ld';
 import { localizedAlternates } from '@/lib/seo';
@@ -26,7 +26,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { lang } = await params;
   if (!isValidLocale(lang)) return {};
-  const dict = getDictionary(lang);
+  const dict = await getSiteDictionary(lang);
   // No title: home inherits the root default, the full brand title (brief §5.1)
   return {
     description: dict.meta.home_description,
@@ -38,7 +38,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
   const { lang } = await params;
   if (!isValidLocale(lang)) notFound();
 
-  const dict = getDictionary(lang);
+  const dict = await getSiteDictionary(lang);
   const { posts } = await getHomeData(lang);
 
   return (

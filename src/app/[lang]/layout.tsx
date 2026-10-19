@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { locales, isValidLocale } from '@/i18n/config';
-import { getDictionary } from '@/lib/dictionaries';
+import { getSiteDictionary } from '@/lib/site-content';
 import { localizedAlternates } from '@/lib/seo';
 import { NavBar, Footer } from '@/components/ui';
 
@@ -32,7 +32,7 @@ export default async function LangLayout({
   const { lang } = await params;
   if (!isValidLocale(lang)) notFound();
 
-  const dict = getDictionary(lang);
+  const dict = await getSiteDictionary(lang);
 
   const navItems = [
     { label: dict.nav.about, href: `/${lang}/about` },

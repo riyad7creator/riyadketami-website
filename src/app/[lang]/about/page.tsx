@@ -2,10 +2,9 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { isValidLocale } from '@/i18n/config';
-import { getDictionary } from '@/lib/dictionaries';
 import { localizedAlternates } from '@/lib/seo';
 import { BRAND } from '@/lib/brand';
-import { getSiteImages } from '@/lib/site-content';
+import { getSiteDictionary, getSiteImages } from '@/lib/site-content';
 import { Button } from '@/components/ui';
 import Eyebrow from '@/components/ui/Eyebrow';
 import SocialRow from '@/components/ui/SocialRow';
@@ -17,7 +16,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { lang } = await params;
   if (!isValidLocale(lang)) return {};
-  const dict = getDictionary(lang);
+  const dict = await getSiteDictionary(lang);
   return {
     title: dict.about.eyebrow,
     description: dict.meta.about_description,
@@ -33,7 +32,7 @@ export default async function AboutPage({
   const img = await getSiteImages();
   const { lang } = await params;
   if (!isValidLocale(lang)) notFound();
-  const dict = getDictionary(lang);
+  const dict = await getSiteDictionary(lang);
   const t = dict.about;
   const copy = dict.home.about;
 

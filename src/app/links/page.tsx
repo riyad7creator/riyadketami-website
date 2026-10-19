@@ -4,7 +4,7 @@ import dbConnect from '@/lib/db/connect';
 import LatestSourceModel from '@/models/LatestSource';
 import SiteProfileModel from '@/models/SiteProfile';
 import { getCachedFeed, youtubeRssUrl } from '@/lib/rss-fetcher';
-import { getDictionary } from '@/lib/dictionaries';
+import { getSiteDictionary } from '@/lib/site-content';
 import { BRAND } from '@/lib/brand';
 import Eyebrow from '@/components/ui/Eyebrow';
 import { QuickLinkList } from '@/components/home/QuickLinks';
@@ -71,7 +71,7 @@ async function getStatusLine(): Promise<string | null> {
 
 export default async function LinksPage() {
   const locale: Locale = 'en';
-  const dict = getDictionary(locale);
+  const dict = await getSiteDictionary(locale);
   const [latestItems, statusLine] = await Promise.all([getLatest(), getStatusLine()]);
 
   return (

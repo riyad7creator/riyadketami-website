@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { isValidLocale } from '@/i18n/config';
-import { getDictionary } from '@/lib/dictionaries';
+import { getSiteDictionary } from '@/lib/site-content';
 import { localizedAlternates } from '@/lib/seo';
 import Eyebrow from '@/components/ui/Eyebrow';
 import SocialRow from '@/components/ui/SocialRow';
@@ -15,7 +15,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { lang } = await params;
   if (!isValidLocale(lang)) return {};
-  const dict = getDictionary(lang);
+  const dict = await getSiteDictionary(lang);
   return {
     title: dict.contact.eyebrow,
     description: dict.meta.contact_description,
@@ -30,7 +30,7 @@ export default async function ContactPage({
 }) {
   const { lang } = await params;
   if (!isValidLocale(lang)) notFound();
-  const dict = getDictionary(lang);
+  const dict = await getSiteDictionary(lang);
   const t = dict.contact;
 
   const formLabels = {

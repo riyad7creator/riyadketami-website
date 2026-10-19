@@ -1,5 +1,8 @@
 import { cache } from 'react';
 import { BRAND } from '@/lib/brand';
+import { getDictionary, type Dictionary } from '@/lib/dictionaries';
+import { applyTextOverrides, type SiteTextStore } from '@/lib/site-text';
+import type { Locale } from '@/i18n/config';
 
 /**
  * Single registry for every editable image and link on the public site.
@@ -39,9 +42,75 @@ export type ImageSlotKey = keyof typeof IMAGE_SLOTS;
 export type SiteImage = Pick<ImageSlot, 'src' | 'width' | 'height' | 'alt'>;
 export type SiteImages = Record<ImageSlotKey, SiteImage>;
 
-/** Overrides saved from the admin. Wired to MongoDB in loadImageOverrides(). */
-async function loadImageOverrides(): Promise<Partial<Record<ImageSlotKey, Partial<SiteImage>>>> {
-  return {};
+/** SiteSettings keys written by rk-studio, Content */
+export const SITE_CONTENT_KEYS = {
+  images: 'site-images',
+  text: 'site-text',
+  links: 'site-links',
+} as const;
+
+export type ImageOverrides = Partial<Record<ImageSlotKey, Partial<SiteImage>>>;
+
+interface SiteContentOverrides {
+  images: ImageOverrides | null;
+  text: SiteTextStore | null;
+  links: SiteLink[] | null;
+}
+
+const EMPTY_OVERRIDES: SiteContentOverrides = { images: null, text: null, links: null };
+
+// After a failed read (DB down, env missing) skip MongoDB for a minute so a
+// build or a burst of requests does not wait on the connect timeout every time.
+let lastFailureAt = 0;
+const RETRY_AFTER_MS = 60_000;
+
+/**
+ * One query for all three admin keys, deduped per request by React cache.
+ * Non-fatal: any failure falls back to the shipped defaults.
+ */
+const loadOverrides = cache(async (): Promise<SiteContentOverrides> => {
+  if (!process.env.MONGODB_URI) return EMPTY_OVERRIDES;
+  if (Date.now() - lastFailureAt < RETRY_AFTER_MS) return EMPTY_OVERRIDES;
+  try {
+    const [{ default: dbConnect }, { default: SiteSettings }] = await Promise.all([
+      import('@/lib/db/connect'),
+      import('@/models/SiteSettings'),
+    ]);
+    await dbConnect();
+    const docs = await SiteSettings.find({ key: { $in: Object.values(SITE_CONTENT_KEYS) } })
+      .select('key value')
+      .lean();
+    const byKey = new Map(docs.map((d) => [d.key, d.value as unknown]));
+    const images = byKey.get(SITE_CONTENT_KEYS.images);
+    const text = byKey.get(SITE_CONTENT_KEYS.text);
+    const links = byKey.get(SITE_CONTENT_KEYS.links);
+    return {
+      images: images && typeof images === 'object' && !Array.isArray(images) ? (images as ImageOverrides) : null,
+      text: text && typeof text === 'object' && !Array.isArray(text) ? (text as SiteTextStore) : null,
+      links: Array.isArray(links) && links.length > 0 ? (links as SiteLink[]) : null,
+    };
+  } catch (error) {
+    lastFailureAt = Date.now();
+    console.warn('[site-content] overrides unavailable, using defaults:', (error as Error)?.message ?? error);
+    return EMPTY_OVERRIDES;
+  }
+});
+
+/** Overrides saved from the admin (SiteSettings 'site-images'). */
+async function loadImageOverrides(): Promise<ImageOverrides> {
+  const { images } = await loadOverrides();
+  if (!images) return {};
+  const out: ImageOverrides = {};
+  for (const key of Object.keys(IMAGE_SLOTS) as ImageSlotKey[]) {
+    const o = images[key];
+    if (!o || typeof o.src !== 'string' || !o.src) continue;
+    const clean: Partial<SiteImage> = { src: o.src };
+    if (typeof o.width === 'number' && o.width > 0) clean.width = o.width;
+    if (typeof o.height === 'number' && o.height > 0) clean.height = o.height;
+    if (typeof o.alt === 'string') clean.alt = o.alt;
+    out[key] = clean;
+  }
+  return out;
 }
 
 export const getSiteImages = cache(async (): Promise<SiteImages> => {
@@ -69,8 +138,26 @@ export const DEFAULT_LINKS: SiteLink[] = [
   { key: 'collab', label: `Collaborations: ${BRAND.email}`, url: BRAND.mailto },
 ];
 
+/** Link list saved from the admin (SiteSettings 'site-links'), or null for the defaults. */
 async function loadLinkOverrides(): Promise<SiteLink[] | null> {
-  return null;
+  const { links } = await loadOverrides();
+  if (!links) return null;
+  const clean = links.filter(
+    (l): l is SiteLink =>
+      !!l && typeof l.key === 'string' && typeof l.label === 'string' && typeof l.url === 'string' && !!l.url
+  );
+  return clean.length > 0 ? clean : null;
 }
 
 export const getSiteLinks = cache(async (): Promise<SiteLink[]> => (await loadLinkOverrides()) ?? DEFAULT_LINKS);
+
+/**
+ * getDictionary(lang) with the admin's text overrides (SiteSettings 'site-text')
+ * merged in by dot-path. Shape and types never change: unknown paths and
+ * non-string targets are ignored.
+ */
+export const getSiteDictionary = cache(async (lang: Locale): Promise<Dictionary> => {
+  const base = getDictionary(lang);
+  const { text } = await loadOverrides();
+  return applyTextOverrides(base, text?.[lang]);
+});

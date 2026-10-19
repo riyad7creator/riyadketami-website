@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import DOMPurify from 'isomorphic-dompurify';
 import { isValidLocale } from '@/i18n/config';
-import { getDictionary } from '@/lib/dictionaries';
+import { getSiteDictionary } from '@/lib/site-content';
 import { getBlogPost } from '@/lib/blog-data';
 import { localizedAlternates } from '@/lib/seo';
 import { Pill, Reveal } from '@/components/ui';
@@ -48,7 +48,7 @@ export default async function BlogPostPage({
   const { lang, slug } = await params;
   if (!isValidLocale(lang)) notFound();
 
-  const [post, dict] = await Promise.all([getBlogPost(lang, slug), Promise.resolve(getDictionary(lang))]);
+  const [post, dict] = await Promise.all([getBlogPost(lang, slug), getSiteDictionary(lang)]);
   if (!post) notFound();
 
   const cleanHtml = DOMPurify.sanitize(post.content);

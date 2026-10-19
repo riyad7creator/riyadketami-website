@@ -18,7 +18,7 @@ function buildPage(title: string, message: string): string {
   <title>${title} — Riyad Ketami Newsletter</title>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:ui-monospace,"JetBrains Mono",monospace;background:#111111;color:#F4F4EF;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+    body{font-family:ui-monospace,"JetBrains Mono",monospace;background:#050505;color:#F4F4EF;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
     .card{max-width:480px;width:100%;border:1px solid #2A2A28;border-radius:8px;padding:40px;background:#1E1E1E}
     .eyebrow{color:#00CD29;font-size:11px;letter-spacing:0.2em;margin-bottom:20px}
     h1{font-size:20px;font-weight:700;color:#F4F4EF;margin-bottom:12px}

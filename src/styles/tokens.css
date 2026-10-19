@@ -4,12 +4,12 @@
    text on light, never a large fill, and never white text on top of it. */
 :root {
   /* Brief tokens */
-  --ink: #111111;     /* Terminal Ink — page background */
+  --ink: #050505;     /* page background: the near-black of the first ketami.net version (Riyad, 19 Oct 2026) */
   --signal: #00CD29;  /* Signal Green — accent only */
   --paper: #F2F2EE;   /* primary text on ink; light section background */
   --muted: #A3A39C;   /* secondary text on ink (≥4.5:1 on --ink) */
-  --panel: #1A1A1A;   /* cards on ink */
-  --line: #2A2A2A;    /* hairlines, borders */
+  --panel: #0E0E0E;   /* cards on ink */
+  --line: #1F1F1F;    /* hairlines, borders */
   --signal-rgb: 0, 205, 41;
 
   /* Legacy names, kept as aliases so existing markup resolves to brief values */
@@ -30,9 +30,9 @@
   --warning: #FFB020;
 
   --border: var(--line);
-  --border-hover: #3A3A3A;
+  --border-hover: #2E2E2E;
   --surface: var(--panel);
-  --surface-hover: #202020;
+  --surface-hover: #161616;
 
   /* Radii */
   --radius-sm: 6px;

@@ -1,6 +1,5 @@
 import { ArrowUpRight } from 'lucide-react';
 import Eyebrow from '@/components/ui/Eyebrow';
-import Ar from '@/components/ui/Ar';
 import Flag from '@/components/ui/Flag';
 import { BRAND } from '@/lib/brand';
 import type { Dictionary } from '@/lib/dictionaries';
@@ -27,15 +26,6 @@ export function quickLinks(dict: Dictionary): QuickLink[] {
   const t = dict.home.quick_links;
   return [
     { key: 'abb', label: t.abb, url: BRAND.abb.url },
-    {
-      key: 'telegram',
-      label: (
-        <>
-          {t.telegram} (<Ar>{t.telegram_ar}</Ar>)
-        </>
-      ),
-      url: BRAND.telegramUrl,
-    },
     {
       key: 'partner',
       label: BRAND.partnerLink?.label ?? t.partner,

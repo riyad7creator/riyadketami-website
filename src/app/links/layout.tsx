@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { BRAND } from '@/lib/brand';
 
-const description = `${BRAND.title} · ${BRAND.proofLine}. ${BRAND.abb.name}, Telegram, YouTube and every channel in one place.`;
+const description = `${BRAND.title} · ${BRAND.proofLine}. ${BRAND.abb.name}, YouTube and every channel in one place.`;
 
 export const metadata: Metadata = {
   title: 'Links', // root template appends " | Riyad Ketami"

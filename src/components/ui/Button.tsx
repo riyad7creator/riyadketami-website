@@ -1,7 +1,6 @@
 'use client';
 
 import { forwardRef } from 'react';
-import { motion } from 'framer-motion';
 import Link from 'next/link';
 import type { ComponentPropsWithoutRef } from 'react';
 
@@ -32,18 +31,12 @@ const sizes: Record<Size, string> = {
   lg: 'h-12 px-7 text-base rounded-[var(--radius-md)]',
 };
 
-const MotionLink = motion.create(Link);
-
-// Press feedback is a spring so rapid taps inherit velocity instead of queueing tweens.
-const pressProps = {
-  whileTap: { scale: 0.97 },
-  transition: { type: 'spring', stiffness: 500, damping: 30 },
-} as const;
+// Press feedback is a CSS scale (active:scale-[0.97]) so no animation library ships.
 
 const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonProps>(
   ({ variant = 'secondary', size = 'md', loading, children, className = '', disabled, href, target, rel, ...props }, ref) => {
     const base =
-      'relative inline-flex items-center justify-center gap-2 cursor-pointer select-none transition-colors duration-[var(--duration-fast)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-40 disabled:pointer-events-none';
+      'relative inline-flex items-center justify-center gap-2 cursor-pointer select-none transition-[color,background-color,border-color,transform] duration-[var(--duration-fast)] active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-40 disabled:pointer-events-none';
     const classes = `${base} ${variants[variant]} ${sizes[size]} ${className}`;
 
     // Label stays mounted (opacity 0) while loading so the button never changes width.
@@ -60,31 +53,29 @@ const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonProps>(
 
     if (href) {
       return (
-        <MotionLink
+        <Link
           ref={ref as React.Ref<HTMLAnchorElement>}
           href={href}
           target={target}
           rel={rel}
-          {...pressProps}
           className={classes}
           aria-busy={loading || undefined}
         >
           {content}
-        </MotionLink>
+        </Link>
       );
     }
 
     return (
-      <motion.button
+      <button
         ref={ref as React.Ref<HTMLButtonElement>}
-        {...pressProps}
         className={classes}
         disabled={disabled ?? loading}
         aria-busy={loading || undefined}
-        {...(props as ComponentPropsWithoutRef<typeof motion.button>)}
+        {...props}
       >
         {content}
-      </motion.button>
+      </button>
     );
   }
 );

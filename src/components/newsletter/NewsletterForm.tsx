@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
 import { Check } from 'lucide-react';
 import type { Dictionary } from '@/lib/dictionaries';
 import type { Locale } from '@/i18n/config';
@@ -74,11 +73,8 @@ export default function NewsletterForm({
       t.confirmation[preferredLanguage as keyof typeof t.confirmation] ??
       t.confirmation.en;
     return (
-      <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, ease: 'easeOut' }}
-        className={`flex items-center gap-3 glass border border-matrix/30 rounded-[var(--radius-md)] px-6 py-4 ${className}`}
+      <div
+        className={`anim-in flex items-center gap-3 glass border border-matrix/30 rounded-[var(--radius-md)] px-6 py-4 ${className}`}
       >
         <Check size={18} className="text-matrix shrink-0" />
         {/* The message is in the chosen language, whatever the page locale */}
@@ -89,7 +85,7 @@ export default function NewsletterForm({
         >
           {confirmationMsg}
         </p>
-      </motion.div>
+      </div>
     );
   }
 
@@ -99,15 +95,10 @@ export default function NewsletterForm({
       className={`flex flex-col gap-3 ${className}`}
       noValidate
     >
-      <AnimatePresence mode="wait" initial={false}>
         {step === 'email' ? (
-          <motion.div
+          <div
             key="email-step"
-            initial={{ opacity: 0, x: -12 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 12 }}
-            transition={{ duration: 0.25, ease: 'easeOut' }}
-            className={`flex ${isInline ? 'flex-col sm:flex-row' : 'flex-col'} gap-3`}
+            className={`anim-in flex ${isInline ? 'flex-col sm:flex-row' : 'flex-col'} gap-3`}
           >
             <input
               type="email"
@@ -128,15 +119,11 @@ export default function NewsletterForm({
             >
               {t.cta}
             </button>
-          </motion.div>
+          </div>
         ) : (
-          <motion.div
+          <div
             key="language-step"
-            initial={{ opacity: 0, x: 12 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -12 }}
-            transition={{ duration: 0.25, ease: 'easeOut' }}
-            className="flex flex-col gap-3"
+            className="anim-in flex flex-col gap-3"
           >
             <p className="text-xs text-text-2 font-medium">{t.step2_label}</p>
 
@@ -186,18 +173,15 @@ export default function NewsletterForm({
                 {t.back}
               </button>
             </div>
-          </motion.div>
+          </div>
         )}
-      </AnimatePresence>
 
       {error && (
-        <motion.p
-          initial={{ opacity: 0, y: -4 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-xs text-danger font-mono"
+        <p
+          className="anim-in text-xs text-danger font-mono"
         >
           {error}
-        </motion.p>
+        </p>
       )}
 
       {status === 'error' && !error && (

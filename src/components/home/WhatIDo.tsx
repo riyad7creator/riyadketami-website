@@ -50,7 +50,7 @@ export function WhatIDoCards({ dict, headingLevel = 'h3' }: WhatIDoProps) {
               >
                 {card.link}
               </a>
-            ) : (
+            ) : process.env.NODE_ENV === 'production' ? null : (
               <span className="inline-flex min-h-[44px] flex-wrap items-center gap-2 font-mono text-xs text-muted">
                 {card.link} <Flag kind="MISSING">{link.missing}</Flag>
               </span>

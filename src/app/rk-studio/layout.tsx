@@ -7,6 +7,8 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false, nocache: true },
 };
 
+import MotionProvider from '@/components/MotionProvider';
+
 export default function RkStudioRootLayout({ children }: { children: React.ReactNode }) {
-  return children;
+  return <MotionProvider>{children}</MotionProvider>;
 }

@@ -3,7 +3,6 @@
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import { locales } from '@/i18n/config';
 import type { Locale } from '@/i18n/config';
@@ -51,22 +50,15 @@ export default function LangSwitcher({ currentLocale }: LangSwitcherProps) {
         className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--radius-sm)] text-xs font-mono font-medium text-text-2 hover:text-text-0 hover:bg-surface transition-colors duration-[var(--duration-fast)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
       >
         {labels[currentLocale]}
-        <motion.span animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.15 }}>
+        <span className={`transition-transform duration-150 ${open ? 'rotate-180' : ''}`}>
           <ChevronDown size={12} />
-        </motion.span>
+        </span>
       </DropdownMenu.Trigger>
 
-      <AnimatePresence>
-        {open && (
-          <DropdownMenu.Portal forceMount>
-            <DropdownMenu.Content asChild forceMount align="end" sideOffset={4}>
-              <motion.div
-                initial={{ opacity: 0, y: -4, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -4, scale: 0.97, transition: { duration: 0.12 } }}
-                transition={{ type: 'spring', stiffness: 500, damping: 32 }}
-                style={{ transformOrigin: 'var(--radix-dropdown-menu-content-transform-origin)' }}
-                className="z-[var(--z-overlay)] glass border border-border rounded-[var(--radius-md)] py-1 min-w-[120px] shadow-xl"
+      <DropdownMenu.Portal>
+            <DropdownMenu.Content asChild align="end" sideOffset={4}>
+              <div
+                className="anim-pop z-[var(--z-overlay)] glass border border-border rounded-[var(--radius-md)] py-1 min-w-[120px] shadow-xl"
               >
                 {locales.map((locale) => (
                   <DropdownMenu.Item
@@ -79,11 +71,9 @@ export default function LangSwitcher({ currentLocale }: LangSwitcherProps) {
                     {fullLabels[locale]}
                   </DropdownMenu.Item>
                 ))}
-              </motion.div>
+              </div>
             </DropdownMenu.Content>
           </DropdownMenu.Portal>
-        )}
-      </AnimatePresence>
     </DropdownMenu.Root>
   );
 }

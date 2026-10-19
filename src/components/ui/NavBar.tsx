@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import LangSwitcher from './LangSwitcher';
 import Wordmark from './Wordmark';
@@ -119,9 +118,7 @@ export default function NavBar({ locale, items }: NavBarProps) {
               return (
                 <li key={item.href} className="relative">
                   {active && (
-                    <motion.span
-                      layoutId="nav-active"
-                      transition={{ type: 'spring', stiffness: 500, damping: 40 }}
+                    <span
                       className="absolute inset-x-3 bottom-1 h-px bg-signal"
                       aria-hidden
                     />
@@ -157,19 +154,13 @@ export default function NavBar({ locale, items }: NavBarProps) {
       </header>
 
       {/* Mobile drawer — flat panel, no blur or heavy shadow (brief §3.4) */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.nav
+      {mobileOpen && (
+          <nav
             id="mobile-nav"
             ref={drawerRef}
-            initial={{ opacity: 0, y: -16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12, transition: { duration: 0.15, ease: 'easeIn' } }}
-            /* Mirrors --ease-spring in tokens.css — slight overshoot so the
-               drawer pops in rather than merely sliding. */
-            transition={{ duration: 0.28, ease: [0.34, 1.56, 0.64, 1] }}
             aria-label="Mobile navigation"
-            className="fixed top-[4.5rem] inset-x-3 z-[calc(var(--z-nav)-1)] bg-panel border border-line rounded-[var(--radius-md)] px-3 py-3 flex flex-col gap-1 md:hidden"
+            style={{ '--k-y': '-12px' } as React.CSSProperties}
+            className="anim-in fixed top-[4.5rem] inset-x-3 z-[calc(var(--z-nav)-1)] bg-panel border border-line rounded-[var(--radius-md)] px-3 py-3 flex flex-col gap-1 md:hidden"
           >
             {items.map((item) => {
               const active = pathname === item.href;
@@ -186,9 +177,8 @@ export default function NavBar({ locale, items }: NavBarProps) {
                 </Link>
               );
             })}
-          </motion.nav>
+          </nav>
         )}
-      </AnimatePresence>
     </>
   );
 }

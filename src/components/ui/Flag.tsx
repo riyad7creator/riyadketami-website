@@ -9,6 +9,8 @@ interface FlagProps {
  * MISSING flags get the prefix here; VERIFY text carries its own wording.
  */
 export default function Flag({ kind, children, className = '' }: FlagProps) {
+  // Editorial markers are for the build team only, never for visitors.
+  if (process.env.NODE_ENV === 'production') return null;
   return (
     <span
       data-flag={kind}

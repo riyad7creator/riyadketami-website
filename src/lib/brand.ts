@@ -54,7 +54,7 @@ const socialUrl = (key: SocialKey) => SOCIALS.find((s) => s.key === key)!.url;
 function headTitle(name: string, title: string, proof: string): string {
   // A compound title ("AI Expert & Creative Entrepreneur") already has its "&",
   // so the proof line joins with a middot instead of stacking a second "&".
-  return title.includes('&') ? `${name} — ${title} · ${proof}` : `${name} — ${title} & ${proof}`;
+  return title.includes('&') ? `${name} · ${title} · ${proof}` : `${name} · ${title} & ${proof}`;
 }
 
 export const BRAND = {
@@ -103,21 +103,26 @@ export const BRAND = {
   /** Quick link 3 — "This week's tool". Max one, always labelled PARTNER. [sponsor URL] */
   partnerLink: null as { label: string; url: string } | null,
 
-  // "Trusted by AI teams" — shown as logos (Riyad, 13 Oct 2026; MiniMax replaced
-  // by Dreamina). Logos are the brands' own files, never AI-drawn (brief §6.2);
-  // `logo: null` falls back to the name until the official file is supplied.
+  // "Trusted by AI teams": delivered collaborations only, verified 19 Oct 2026 against
+  // the production folders in Documents/04 - Collaborations (2026). Dreamina kept per
+  // Riyad (13 Oct 2026). Not listed until delivered: Lovart, PixVerse, CapCut, Airia,
+  // TrueCode Space (in production). Logos are the brands' own files, never AI-drawn
+  // (brief §6.2); `logo: null` falls back to the name until the official file is supplied.
   partners: [
     { name: 'Moonshot AI · Kimi', logo: '/partners/kimi.svg', width: 64, height: 24 },
+    { name: 'MiniMax', logo: null },
     { name: 'Dreamina', logo: null },
-    { name: 'Pollo AI', logo: '/partners/pollo-ai.png', width: 1000, height: 277 },
+    { name: 'Genspark', logo: '/partners/genspark.png', width: 492, height: 96 },
     { name: 'Higgsfield', logo: null },
+    { name: 'Pollo AI', logo: '/partners/pollo-ai.png', width: 1000, height: 277 },
+    { name: 'Skywork', logo: null },
     { name: 'Emergent', logo: null },
   ] as ReadonlyArray<{ name: string; logo: string | null; width?: number; height?: number }>,
 
   images: {
     // Kit assets (brief §6.1) live in /public/brand
-    avatar: '/brand/profile-picture_800.jpg',
-    og: '/brand/og-image_1200x630.jpg',
+    avatar: '/brand/profile-picture_800.v4.jpg',
+    og: '/brand/og-image_1200x630.v4.jpg',
     // A05 (hero_2816x1584.jpg) stays in public/brand as a kit asset; V08 is the desktop hero
     // A07 (hero-vertical) stays in public/brand as a kit asset; V01 is the mobile hero
     oranPlate: '/brand/oran-plate_2816x1584.jpg',
@@ -125,21 +130,21 @@ export const BRAND = {
   },
 
   /**
-   * Generated visuals (brief §6.2). V01–V05 + V08: Flux 2 Pro with six refs of
-   * Riyad's real photos (4 face close-ups + 2 full), then an under-eye retouch
-   * pass (dark circles removed, nothing else changed); V06: grok-imagine-2.
+   * Generated visuals (brief §6.2). v4 (19 Oct 2026): V01, V02, V03, V05, V08 by grok-imagine-2
+   * from Riyad's real photos (Pictures/KETAMI-Brand-Kit/ref-website-2026); V04 is a real
+   * WebExpo stage photo. v3 is archived in Pictures/KETAMI-Brand-Kit/archive-website-visuals-v3.
    * `approved` records Riyad's likeness sign-off (brief §6.4 step 1) — flip it
    * per image once approved; nothing here should ship before that.
    */
   visuals: {
-    V01: { src: '/brand/V01_mobile-hero.jpg', width: 1440, height: 1920, alt: 'Riyad Ketami, portrait at night in Oran', approved: false },
-    V02: { src: '/brand/V02_card-darija.jpg', width: 1920, height: 1440, alt: 'Riyad recording an AI breakdown at his desk', approved: false },
-    V03: { src: '/brand/V03_card-launch.jpg', width: 1920, height: 1440, alt: 'Riyad filming himself with his phone', approved: false },
-    V04: { src: '/brand/V04_card-talks.jpg', width: 1920, height: 1440, alt: 'Riyad speaking on stage', approved: false },
-    V05: { src: '/brand/V05_about-oran.jpg', width: 1920, height: 1280, alt: 'Riyad on the Oran seafront', approved: false },
+    V01: { src: '/brand/V01_mobile-hero.v4.jpg', width: 1440, height: 1920, alt: 'Riyad Ketami, portrait at night in Oran', approved: false },
+    V02: { src: '/brand/V02_card-darija.v4.jpg', width: 1920, height: 1440, alt: 'Riyad recording an AI breakdown at his desk', approved: false },
+    V03: { src: '/brand/V03_card-launch.v4.jpg', width: 1920, height: 1440, alt: 'Riyad filming himself with his phone', approved: false },
+    V04: { src: '/brand/V04_card-talks.v4.jpg', width: 1920, height: 1440, alt: 'Riyad speaking on stage at WebExpo', approved: false },
+    V05: { src: '/brand/V05_about-oran.v4.jpg', width: 1920, height: 1280, alt: 'Riyad on the Oran seafront', approved: false },
     // V08 (new slot): desktop hero in the same Flux set, so desktop and mobile match.
     // Kit A05 (hero_2816x1584.jpg) remains in public/brand as the fallback.
-    V08: { src: '/brand/V08_desktop-hero.jpg', width: 1920, height: 1088, alt: 'Riyad Ketami, portrait at night in Oran', approved: false },
+    V08: { src: '/brand/V08_desktop-hero.v4.jpg', width: 1920, height: 1080, alt: 'Riyad Ketami, portrait at night in Oran', approved: false },
     V06: { src: '/brand/V06_abb-texture.jpg', width: 2816, height: 1584, alt: '', approved: false },
   },
 } as const;
@@ -160,7 +165,7 @@ export function personJsonLd() {
     description:
       'AI expert and co-founder of Algeria Business Bay, making AI work for Algerian and MENA business in Darija.',
     url: BRAND.url,
-    image: `${BRAND.url}/brand/profile-picture_800.jpg`,
+    image: `${BRAND.url}/brand/profile-picture_800.v4.jpg`,
     email: BRAND.mailto,
     address: {
       '@type': 'PostalAddress',

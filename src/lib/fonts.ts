@@ -20,6 +20,7 @@ export const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   variable: '--font-mono',
   display: 'swap',
+  preload: false, // eyebrows only: never worth delaying first paint
   weight: ['400', '500'],
 });
 
@@ -27,5 +28,6 @@ export const ibmPlexArabic = IBM_Plex_Sans_Arabic({
   subsets: ['arabic'],
   variable: '--font-arabic',
   display: 'swap',
+  preload: false, // swaps in; English/French LCP no longer waits on Arabic glyphs
   weight: ['500', '600'],
 });

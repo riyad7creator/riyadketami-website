@@ -2,8 +2,6 @@ import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { spaceGrotesk, jetbrainsMono, ibmPlexArabic } from '@/lib/fonts';
 import { ClarityScript } from '@/components/ClarityScript';
-import ScrollControl from '@/components/ScrollControl';
-import MotionProvider from '@/components/MotionProvider';
 import { BRAND } from '@/lib/brand';
 import './globals.css';
 
@@ -50,8 +48,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       ].join(' ')}
     >
       <body suppressHydrationWarning>
-        <ScrollControl />
-        <MotionProvider>{children}</MotionProvider>
+        {children}
         <ClarityScript />
       </body>
     </html>

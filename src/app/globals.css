@@ -261,3 +261,19 @@ body {
     opacity: 0.6;
   }
 }
+
+/* Lightweight entrance animations: CSS instead of Framer Motion on public pages.
+   The reduced-motion rule above already shortens these to ~0ms. */
+@keyframes k-in {
+  from { opacity: 0; transform: translateY(var(--k-y, 8px)); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes k-pop {
+  from { opacity: 0; transform: translateY(-4px) scale(0.95); }
+  to   { opacity: 1; transform: none; }
+}
+.anim-in  { animation: k-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.anim-pop {
+  animation: k-pop 0.16s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transform-origin: var(--radix-dropdown-menu-content-transform-origin);
+}

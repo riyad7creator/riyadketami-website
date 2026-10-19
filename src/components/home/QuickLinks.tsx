@@ -52,7 +52,10 @@ export function QuickLinkList({ dict }: { dict: Dictionary }) {
   const t = dict.home.quick_links;
   return (
     <ol className="flex flex-col divide-y divide-line border-y border-line">
-      {quickLinks(dict).map((l) => {
+      {quickLinks(dict)
+        // In production, a link without a target is hidden rather than shown empty.
+        .filter((l) => l.url || process.env.NODE_ENV !== 'production')
+        .map((l) => {
         const inner = (
           <>
             <span className="flex min-w-0 flex-1 flex-wrap items-center gap-x-3 gap-y-1 text-paper">

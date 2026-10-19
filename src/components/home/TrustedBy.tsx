@@ -11,7 +11,7 @@ export default function TrustedBy({ dict }: { dict: Dictionary }) {
         <Eyebrow as="h2" id="trusted">
           {dict.home.trusted.eyebrow}
         </Eyebrow>
-        <ul className="flex flex-wrap items-center gap-x-12 gap-y-8" dir="ltr">
+        <ul className="grid grid-cols-2 items-center gap-x-10 gap-y-8 sm:grid-cols-4" dir="ltr">
           {BRAND.partners.map((p) => (
             <li key={p.name} className="flex h-8 items-center opacity-70 transition-opacity duration-[var(--duration-fast)] hover:opacity-100">
               {p.logo ? (

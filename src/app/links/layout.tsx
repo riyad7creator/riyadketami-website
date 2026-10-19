@@ -9,14 +9,14 @@ export const metadata: Metadata = {
   alternates: { canonical: '/links' },
   openGraph: {
     type: 'profile',
-    title: `${BRAND.name} — Links`,
+    title: `${BRAND.name} · Links`,
     description,
     url: `${BRAND.url}/links`,
     images: [{ url: BRAND.images.og, width: 1200, height: 630, alt: `${BRAND.name}, ${BRAND.title}` }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${BRAND.name} — Links`,
+    title: `${BRAND.name} · Links`,
     description,
     images: [BRAND.images.og],
   },

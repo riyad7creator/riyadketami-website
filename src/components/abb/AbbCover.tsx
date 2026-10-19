@@ -14,7 +14,7 @@ interface AbbCoverProps {
 
 /**
  * Algeria Business Bay cover: the official kit's Bay of Algiers background,
- * night-violet overlay, white ABB logo, tagline and a mint Join button.
+ * night-violet overlay, mint ABB logo, tagline and a mint Join button.
  * ABB colours (kit): mint #00FFC6, night #230447, violet #6600CC.
  */
 export default async function AbbCover({ tagline, body, joinLabel, variant = 'section', eyebrow, headingId, children }: AbbCoverProps) {
@@ -44,7 +44,7 @@ export default async function AbbCover({ tagline, body, joinLabel, variant = 'se
         <img
           src={img.abbLogo.src}
           alt={img.abbLogo.alt || BRAND.abb.name}
-          className={isCard ? 'h-5 w-auto self-start' : 'h-9 w-auto self-start sm:h-11'}
+          className={isCard ? 'h-5 w-auto self-start' : 'h-10 w-auto self-start sm:h-14'}
         />
         {eyebrow && (
           <p className="font-mono text-xs uppercase tracking-[0.12em] text-[#00FFC6]">{eyebrow}</p>

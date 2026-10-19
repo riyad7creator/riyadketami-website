@@ -105,18 +105,18 @@ export const BRAND = {
   // the production folders in Documents/04 - Collaborations (2026). Dreamina kept per
   // Riyad (13 Oct 2026). Not listed until delivered: Lovart, PixVerse, CapCut, Airia,
   // TrueCode Space (in production). Logos are the brands' own files, never AI-drawn
-  // (brief §6.2). Names only, no logos, until each brand gives written OK to show its logo
-  // (Riyad, 19 Oct 2026); `logo` takes the official file path once approved.
+  // (brief §6.2). Official logos per Riyad (19 Oct 2026), sourced from each brand's own site or
+  // kit; shown monochrome white so no brand dominates.
   partners: [
-    { name: 'Kimi', logo: null },
-    { name: 'ByteDance', logo: null }, // Dreamina + Pippit campaigns (Dreamina via agency GrowMaxValue)
-    { name: 'Dreamina', logo: null },
-    { name: 'Genspark', logo: null },
-    { name: 'Higgsfield', logo: null },
-    { name: 'Pollo AI', logo: null },
-    { name: 'Skywork', logo: null },
-    { name: 'Emergent', logo: null },
-  ] as ReadonlyArray<{ name: string; logo: string | null; width?: number; height?: number }>,
+    { name: 'Kimi', logo: '/partners/kimi.svg', width: 64, height: 24 },
+    { name: 'ByteDance', logo: '/partners/bytedance.svg', width: 16219, height: 2798 }, // Wikimedia Commons, public domain
+    { name: 'Dreamina', logo: '/partners/dreamina.png', width: 381, height: 108 }, // dreamina.capcut.com header
+    { name: 'Genspark', logo: '/partners/genspark.png', width: 492, height: 96 }, // brand kit
+    { name: 'Higgsfield', logo: '/partners/higgsfield-mark.svg', width: 20, height: 20, withName: true }, // higgsfield.ai mark
+    { name: 'Pollo AI', logo: '/partners/pollo-ai.png', width: 1000, height: 277 },
+    { name: 'Skywork', logo: '/partners/skywork.svg', width: 128, height: 28 }, // skywork.ai header
+    { name: 'Emergent', logo: '/partners/emergent.svg', width: 111, height: 24 }, // emergent.sh
+  ] as ReadonlyArray<{ name: string; logo: string | null; width?: number; height?: number; withName?: boolean }>,
 
   images: {
     // Kit assets (brief §6.1) live in /public/brand
@@ -145,8 +145,8 @@ export const BRAND = {
     // Kit A05 (hero_2816x1584.jpg) remains in public/brand as the fallback.
     V08: { src: '/brand/V08_desktop-hero.v6.jpg', width: 1920, height: 1080, alt: 'Riyad Ketami, studio portrait', approved: false },
     V09: { src: '/brand/V09_contact.v1.jpg', width: 1920, height: 1080, alt: 'Riyad on a video call with a brand team from his studio in Oran', approved: false },
-    V10: { src: '/brand/V10_ready-to-start.v1.jpg', width: 1920, height: 1080, alt: 'Riyad shaking hands with a client at the start of a project', approved: false },
-    V11: { src: '/brand/V11_about.v1.jpg', width: 1920, height: 1280, alt: 'Riyad in his studio in Oran', approved: false },
+    V10: { src: '/brand/V10_ready-to-start.v2.jpg', width: 1920, height: 1080, alt: 'Riyad leading an AI workshop for a team of entrepreneurs', approved: false },
+    V11: { src: '/brand/V11_about.v2.jpg', width: 1920, height: 1280, alt: 'Riyad in Oran, the Santa Cruz fort and chapel behind him', approved: false },
     V06: { src: '/brand/V06_abb-texture.jpg', width: 2816, height: 1584, alt: '', approved: false },
   },
 } as const;

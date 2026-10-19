@@ -15,13 +15,16 @@ export default function TrustedBy({ dict }: { dict: Dictionary }) {
           {BRAND.partners.map((p) => (
             <li key={p.name} className="flex h-8 items-center opacity-70 transition-opacity duration-[var(--duration-fast)] hover:opacity-100">
               {p.logo ? (
-                <Image
-                  src={p.logo}
-                  alt={p.name}
-                  width={p.width}
-                  height={p.height}
-                  className="h-7 w-auto"
-                />
+                <span className="flex items-center gap-2.5">
+                  <Image
+                    src={p.logo}
+                    alt={p.withName ? '' : p.name}
+                    width={p.width}
+                    height={p.height}
+                    className={`${p.withName ? 'h-7' : 'h-6'} w-auto max-w-[150px] object-contain brightness-0 invert`}
+                  />
+                  {p.withName && <span className="font-display text-xl font-bold text-paper">{p.name}</span>}
+                </span>
               ) : (
                 // Official logo file not supplied yet — the name stands in
                 <span className="font-display text-xl font-bold text-paper">{p.name}</span>

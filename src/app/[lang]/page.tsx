@@ -7,7 +7,6 @@ import { jsonLdString } from '@/lib/json-ld';
 import { localizedAlternates } from '@/lib/seo';
 import { personJsonLd } from '@/lib/brand';
 import Hero from '@/components/home/Hero';
-import QuickLinks from '@/components/home/QuickLinks';
 import NowStrip from '@/components/home/NowStrip';
 import WhatIDo from '@/components/home/WhatIDo';
 import AbbSection from '@/components/home/AbbSection';
@@ -46,7 +45,6 @@ export default async function HomePage({ params }: { params: Promise<{ lang: str
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdString(personJsonLd()) }} />
       {/* Section order: brief §2.3 */}
       <Hero locale={lang} dict={dict} />
-      <QuickLinks dict={dict} />
       <NowStrip dict={dict} />
       <WhatIDo dict={dict} />
       <AbbSection dict={dict} />

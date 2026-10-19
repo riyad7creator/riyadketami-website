@@ -492,6 +492,7 @@ function LinksTab({ data, onSaved }: { data: ContentPayload; onSaved: (d: Conten
   // true when the list should go back to the Linktree defaults on save
   const [useDefaults, setUseDefaults] = useState(data.links === null);
   const [saving, setSaving] = useState(false);
+  const [iconFor, setIconFor] = useState<number | null>(null);
 
   const dirty = !sameJson(list, savedList) || useDefaults !== (data.links === null);
 
@@ -536,7 +537,7 @@ function LinksTab({ data, onSaved }: { data: ContentPayload; onSaved: (d: Conten
     setSaving(true);
     const links = useDefaults
       ? null
-      : list.map((l) => ({ key: l.key, label: l.label.trim(), url: l.url.trim(), partner: !!l.partner }));
+      : list.map((l) => ({ key: l.key, label: l.label.trim(), url: l.url.trim(), partner: !!l.partner, ...(l.icon ? { icon: l.icon } : {}) }));
     const result = await putContent({ links });
     setSaving(false);
     if ('error' in result) {
@@ -617,9 +618,37 @@ function LinksTab({ data, onSaved }: { data: ContentPayload; onSaved: (d: Conten
               />
               PARTNER (sponsored link)
             </label>
+            <div className="flex items-center gap-3">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-[var(--radius-sm)] border border-border bg-white">
+                {l.icon ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={l.icon} alt="" className="h-full w-full object-contain p-1" />
+                ) : (
+                  <ImageIcon size={14} className="text-black/40" />
+                )}
+              </span>
+              <button type="button" onClick={() => setIconFor(i)} className={btnGhost}>
+                {l.icon ? 'Change logo / icon' : 'Add logo / icon'}
+              </button>
+              {l.icon && (
+                <button type="button" onClick={() => update(i, { icon: undefined })} className={btnGhost}>
+                  Remove
+                </button>
+              )}
+            </div>
           </div>
         ))}
       </div>
+
+      <MediaPickerModal
+        open={iconFor !== null}
+        onClose={() => setIconFor(null)}
+        onSelect={(url, id) => {
+          if (iconFor !== null) update(iconFor, { icon: mediaPath(url, id) });
+          setIconFor(null);
+        }}
+        title="Logo or icon for this link"
+      />
 
       <div className="flex flex-wrap gap-2">
         <button type="button" onClick={add} disabled={list.length >= 12} className={btnGhost}>

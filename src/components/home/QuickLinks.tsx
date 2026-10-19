@@ -1,4 +1,4 @@
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, Link2, Mail, Youtube } from 'lucide-react';
 import Eyebrow from '@/components/ui/Eyebrow';
 import { getSiteLinks } from '@/lib/site-content';
 import type { Dictionary } from '@/lib/dictionaries';
@@ -22,13 +22,23 @@ export async function QuickLinkList({ dict }: { dict: Dictionary }) {
     <ol className="flex flex-col divide-y divide-line border-y border-line">
       {links.map((l) => {
         const external = !l.url.startsWith('mailto:');
+        const Fallback = l.url.startsWith('mailto:') ? Mail : /youtube\.com|youtu\.be/.test(l.url) ? Youtube : Link2;
         return (
           <li key={l.key}>
             <a
               href={l.url}
               {...(external ? { target: '_blank', rel: 'noopener' } : {})}
-              className="group flex min-h-[56px] items-center gap-4 px-1 transition-colors duration-[var(--duration-fast)] hover:bg-panel"
+              className="group flex min-h-[64px] items-center gap-4 px-1 py-2 transition-colors duration-[var(--duration-fast)] hover:bg-panel"
             >
+              {/* Logo slot: partner logo/icon (editable in rk-studio → Content → Links) */}
+              <span className={`flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-[var(--radius-sm)] ${l.icon ? 'bg-white' : 'border border-line bg-panel'}`}>
+                {l.icon ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={l.icon} alt="" loading="lazy" className="h-full w-full object-contain p-1.5" />
+                ) : (
+                  <Fallback size={18} aria-hidden className="text-muted" />
+                )}
+              </span>
               <span className="flex min-w-0 flex-1 flex-wrap items-center gap-x-3 gap-y-1 text-paper">
                 <span className="min-w-0">{localized[l.key] ?? l.label}</span>
                 {l.partner && (

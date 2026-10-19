@@ -46,6 +46,14 @@ const link = z.object({
       message: 'Link URLs must start with https:// or mailto:',
     }),
   partner: z.boolean().optional(),
+  icon: z
+    .string()
+    .trim()
+    .max(2048)
+    .refine((u) => u === '' || /^\/[^\s]*$/.test(u) || /^https:\/\/[^\s]+$/i.test(u), {
+      message: 'Icon must be a site path starting with / or an https:// URL',
+    })
+    .optional(),
 });
 
 const putSchema = z.object({

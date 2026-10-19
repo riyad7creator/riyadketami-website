@@ -129,11 +129,13 @@ export interface SiteLink {
   label: string;
   url: string;
   partner?: boolean;
+  /** Small logo/icon shown in the link row (site path or https URL). Optional. */
+  icon?: string;
 }
 
 export const DEFAULT_LINKS: SiteLink[] = [
-  { key: 'truecode', label: 'TrueCode Space · Formation IA & Automatisation (groupe du 1er novembre)', url: 'https://truecodespace.com', partner: true },
-  { key: 'higgsfield', label: 'Open Higgsfield: generative video & image models via API', url: 'https://higgsfield.ai/s/hf-api-master-ig-riyadketami-dgQLll', partner: true },
+  { key: 'truecode', label: 'TrueCode Space · Formation IA & Automatisation (groupe du 1er novembre)', url: 'https://truecodespace.com', partner: true, icon: '/partners/truecode-icon.png' },
+  { key: 'higgsfield', label: 'Open Higgsfield: generative video & image models via API', url: 'https://higgsfield.ai/s/hf-api-master-ig-riyadketami-dgQLll', partner: true, icon: '/partners/higgsfield-mark.svg' },
   { key: 'youtube', label: 'YouTube: AI in Darija', url: BRAND.youtubeUrl },
   { key: 'collab', label: `Collaborations: ${BRAND.email}`, url: BRAND.mailto },
 ];

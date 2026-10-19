@@ -146,7 +146,7 @@ export const BRAND = {
     V08: { src: '/brand/V08_desktop-hero.v6.jpg', width: 1920, height: 1080, alt: 'Riyad Ketami, studio portrait', approved: false },
     V09: { src: '/brand/V09_contact.v1.jpg', width: 1920, height: 1080, alt: 'Riyad on a video call with a brand team from his studio in Oran', approved: false },
     V10: { src: '/brand/V10_ready-to-start.v2.jpg', width: 1920, height: 1080, alt: 'Riyad leading an AI workshop for a team of entrepreneurs', approved: false },
-    V11: { src: '/brand/V11_about.v3.jpg', width: 1920, height: 1280, alt: 'Riyad Ketami in his office', approved: false },
+    V11: { src: '/brand/V11_about.v5.jpg', width: 1920, height: 1280, alt: 'Riyad Ketami in his office', approved: false },
     V06: { src: '/brand/V06_abb-texture.jpg', width: 2816, height: 1584, alt: '', approved: false },
   },
 } as const;

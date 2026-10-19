@@ -30,7 +30,7 @@ export const IMAGE_SLOTS = {
   cardDarija: { label: 'Card 1: AI in Darija', section: 'Home · What I do', hint: '4:3', ...V.V02 },
   cardLaunch: { label: 'Card 2: Launch partner in MENA', section: 'Home · What I do', hint: '4:3', ...V.V03 },
   cardTalks: { label: 'Card 3: Talks and workshops', section: 'Home · What I do', hint: '4:3', ...V.V04 },
-  abbCover: { label: 'ABB cover background', section: 'Home · Algeria Business Bay + Bio page', hint: '2:1 wide, darkened behind the logo and text', src: '/abb/abb-cover.jpg', width: 2400, height: 1200, alt: '' },
+  abbCover: { label: 'ABB cover background', section: 'Home · Algeria Business Bay + Bio page', hint: '2:1 wide, darkened behind the logo and text', src: '/abb/abb-cover.v2.jpg', width: 2400, height: 1200, alt: '' },
   abbLogo: { label: 'ABB logo (white)', section: 'Home · Algeria Business Bay + Bio page', hint: 'Light logo on transparent background (SVG or PNG)', src: '/abb/abb-logo-white.svg', width: 1876, height: 351, alt: 'Algeria Business Bay' },
   contactBg: { label: 'Contact background', section: 'Home · Contact', hint: '16:9, subject on the right, darkened behind the text', ...V.V09 },
   aboutMain: { label: 'About main image', section: 'About', hint: '3:2', ...V.V11 },

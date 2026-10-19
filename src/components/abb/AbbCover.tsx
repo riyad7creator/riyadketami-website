@@ -36,7 +36,7 @@ export default async function AbbCover({ tagline, body, joinLabel, variant = 'se
       />
       <div
         aria-hidden
-        className="absolute inset-0 -z-10 bg-gradient-to-r from-[#230447] via-[#230447]/85 to-[#230447]/35 rtl:bg-gradient-to-l"
+        className="absolute inset-0 -z-10 bg-gradient-to-r from-[#230447]/95 via-[#230447]/60 via-45% to-transparent rtl:bg-gradient-to-l"
       />
 
       <div className={`${isCard ? 'gap-2.5' : 'mx-auto max-w-[1200px] gap-5'} flex flex-col`}>

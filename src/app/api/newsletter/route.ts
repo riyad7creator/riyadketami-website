@@ -6,6 +6,7 @@ import Subscriber from '@/models/Subscriber';
 import { syncToKit } from '@/lib/kit';
 import { rateLimit } from '@/lib/rate-limit';
 import { notifyAdmin } from '@/lib/notify';
+import { readJson, InvalidJsonError, badJson } from '@/lib/api-helpers';
 
 const SOURCES = ['homepage', 'blog-cta', 'links-page', 'import', 'other'] as const;
 
@@ -32,7 +33,7 @@ export async function POST(req: Request) {
   if (limited) return limited;
 
   try {
-    const body = await req.json();
+    const body = await readJson(req);
     const { email, preferredLanguage, source } = schema.parse(body);
 
     await dbConnect();
@@ -94,6 +95,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ ok: true }, { status: 201 });
   } catch (err) {
+    if (err instanceof InvalidJsonError) return badJson();
     if (err instanceof z.ZodError) {
       return NextResponse.json({ error: 'Invalid email or language' }, { status: 400 });
     }

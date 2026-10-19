@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
 import { revalidateTag } from 'next/cache';
+import { revalidateLinksPage } from '@/lib/revalidate';
 import dbConnect from '@/lib/db/connect';
 import LinkCardModel from '@/models/LinkCard';
 import type { LinkCardSection } from '@/models/LinkCard';
-import { requireAdmin, serverError, zodFail } from '@/lib/api-helpers';
+import { requireAdmin, serverError, zodFail, readJson } from '@/lib/api-helpers';
 import { linkCardSchema } from '@/lib/links-page-validation';
 
 function isActiveNow(card: { active: boolean; startsAt?: Date | null; endsAt?: Date | null }) {
@@ -51,7 +52,7 @@ export async function POST(req: Request) {
   if (!check.ok) return check.response;
 
   try {
-    const body = (await req.json()) as unknown;
+    const body = (await readJson(req)) as unknown;
     const result = linkCardSchema.safeParse(body);
     if (!result.success) return zodFail(result.error);
 
@@ -72,6 +73,7 @@ export async function POST(req: Request) {
     };
     const card = await LinkCardModel.create(createData);
     revalidateTag('links-page', 'max');
+    revalidateLinksPage();
     return NextResponse.json(card.toObject(), { status: 201 });
   } catch (error) {
     return serverError('Failed to create card', error);

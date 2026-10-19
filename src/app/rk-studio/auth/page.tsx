@@ -6,6 +6,25 @@ import { useRouter } from 'next/navigation';
 import { FormField, Button } from '@/components/ui';
 import Eyebrow from '@/components/ui/Eyebrow';
 
+const LOGIN_MESSAGES: Record<string, string> = {
+  rate_limited: 'Too many failed attempts for this account from your network. Wait 15 minutes and try again.',
+  invalid_credentials: 'Email or password is incorrect.',
+  credentials: 'Email or password is incorrect.',
+};
+
+/** Only same-site studio paths are allowed as a return target (no open redirect). */
+function safeCallbackUrl(raw: string | null): string {
+  if (!raw) return '/rk-studio';
+  try {
+    const url = new URL(raw, window.location.origin);
+    if (url.origin !== window.location.origin) return '/rk-studio';
+    if (!url.pathname.startsWith('/rk-studio') || url.pathname.startsWith('/rk-studio/auth')) return '/rk-studio';
+    return `${url.pathname}${url.search}${url.hash}`;
+  } catch {
+    return '/rk-studio';
+  }
+}
+
 export default function LoginPage() {
   const router = useRouter();
   const [error, setError] = useState('');
@@ -17,23 +36,27 @@ export default function LoginPage() {
     setLoading(true);
 
     const fd = new FormData(e.currentTarget);
-    const result = await signIn('credentials', {
-      email: fd.get('email') as string,
-      password: fd.get('password') as string,
-      redirect: false,
-    });
+    const callbackUrl = safeCallbackUrl(new URLSearchParams(window.location.search).get('callbackUrl'));
+    let result: Awaited<ReturnType<typeof signIn>> | undefined;
+    try {
+      result = await signIn('credentials', {
+        email: String(fd.get('email') ?? '').trim(),
+        password: String(fd.get('password') ?? ''),
+        redirect: false,
+        callbackUrl,
+      });
+    } catch {
+      setLoading(false);
+      setError('Could not reach the server. Check your connection and try again.');
+      return;
+    }
 
     setLoading(false);
     if (result?.error) {
-      const raw = String(result.error);
-      const msg = raw.includes('locked')
-        ? 'Account temporarily locked. Try again in 2 hours.'
-        : raw.toLowerCase().includes('too many')
-          ? 'Too many login attempts. Wait a minute and try again.'
-          : 'Invalid credentials.';
-      setError(msg);
+      setError(LOGIN_MESSAGES[result.code ?? ''] ?? LOGIN_MESSAGES.invalid_credentials ?? 'Sign in failed.');
     } else {
-      router.push('/rk-studio');
+      router.push(callbackUrl);
+      router.refresh();
     }
   };
 

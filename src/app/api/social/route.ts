@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db/connect';
 import SocialAccount from '@/models/SocialAccount';
 import { socialAccountSchema } from '@/lib/validation';
-import { requireAdmin, zodFail, serverError } from '@/lib/api-helpers';
+import { requireAdmin, zodFail, serverError, readJson } from '@/lib/api-helpers';
 
 export async function GET(req: Request) {
   try {
@@ -32,7 +32,7 @@ export async function POST(req: Request) {
     if (!check.ok) return check.response;
 
     await dbConnect();
-    const body = await req.json() as unknown;
+    const body = await readJson(req) as unknown;
     const result = socialAccountSchema.safeParse(body);
     if (!result.success) return zodFail(result.error);
 

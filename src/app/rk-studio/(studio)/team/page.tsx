@@ -11,6 +11,7 @@ interface Member {
   email: string;
   role: string;
   isActive: boolean;
+  isSelf?: boolean;
   createdAt: string;
 }
 
@@ -32,7 +33,7 @@ export default function AdminTeamPage() {
   const [error, setError] = useState('');
   const [removeError, setRemoveError] = useState('');
 
-  const { register, handleSubmit, reset } = useForm<MemberForm>({ defaultValues: { role: 'editor' } });
+  const { register, handleSubmit, reset } = useForm<MemberForm>({ defaultValues: { role: 'admin' } });
 
   useEffect(() => {
     fetch('/api/team')
@@ -52,7 +53,7 @@ export default function AdminTeamPage() {
     if (res.ok) {
       const member = await res.json() as Member;
       setMembers((prev) => [member, ...prev]);
-      reset({ role: 'editor' });
+      reset({ role: 'admin' });
       setAdding(false);
     } else {
       const err = await res.json() as { error?: string };
@@ -112,11 +113,9 @@ export default function AdminTeamPage() {
             </div>
             <div>
               <label className={labelCls}>Role</label>
-              <select {...register('role')} className={inputCls}>
-                <option value="editor">Editor</option>
-                <option value="viewer">Viewer</option>
-                <option value="admin">Admin</option>
-              </select>
+              {/* rk-studio only supports full admin access for now */}
+              <input value="Admin (full access)" readOnly className={`${inputCls} opacity-70 cursor-not-allowed`} />
+              <input type="hidden" {...register('role')} />
             </div>
             <div>
               <label className={labelCls}>Password *</label>
@@ -128,7 +127,7 @@ export default function AdminTeamPage() {
             <button type="submit" disabled={saving} className="px-4 py-2 bg-matrix text-bg-0 text-sm font-semibold rounded-[var(--radius-md)] hover:bg-matrix/90 disabled:opacity-40 transition-colors duration-[var(--duration-fast)]">
               {saving ? 'Adding...' : 'Add'}
             </button>
-            <button type="button" onClick={() => { setAdding(false); setError(''); reset({ role: 'editor' }); }} className="px-4 py-2 glass border border-border text-text-1 text-sm rounded-[var(--radius-md)] hover:border-border-hover transition-colors duration-[var(--duration-fast)]">
+            <button type="button" onClick={() => { setAdding(false); setError(''); reset({ role: 'admin' }); }} className="px-4 py-2 glass border border-border text-text-1 text-sm rounded-[var(--radius-md)] hover:border-border-hover transition-colors duration-[var(--duration-fast)]">
               Cancel
             </button>
           </div>
@@ -159,10 +158,14 @@ export default function AdminTeamPage() {
                   <td className="px-4 py-3 text-text-2 text-xs">{m.email}</td>
                   <td className="px-4 py-3">{roleBadge(m.role)}</td>
                   <td className="px-4 py-3">
-                    <InlineDeleteConfirm
-                      label={`Remove ${m.name}`}
-                      onConfirm={() => void removeMember(m._id)}
-                    />
+                    {m.isSelf ? (
+                      <span className="font-mono text-[10px] text-text-2">you</span>
+                    ) : (
+                      <InlineDeleteConfirm
+                        label={`Remove ${m.name}`}
+                        onConfirm={() => void removeMember(m._id)}
+                      />
+                    )}
                   </td>
                 </tr>
               ))}

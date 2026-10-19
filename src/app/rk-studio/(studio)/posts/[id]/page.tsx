@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, use, useRef, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { ArrowLeft, Sparkles, CheckCircle2, Clock } from 'lucide-react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
@@ -67,12 +67,18 @@ export default function PostEditorPage({ params }: { params: Promise<{ id: strin
   const { id } = use(params);
   const isNew = id === 'new';
   const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const [form, setForm] = useState<PostForm>(EMPTY);
+  // New posts can be prefilled from AI Tools (?title=...)
+  const [form, setForm] = useState<PostForm>(() => {
+    const title = isNew ? (searchParams.get('title') ?? '').slice(0, 100) : '';
+    return title ? { ...EMPTY, title, slug: slugify(title) } : EMPTY;
+  });
   const [loadedPost, setLoadedPost] = useState<{ updatedAt?: string; _id?: string } | null>(null);
   const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
-  const [saveState, setSaveState] = useState<SaveState>('idle');
+  // ?saved=1: arrived here from "Save draft" on a new post
+  const [saveState, setSaveState] = useState<SaveState>(() => (searchParams.get('saved') === '1' ? 'saved' : 'idle'));
   const [error, setError] = useState('');
   const [aiOpen, setAiOpen] = useState(false);
   const [toast, setToast] = useState<Toast | null>(null);
@@ -82,6 +88,14 @@ export default function PostEditorPage({ params }: { params: Promise<{ id: strin
   const currentIdRef = useRef<string>(id);
 
   useEffect(() => { currentIdRef.current = id; }, [id]);
+
+  // Fade the "Saved" badge carried over from the first save, and drop the query flag
+  useEffect(() => {
+    if (searchParams.get('saved') !== '1') return;
+    window.history.replaceState(null, '', window.location.pathname);
+    const t = setTimeout(() => setSaveState((s) => (s === 'saved' ? 'idle' : s)), 2500);
+    return () => clearTimeout(t);
+  }, [searchParams]);
 
   useEffect(() => {
     if (isNew) return;
@@ -146,19 +160,21 @@ export default function PostEditorPage({ params }: { params: Promise<{ id: strin
   function buildBody(f: PostForm, statusOverride?: string) {
     return {
       title: f.title,
-      slug: f.slug,
+      // Arabic-only titles slugify to '': omit it and let the server derive one
+      slug: f.slug.trim() || undefined,
       language: f.language,
       status: statusOverride ?? f.status,
-      category: f.category || undefined,
-      excerpt: f.excerpt || undefined,
+      // '' clears the field on the server
+      category: f.category,
+      excerpt: f.excerpt,
       content: f.content,
-      featuredImage: f.featuredImage || undefined,
+      featuredImage: f.featuredImage,
       tags: f.tags ? f.tags.split(',').map((t) => t.trim()).filter(Boolean) : [],
       readTime: parseInt(f.readTime) || calcReadTime(f.content, f.language),
     };
   }
 
-  /** Shared save logic — returns the saved post ID or null on failure */
+  /** Shared save logic: returns the saved post ID or null on failure */
   const savePost = async (statusOverride?: string): Promise<string | null> => {
     const body = buildBody(form, statusOverride);
     const res = await fetch(isNew ? '/api/posts' : `/api/posts/${id}`, {
@@ -171,8 +187,11 @@ export default function PostEditorPage({ params }: { params: Promise<{ id: strin
       setError(err.error ?? 'Save failed.');
       return null;
     }
-    const saved = await res.json() as { _id: string };
-    savedFormRef.current = { ...form };
+    const saved = await res.json() as { _id: string; slug?: string };
+    // Keep the slug the server derived (empty or Arabic titles)
+    const next = saved.slug && !form.slug.trim() ? { ...form, slug: saved.slug } : form;
+    if (next !== form) setForm(next);
+    savedFormRef.current = { ...next };
     setSaveState('saved');
     setTimeout(() => setSaveState('idle'), 2500);
     return saved._id;
@@ -181,8 +200,10 @@ export default function PostEditorPage({ params }: { params: Promise<{ id: strin
   const handleSaveDraft = async () => {
     setSaving(true);
     setError('');
-    await savePost();
+    const savedId = await savePost();
     setSaving(false);
+    // A new post now exists: move to its URL so later saves update it instead of creating copies
+    if (isNew && savedId) router.replace(`/rk-studio/posts/${savedId}?saved=1`);
   };
 
   const handlePublish = async () => {
@@ -223,16 +244,16 @@ export default function PostEditorPage({ params }: { params: Promise<{ id: strin
         if (frOk && arOk) {
           setToast({ state: 'done', message: '✓ Published in EN, FR, AR' });
         } else if (!frOk && !arOk) {
-          setToast({ state: 'partial', message: 'Published in EN. Translations failed — retry in the Translations section below' });
+          setToast({ state: 'partial', message: 'Published in EN. Translations failed. Retry in the Translations section below' });
         } else {
           const failed = !frOk ? 'FR' : 'AR';
-          setToast({ state: 'partial', message: `Published in EN. ${failed} translation failed — retry in admin` });
+          setToast({ state: 'partial', message: `Published in EN. ${failed} translation failed. Retry in the Translations section below` });
         }
 
         setTranslationsKey((k) => k + 1);
         setTimeout(() => setToast(null), 7000);
       } catch {
-        setToast({ state: 'partial', message: 'Published in EN. Translation error — retry in the Translations section below' });
+        setToast({ state: 'partial', message: 'Published in EN. Translation error. Retry in the Translations section below' });
         setTimeout(() => setToast(null), 7000);
       }
     } else if (!isPublishing) {
@@ -241,7 +262,7 @@ export default function PostEditorPage({ params }: { params: Promise<{ id: strin
 
     // For new posts: navigate after translations are done
     if (isNew) {
-      router.replace(`/rk-studio/posts/${savedId}`);
+      router.replace(`/rk-studio/posts/${savedId}?saved=1`);
     }
 
     setSaving(false);
@@ -362,7 +383,7 @@ export default function PostEditorPage({ params }: { params: Promise<{ id: strin
           <div>
             <label className={labelCls}>Category</label>
             <select value={form.category} onChange={set('category')} className={selectCls}>
-              <option value="">— None —</option>
+              <option value="">None</option>
               {BLOG_CATEGORIES.map((c) => (
                 <option key={c.value} value={c.value}>{c.label}</option>
               ))}
@@ -426,7 +447,7 @@ export default function PostEditorPage({ params }: { params: Promise<{ id: strin
           </div>
         </div>
 
-        {/* Translations section — only for EN posts */}
+        {/* Translations section: only for EN posts */}
         {showTranslations && (
           <TranslationsSection
             postId={id}

@@ -4,7 +4,8 @@ import Post from '@/models/Post';
 import { postSchema } from '@/lib/validation';
 import { POST_STATUSES } from '@/lib/constants';
 import DOMPurify from 'isomorphic-dompurify';
-import { requireAdmin, zodFail, serverError, generateSlug, escapeRegex } from '@/lib/api-helpers';
+import { revalidateBlog } from '@/lib/revalidate';
+import { requireAdmin, zodFail, serverError, generateSlug, escapeRegex, readJson } from '@/lib/api-helpers';
 
 export async function GET(req: Request) {
   try {
@@ -64,16 +65,21 @@ export async function POST(req: Request) {
     if (!check.ok) return check.response;
 
     await dbConnect();
-    const body = await req.json() as unknown;
+    const body = await readJson(req) as unknown;
     const result = postSchema.safeParse(body);
     if (!result.success) return zodFail(result.error);
 
-    const data = result.data;
+    // Empty optional fields are simply not stored ('' would fail the category enum)
+    const { category, ...rest } = result.data;
+    const data = { ...rest, ...(category ? { category } : {}) };
     if (data.content) data.content = DOMPurify.sanitize(data.content);
-    // Arabic-only titles slugify to '' — fall back to a timestamped slug
+    if (data.excerpt === '') delete data.excerpt;
+    if (data.featuredImage === '') delete data.featuredImage;
+    // Arabic-only titles slugify to '': fall back to a timestamped slug
     if (!data.slug && data.title) data.slug = generateSlug(data.title) || `post-${Date.now().toString(36)}`;
 
     const post = await Post.create({ ...data, author: check.session.user.id });
+    revalidateBlog();
     return NextResponse.json(post, { status: 201 });
   } catch (error) {
     if ((error as { code?: number })?.code === 11000) {

@@ -4,7 +4,11 @@ import Post from '@/models/Post';
 import MediaFileModel from '@/models/MediaFile';
 import { postSchema } from '@/lib/validation';
 import DOMPurify from 'isomorphic-dompurify';
-import { requireAdmin, zodFail, serverError } from '@/lib/api-helpers';
+import { requireAdmin, zodFail, serverError, readJson } from '@/lib/api-helpers';
+import { revalidateBlog } from '@/lib/revalidate';
+
+/** Fields the editor may clear by sending '' (answered with $unset) */
+const CLEARABLE = ['excerpt', 'category', 'featuredImage'] as const;
 
 export async function GET(
   _req: Request,
@@ -20,6 +24,12 @@ export async function GET(
 
     if (!post) {
       return NextResponse.json({ error: 'Post not found' }, { status: 404 });
+    }
+
+    // Drafts are only visible to admins; everyone else gets the same 404 as a missing post
+    if (post.status !== 'published') {
+      const check = await requireAdmin();
+      if (!check.ok) return NextResponse.json({ error: 'Post not found' }, { status: 404 });
     }
 
     // View counting is handled by the client `ViewTracker` hitting
@@ -43,18 +53,38 @@ export async function PATCH(
 
     const { id } = await params;
     await dbConnect();
-    const body = await req.json() as unknown;
+    const body = await readJson(req);
     const result = postSchema.partial().safeParse(body);
     if (!result.success) return zodFail(result.error);
 
-    const data = result.data;
-    if (data.content) data.content = DOMPurify.sanitize(data.content);
+    const data: Record<string, unknown> = { ...result.data };
+    if (typeof data.content === 'string') data.content = DOMPurify.sanitize(data.content);
 
-    const post = await Post.findByIdAndUpdate(id, data, { new: true, runValidators: true });
+    const unset: Record<string, 1> = {};
+    for (const field of CLEARABLE) {
+      if (data[field] === '') {
+        delete data[field];
+        unset[field] = 1;
+      }
+    }
+
+    const update: Record<string, unknown> = { $set: data };
+    if (Object.keys(unset).length > 0) update.$unset = unset;
+
+    const post = await Post.findByIdAndUpdate(id, update, { new: true, runValidators: true });
     if (!post) return NextResponse.json({ error: 'Post not found' }, { status: 404 });
 
+    // A status change on a source post applies to its FR/AR translations too
+    if (result.data.status && !post.translated_from) {
+      await Post.updateMany({ translated_from: post._id }, { $set: { status: result.data.status } });
+    }
+
+    revalidateBlog();
     return NextResponse.json(post);
   } catch (error) {
+    if ((error as { code?: number })?.code === 11000) {
+      return NextResponse.json({ error: 'A post with this slug already exists in this language' }, { status: 409 });
+    }
     return serverError('Failed to update post', error);
   }
 }
@@ -73,11 +103,18 @@ export async function DELETE(
 
     if (!post) return NextResponse.json({ error: 'Post not found' }, { status: 404 });
 
-    // Pull this post's id from every media file's `usedIn` so deletion isn't
-    // blocked later by stale references.
-    await MediaFileModel.updateMany({ usedIn: id }, { $pull: { usedIn: id } });
+    // Deleting a source post removes its translations as well
+    const translations = await Post.find({ translated_from: post._id }).select('_id').lean();
+    const translationIds = translations.map((t) => String(t._id));
+    if (translationIds.length > 0) await Post.deleteMany({ _id: { $in: translationIds } });
 
-    return NextResponse.json({ message: 'Post deleted' });
+    // Pull these ids from every media file's `usedIn` so deletion isn't
+    // blocked later by stale references.
+    const ids = [id, ...translationIds];
+    await MediaFileModel.updateMany({ usedIn: { $in: ids } }, { $pull: { usedIn: { $in: ids } } });
+
+    revalidateBlog();
+    return NextResponse.json({ message: 'Post deleted', translationsDeleted: translationIds.length });
   } catch (error) {
     return serverError('Failed to delete post', error);
   }

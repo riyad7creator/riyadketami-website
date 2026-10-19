@@ -2,6 +2,7 @@
 
 import { useState, useRef, useCallback } from 'react';
 import dynamic from 'next/dynamic';
+import DOMPurify from 'isomorphic-dompurify';
 import { CheckCircle2, AlertTriangle, XCircle, Edit3, RefreshCw, ExternalLink, Loader2, ChevronDown, ChevronUp, Save } from 'lucide-react';
 
 const TiptapEditor = dynamic(() => import('./TiptapEditor'), { ssr: false });
@@ -427,7 +428,7 @@ export default function TranslationCard({ lang, enPost, translation, onRefresh }
               ref={leftRef}
               onScroll={syncLeft}
               className="overflow-y-auto border-r border-border px-4 py-3 prose prose-invert prose-sm max-w-none prose-headings:font-display prose-headings:text-text-0 prose-p:text-text-1 prose-a:text-matrix prose-code:text-matrix"
-              dangerouslySetInnerHTML={{ __html: enPost.content }}
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(enPost.content ?? '') }}
             />
 
             {/* Translation column */}
@@ -446,7 +447,7 @@ export default function TranslationCard({ lang, enPost, translation, onRefresh }
               ) : (
                 <div
                   className="px-4 py-3 prose prose-invert prose-sm max-w-none prose-headings:font-display prose-headings:text-text-0 prose-p:text-text-1 prose-a:text-matrix prose-code:text-matrix"
-                  dangerouslySetInnerHTML={{ __html: activeData.content }}
+                  dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(activeData.content ?? '') }}
                 />
               )}
             </div>

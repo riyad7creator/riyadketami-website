@@ -60,20 +60,27 @@ function CopyButton({ text }: { text: string }) {
 }
 
 // ── Tool: Alt text generator ─────────────────────────────────────────────────
+interface AltTextResult {
+  updated: number;
+  total: number;
+  failed: number;
+  failures: { id: string; name: string; error: string }[];
+}
+
 function AltTextTool() {
   const { toast } = useToast();
   const [running, setRunning] = useState(false);
-  const [result, setResult] = useState<{ updated: number; total: number } | null>(null);
+  const [result, setResult] = useState<AltTextResult | null>(null);
 
   const run = async () => {
     setRunning(true);
     setResult(null);
     try {
       const res = await fetch('/api/admin/ai/alt-text', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) });
-      const data = await res.json() as { updated: number; total: number; error?: string };
+      const data = await res.json() as AltTextResult & { error?: string };
+      if (Array.isArray(data.failures)) setResult(data);
       if (!res.ok) throw new Error(data.error ?? 'Failed');
-      setResult(data);
-      toast(`Updated ${data.updated} images`, 'success');
+      toast(`Updated ${data.updated} images${data.failed ? `, ${data.failed} failed` : ''}`, data.failed ? 'error' : 'success');
     } catch (e) {
       toast(e instanceof Error ? e.message : 'Failed', 'error');
     } finally {
@@ -89,7 +96,12 @@ function AltTextTool() {
         {running ? 'Generating…' : 'Run on missing images'}
       </button>
       {result && (
-        <p className="text-sm text-matrix">Updated {result.updated} of {result.total} images.</p>
+        <div className="space-y-1">
+          <p className="text-sm text-matrix">Updated {result.updated} of {result.total} images.</p>
+          {result.failures.map((f) => (
+            <p key={f.id} className="text-xs text-danger">{f.name}: {f.error}</p>
+          ))}
+        </div>
       )}
     </div>
   );

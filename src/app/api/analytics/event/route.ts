@@ -3,6 +3,7 @@ import { z } from 'zod';
 import dbConnect from '@/lib/db/connect';
 import AnalyticsEvent from '@/models/AnalyticsEvent';
 import { rateLimit } from '@/lib/rate-limit';
+import { readJson, InvalidJsonError, badJson } from '@/lib/api-helpers';
 
 const schema = z.object({
   type: z.enum(['view', 'click']),
@@ -13,11 +14,11 @@ const schema = z.object({
 
 /** POST /api/analytics/event — public, rate-limited event ingestion */
 export async function POST(req: Request) {
-  const limited = await rateLimit(req, 10, 60_000);
+  const limited = await rateLimit(req, 10, 60_000, 'analytics');
   if (limited) return limited;
 
   try {
-    const body = await req.json() as unknown;
+    const body = await readJson(req) as unknown;
     const result = schema.safeParse(body);
     if (!result.success) return NextResponse.json({ ok: false }, { status: 400 });
 
@@ -30,7 +31,8 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ ok: true }, { status: 201 });
-  } catch {
+  } catch (err) {
+    if (err instanceof InvalidJsonError) return badJson();
     return NextResponse.json({ ok: false }, { status: 500 });
   }
 }

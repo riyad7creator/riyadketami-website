@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
 import { revalidateTag } from 'next/cache';
+import { revalidateLinksPage } from '@/lib/revalidate';
 import dbConnect from '@/lib/db/connect';
 import LatestSourceModel from '@/models/LatestSource';
-import { requireAdmin, serverError, zodFail } from '@/lib/api-helpers';
+import { requireAdmin, serverError, zodFail, readJson } from '@/lib/api-helpers';
 import { latestSourceSchema } from '@/lib/links-page-validation';
 
 export async function GET(req: Request) {
@@ -29,7 +30,7 @@ export async function POST(req: Request) {
   if (!check.ok) return check.response;
 
   try {
-    const body = (await req.json()) as unknown;
+    const body = (await readJson(req)) as unknown;
     const result = latestSourceSchema.safeParse(body);
     if (!result.success) return zodFail(result.error);
 
@@ -39,6 +40,7 @@ export async function POST(req: Request) {
 
     const source = await LatestSourceModel.create({ ...result.data, order });
     revalidateTag('links-page', 'max');
+    revalidateLinksPage();
     return NextResponse.json(source.toObject(), { status: 201 });
   } catch (error) {
     return serverError('Failed to create source', error);

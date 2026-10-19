@@ -1,6 +1,7 @@
 import dbConnect from '@/lib/db/connect';
 import Subscriber from '@/models/Subscriber';
 import { requireAdmin, serverError } from '@/lib/api-helpers';
+import { csvRow } from '@/lib/csv';
 
 export async function GET(req: Request) {
   const check = await requireAdmin();
@@ -28,7 +29,7 @@ export async function GET(req: Request) {
       subscribers
         .map(
           (s) =>
-            `${s.email},${s.preferredLanguage ?? ''},${new Date(s.createdAt).toISOString().slice(0, 10)},${s.unsubscribed ? 'unsubscribed' : 'active'}`
+            csvRow([s.email, s.preferredLanguage ?? '', new Date(s.createdAt).toISOString().slice(0, 10), s.unsubscribed ? 'unsubscribed' : 'active'])
         )
         .join('\n');
 

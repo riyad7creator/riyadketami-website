@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react';
 import { X, Sparkles, Send, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import DOMPurify from 'isomorphic-dompurify';
 
 interface AIWriterPanelProps {
   open: boolean;
@@ -84,7 +85,7 @@ export default function AIWriterPanel({ open, onClose, onInsert, postTitle, lang
 
   const handleInsert = () => {
     if (!output) return;
-    onInsert(output);
+    onInsert(DOMPurify.sanitize(output));
     setOutput('');
     setPrompt('');
     onClose();
@@ -166,7 +167,7 @@ export default function AIWriterPanel({ open, onClose, onInsert, postTitle, lang
                   <span className="text-xs font-medium text-text-2">Preview</span>
                   <div
                     className="min-h-[200px] bg-bg-1 border border-border rounded-[var(--radius-md)] p-4 prose prose-invert prose-sm max-w-none prose-headings:font-display prose-headings:text-text-0 prose-p:text-text-1 prose-a:text-matrix prose-code:text-matrix overflow-y-auto"
-                    dangerouslySetInnerHTML={{ __html: output }}
+                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(output) }}
                   />
                 </div>
               )}

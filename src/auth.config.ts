@@ -1,9 +1,22 @@
 import type { NextAuthConfig } from 'next-auth';
 import type { UserRole } from '@/models/User';
 
+/** Sessions expire after 24h; the user record is re-checked in auth.ts (Node runtime). */
+export const SESSION_MAX_AGE = 24 * 60 * 60;
+
+/**
+ * Edge-safe config shared with middleware. No database access here: middleware
+ * runs on the Edge runtime. The periodic DB re-check of the user lives in the
+ * jwt callback of auth.ts, which only runs on the Node runtime (route handlers,
+ * server components), and requireAdmin() goes through it.
+ */
 export const authConfig = {
   pages: {
     signIn: '/rk-studio/auth',
+  },
+  session: {
+    strategy: 'jwt',
+    maxAge: SESSION_MAX_AGE,
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
@@ -32,6 +45,7 @@ export const authConfig = {
     async jwt({ token, user }) {
       if (user) {
         token.role = user.role;
+        token.checkedAt = Date.now();
       }
       return token;
     },

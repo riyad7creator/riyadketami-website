@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import dbConnect from '@/lib/db/connect';
 import Subscriber from '@/models/Subscriber';
-import { serverError } from '@/lib/api-helpers';
+import { serverError, readJson } from '@/lib/api-helpers';
 import { z } from 'zod';
 
 const patchSchema = z.object({
@@ -20,7 +20,7 @@ export async function PATCH(
 
   try {
     const { id } = await params;
-    const body = await req.json();
+    const body = await readJson(req);
     const parsed = patchSchema.parse(body);
 
     await dbConnect();

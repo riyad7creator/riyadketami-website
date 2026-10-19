@@ -1,10 +1,15 @@
 import { NextResponse } from 'next/server';
+import DOMPurify from 'isomorphic-dompurify';
 import dbConnect from '@/lib/db/connect';
 import Post from '@/models/Post';
-import { requireAdmin, serverError } from '@/lib/api-helpers';
-import { getOpenRouterKey, getModel, logUsage, OPENROUTER_URL } from '@/lib/ai-config';
+import { requireAdmin, serverError, readJson } from '@/lib/api-helpers';
+import { getOpenRouterKey, getModel, checkBudget, openRouterJson } from '@/lib/ai-config';
 
-/** POST /api/admin/ai/newsletter-draft — draft a newsletter from recent posts */
+type Lang = 'en' | 'fr' | 'ar';
+const LANGS: Lang[] = ['en', 'fr', 'ar'];
+const OBJECT_ID = /^[0-9a-fA-F]{24}$/;
+
+/** POST /api/admin/ai/newsletter-draft: draft a newsletter from recent posts */
 export async function POST(req: Request) {
   try {
     const check = await requireAdmin();
@@ -14,30 +19,33 @@ export async function POST(req: Request) {
     if (!apiKey) {
       return NextResponse.json({ error: 'OpenRouter key not configured.' }, { status: 500 });
     }
+    const overBudget = await checkBudget();
+    if (overBudget) return overBudget;
 
-    const body = await req.json() as { postIds?: string[]; language?: string };
-    const language = (body.language ?? 'en') as 'en' | 'fr' | 'ar';
+    const body = await readJson<{ postIds?: unknown; language?: string }>(req);
+    const language: Lang = LANGS.includes(body?.language as Lang) ? (body.language as Lang) : 'en';
+    const postIds = Array.isArray(body?.postIds)
+      ? (body.postIds as unknown[]).filter((id): id is string => typeof id === 'string' && OBJECT_ID.test(id)).slice(0, 10)
+      : [];
 
     await dbConnect();
 
-    let posts;
-    if (body.postIds?.length) {
-      posts = await Post.find({ _id: { $in: body.postIds } }).select('title excerpt slug').lean();
-    } else {
-      posts = await Post.find({ status: 'published', language })
+    const posts = (postIds.length
+      ? await Post.find({ _id: { $in: postIds } }).select('title excerpt slug language').lean()
+      : await Post.find({ status: 'published', language })
         .sort({ createdAt: -1 })
         .limit(3)
-        .select('title excerpt slug')
-        .lean() as Array<{ title: string; excerpt?: string; slug: string }>;
-    }
+        .select('title excerpt slug language')
+        .lean()) as Array<{ title: string; excerpt?: string; slug: string; language?: string }>;
 
     if (posts.length === 0) {
       return NextResponse.json({ error: 'No posts found to draft from.' }, { status: 400 });
     }
 
     const model = await getModel('agents');
-    const postsContext = posts.map((p: { title: string; excerpt?: string; slug: string }) =>
-      `Title: ${p.title}\nExcerpt: ${p.excerpt ?? '(none)'}\nURL: https://ketami.net/blog/${p.slug}`
+    // Public URLs are locale-prefixed: /<lang>/blog/<slug>
+    const postsContext = posts.map((p) =>
+      `Title: ${p.title}\nExcerpt: ${p.excerpt ?? '(none)'}\nURL: https://ketami.net/${p.language ?? language}/blog/${p.slug}`
     ).join('\n\n');
 
     const langLabel = language === 'fr' ? 'French' : language === 'ar' ? 'Arabic' : 'English';
@@ -51,48 +59,21 @@ ${postsContext}
 Return a JSON object with these fields:
 - "subject": email subject line (catchy, under 60 chars)
 - "previewText": email preview text (under 90 chars)
-- "htmlBody": HTML content using only <p>, <h2>, <ul>, <li>, <a>, <strong>, <em> tags. Include brief summaries of each post with links. Close with a short personal note from Riyad. Max 400 words.`;
+- "htmlBody": HTML content using only <p>, <h2>, <ul>, <li>, <a>, <strong>, <em> tags. Include brief summaries of each post with links (use the URLs exactly as given). Close with a short personal note from Riyad. Max 400 words.`;
 
-    const res = await fetch(OPENROUTER_URL, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://ketami.net',
-        'X-Title': 'Riyad Ketami Admin',
-      },
-      body: JSON.stringify({
-        model,
-        stream: false,
-        response_format: { type: 'json_object' },
-        messages: [{ role: 'user', content: userMessage }],
-      }),
-    });
-
-    if (!res.ok) {
-      const text = await res.text();
-      return NextResponse.json({ error: `AI error: ${text}` }, { status: res.status });
-    }
-
-    const data = await res.json() as {
-      choices?: { message?: { content?: string } }[];
-      usage?: { prompt_tokens?: number; completion_tokens?: number };
-    };
-    const raw = data.choices?.[0]?.message?.content ?? '{}';
-
-    logUsage({
+    const result = await openRouterJson<{ subject?: string; previewText?: string; htmlBody?: string }>({
+      apiKey,
       model,
-      promptTokens: data.usage?.prompt_tokens ?? 0,
-      completionTokens: data.usage?.completion_tokens ?? 0,
       route: 'newsletter-draft',
+      messages: [{ role: 'user', content: userMessage }],
     });
+    if (!result.ok) return NextResponse.json({ error: result.error }, { status: result.status });
 
-    let draft: { subject: string; previewText: string; htmlBody: string } = { subject: '', previewText: '', htmlBody: '' };
-    try {
-      draft = JSON.parse(raw) as typeof draft;
-    } catch {
-      return NextResponse.json({ error: 'Failed to parse AI response' }, { status: 500 });
-    }
+    const draft = {
+      subject: String(result.data.subject ?? ''),
+      previewText: String(result.data.previewText ?? ''),
+      htmlBody: DOMPurify.sanitize(String(result.data.htmlBody ?? '')),
+    };
 
     return NextResponse.json({ draft, postsUsed: posts.length });
   } catch (error) {

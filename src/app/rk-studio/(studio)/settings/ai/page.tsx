@@ -3,21 +3,22 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Eye, EyeOff, Loader2, Check, X, Zap, DollarSign, Cpu } from 'lucide-react';
 import { useToast } from '@/components/ui/Toast';
+import { MODEL_OPTIONS, MODEL_PRESETS } from '@/lib/ai-models';
 
-const MODELS = [
-  { id: 'moonshotai/kimi-k2', label: 'Kimi K2 (Moonshot)', tier: 'mid' },
-  { id: 'minimax/minimax-m1-40b', label: 'MiniMax M1 40B', tier: 'mid' },
-  { id: 'meta-llama/llama-3.1-8b-instruct', label: 'Llama 3.1 8B', tier: 'small' },
-  { id: 'google/gemini-flash-1.5', label: 'Gemini Flash 1.5', tier: 'small' },
-  { id: 'anthropic/claude-3.5-haiku', label: 'Claude 3.5 Haiku', tier: 'mid' },
-  { id: 'anthropic/claude-3.5-sonnet', label: 'Claude 3.5 Sonnet', tier: 'large' },
-];
+const MODELS = MODEL_OPTIONS;
 
 const TASK_LABELS: Record<string, string> = {
   ai_model_writing: 'Blog writing',
   ai_model_translation: 'Translation',
   ai_model_alttext: 'Alt-text generation',
   ai_model_agents: 'Agentic tools (SEO, post ideas, newsletter)',
+};
+
+const TASK_PRESETS: Record<string, string> = {
+  ai_model_writing: MODEL_PRESETS.writing,
+  ai_model_translation: MODEL_PRESETS.translation,
+  ai_model_alttext: MODEL_PRESETS.alttext,
+  ai_model_agents: MODEL_PRESETS.agents,
 };
 
 interface Settings {
@@ -28,6 +29,7 @@ interface Settings {
   ai_model_alttext: string | null;
   ai_model_agents: string | null;
   ai_budget_usd: string | null;
+  ai_key_source: 'env' | 'saved' | null;
 }
 
 interface Usage {
@@ -46,10 +48,11 @@ function ModelSelect({ value, onChange }: { value: string; onChange: (v: string)
       onChange={e => onChange(e.target.value)}
       className="w-full bg-bg-0 border border-border rounded-[var(--radius-md)] px-3 py-2 text-sm text-text-0 focus:outline-none focus:border-matrix/50 transition-colors"
     >
-      <option value="">— Use default model —</option>
+      <option value="">Use default model</option>
       {MODELS.map(m => (
-        <option key={m.id} value={m.id}>{m.label} ({m.tier})</option>
+        <option key={m.id} value={m.id}>{m.label} ({m.tier}{m.vision ? ', vision' : ''})</option>
       ))}
+      {value && !MODELS.some(m => m.id === value) && <option value={value}>{value} (saved)</option>}
     </select>
   );
 }
@@ -91,10 +94,11 @@ export default function AISettingsPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ key: keyInput || undefined }),
       });
-      const data = await res.json() as { ok: boolean; modelCount?: number; error?: string };
+      const data = await res.json() as { ok: boolean; source?: string; label?: string | null; error?: string };
+      const from = data.source === 'env' ? 'environment key' : data.source === 'saved' ? 'saved key' : 'typed key';
       setTestResult({
         ok: data.ok,
-        message: data.ok ? `Connected — ${data.modelCount} models available` : data.error ?? 'Connection failed',
+        message: data.ok ? `Connected with the ${from}${data.label ? ` (${data.label})` : ''}` : data.error ?? 'Connection failed',
       });
     } catch {
       setTestResult({ ok: false, message: 'Network error' });
@@ -108,7 +112,7 @@ export default function AISettingsPage() {
     try {
       const body: Record<string, string> = {};
       if (keyInput) body['ai_openrouter_key'] = keyInput;
-      if (settings.ai_default_model) body['ai_default_model'] = settings.ai_default_model;
+      if (settings.ai_default_model !== undefined) body['ai_default_model'] = settings.ai_default_model ?? '';
       if (settings.ai_model_writing !== undefined) body['ai_model_writing'] = settings.ai_model_writing ?? '';
       if (settings.ai_model_translation !== undefined) body['ai_model_translation'] = settings.ai_model_translation ?? '';
       if (settings.ai_model_alttext !== undefined) body['ai_model_alttext'] = settings.ai_model_alttext ?? '';
@@ -140,6 +144,7 @@ export default function AISettingsPage() {
   }
 
   const keyIsSet = settings.ai_openrouter_key === '••••••••';
+  const keySource = settings.ai_key_source ?? null;
 
   return (
     <div className="max-w-2xl space-y-6">
@@ -153,8 +158,10 @@ export default function AISettingsPage() {
         <div className="flex items-center gap-2">
           <Zap size={15} className="text-matrix" />
           <h2 className="font-semibold text-text-0">OpenRouter API Key</h2>
-          {keyIsSet && (
-            <span className="ml-auto text-[11px] font-mono bg-matrix/10 text-matrix px-2 py-0.5 rounded-full">configured</span>
+          {keySource && (
+            <span className="ml-auto text-[11px] font-mono bg-matrix/10 text-matrix px-2 py-0.5 rounded-full">
+              {keySource === 'env' ? 'active: environment (OPENROUTER_API_KEY)' : 'active: saved key'}
+            </span>
           )}
         </div>
 
@@ -164,7 +171,7 @@ export default function AISettingsPage() {
               type={showKey ? 'text' : 'password'}
               value={keyInput}
               onChange={e => setKeyInput(e.target.value)}
-              placeholder={keyIsSet ? 'Enter new key to replace…' : 'sk-or-…'}
+              placeholder={keyIsSet ? 'Enter new key to replace' : 'sk-or-...'}
               className="w-full bg-bg-0 border border-border rounded-[var(--radius-md)] px-3 py-2 pr-9 text-sm text-text-0 placeholder:text-text-2/50 focus:outline-none focus:border-matrix/50 transition-colors font-mono"
             />
             <button
@@ -191,6 +198,11 @@ export default function AISettingsPage() {
           </div>
         )}
 
+        {keySource === 'env' && keyIsSet && (
+          <p className="text-[11px] text-warning">
+            A saved key also exists, but OPENROUTER_API_KEY in the environment takes precedence.
+          </p>
+        )}
         <p className="text-[11px] text-text-2">
           Key is stored encrypted in the database. Get yours at{' '}
           <span className="text-matrix font-mono">openrouter.ai/keys</span>.
@@ -206,7 +218,7 @@ export default function AISettingsPage() {
 
         <div className="space-y-3">
           <div>
-            <label className="block text-xs text-text-2 mb-1.5">Default model (fallback for all tasks)</label>
+            <label className="block text-xs text-text-2 mb-1.5">Default model (fallback for writing, translation and agent tasks)</label>
             <ModelSelect
               value={settings.ai_default_model ?? ''}
               onChange={v => setSettings(s => ({ ...s, ai_default_model: v }))}
@@ -215,7 +227,10 @@ export default function AISettingsPage() {
 
           {Object.entries(TASK_LABELS).map(([key, label]) => (
             <div key={key}>
-              <label className="block text-xs text-text-2 mb-1.5">{label}</label>
+              <label className="block text-xs text-text-2 mb-1.5">
+                {label}
+                <span className="ms-2 font-mono text-[10px] text-text-2/70">preset: {TASK_PRESETS[key]}</span>
+              </label>
               <ModelSelect
                 value={(settings as Record<string, string | null>)[key] ?? ''}
                 onChange={v => setSettings(s => ({ ...s, [key]: v || null }))}
@@ -271,7 +286,7 @@ export default function AISettingsPage() {
               {usage.byModel.map(m => (
                 <div key={m._id} className="flex items-center justify-between text-xs">
                   <span className="text-text-2 font-mono truncate max-w-[60%]">{m._id}</span>
-                  <span className="text-text-1">{m.calls} calls — ${m.cost.toFixed(4)}</span>
+                  <span className="text-text-1">{m.calls} calls · ${m.cost.toFixed(4)}</span>
                 </div>
               ))}
             </div>

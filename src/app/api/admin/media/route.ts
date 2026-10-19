@@ -3,6 +3,7 @@ import dbConnect from '@/lib/db/connect';
 import MediaFileModel from '@/models/MediaFile';
 import { requireAdmin, serverError, escapeRegex } from '@/lib/api-helpers';
 import type { MediaFolder, MediaType } from '@/types/media';
+import { detectMimeType, isMediaFolder, sanitizeSvg } from '@/lib/file-validation';
 
 const MAX_IMAGE_SIZE = 4 * 1024 * 1024;   // 4 MB for images
 const MAX_BINARY_SIZE = 50 * 1024 * 1024; // 50 MB for video/Lottie
@@ -21,7 +22,7 @@ function detectMediaType(mimeType: string): MediaType {
 
 async function isLottieJson(buffer: Buffer): Promise<boolean> {
   try {
-    const text = buffer.toString('utf8', 0, Math.min(buffer.length, 2048));
+    const text = buffer.toString('utf8');
     const parsed = JSON.parse(text) as Record<string, unknown>;
     // Lottie files have a version field "v" and a "layers" array
     return typeof parsed.v !== 'undefined' && Array.isArray(parsed.layers);
@@ -30,7 +31,7 @@ async function isLottieJson(buffer: Buffer): Promise<boolean> {
   }
 }
 
-/** GET /api/admin/media — paginated list OR ?stats=true for aggregated counts */
+/** GET /api/admin/media: paginated list OR ?stats=true for aggregated counts */
 export async function GET(req: Request) {
   try {
     const check = await requireAdmin();
@@ -60,9 +61,13 @@ export async function GET(req: Request) {
     }
 
     // Normal paginated list
-    const folder = searchParams.get('folder') as MediaFolder | null;
-    const page = Math.max(1, parseInt(searchParams.get('page') ?? '1', 10));
-    const limit = Math.min(100, Math.max(1, parseInt(searchParams.get('limit') ?? '50', 10)));
+    const folderParam = searchParams.get('folder');
+    if (folderParam && !isMediaFolder(folderParam)) {
+      return NextResponse.json({ error: 'Unknown folder' }, { status: 400 });
+    }
+    const folder = folderParam as MediaFolder | null;
+    const page = Math.max(1, parseInt(searchParams.get('page') ?? '1', 10) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(searchParams.get('limit') ?? '50', 10) || 50));
     const search = searchParams.get('search')?.trim();
 
     const query: Record<string, unknown> = {};
@@ -86,16 +91,17 @@ export async function GET(req: Request) {
   }
 }
 
-/** POST /api/admin/media — upload file + record metadata in DB */
+/** POST /api/admin/media: upload file + record metadata in DB */
 export async function POST(req: Request) {
   try {
     const check = await requireAdmin();
     if (!check.ok) return check.response;
 
-    const formData = await req.formData();
-    const file = formData.get('file') as File | null;
+    const formData = await req.formData().catch(() => null);
+    if (!formData) return NextResponse.json({ error: 'Expected multipart form data' }, { status: 400 });
+    const file = formData.get('file');
 
-    if (!file) return NextResponse.json({ error: 'No file provided' }, { status: 400 });
+    if (!(file instanceof File)) return NextResponse.json({ error: 'No file provided' }, { status: 400 });
     if (!ALLOWED_TYPES.includes(file.type)) {
       return NextResponse.json({ error: `Unsupported file type: ${file.type}` }, { status: 400 });
     }
@@ -110,16 +116,37 @@ export async function POST(req: Request) {
       );
     }
 
-    const folder = (formData.get('folder') as MediaFolder | null) ?? 'uncategorized';
-    const altText = (formData.get('altText') as string | null) ?? '';
-    const width = formData.get('width') ? parseInt(formData.get('width') as string, 10) : undefined;
-    const height = formData.get('height') ? parseInt(formData.get('height') as string, 10) : undefined;
+    const rawFolder = formData.get('folder');
+    if (rawFolder !== null && !isMediaFolder(rawFolder)) {
+      return NextResponse.json({ error: `Unknown folder: ${String(rawFolder).slice(0, 40)}` }, { status: 400 });
+    }
+    const folder: MediaFolder = isMediaFolder(rawFolder) ? rawFolder : 'uncategorized';
+    const altText = String(formData.get('altText') ?? '').slice(0, 300);
+    const toDim = (v: FormDataEntryValue | null) => {
+      const n = v ? parseInt(String(v), 10) : NaN;
+      return Number.isFinite(n) && n > 0 ? n : undefined;
+    };
+    const width = toDim(formData.get('width'));
+    const height = toDim(formData.get('height'));
 
-    const buffer = Buffer.from(await file.arrayBuffer());
+    let buffer = Buffer.from(await file.arrayBuffer());
+
+    // Magic bytes must agree with the declared type (no renamed HTML/scripts)
+    const detected = detectMimeType(buffer);
+    if (detected !== file.type) {
+      return NextResponse.json({ error: 'File content does not match its declared type.' }, { status: 400 });
+    }
 
     // For application/json, verify it's actually a Lottie file
     if (file.type === LOTTIE_TYPE && !(await isLottieJson(buffer))) {
       return NextResponse.json({ error: 'JSON file does not appear to be a valid Lottie animation' }, { status: 400 });
+    }
+
+    // SVG: refuse active content, store the sanitized markup
+    if (file.type === 'image/svg+xml') {
+      const clean = sanitizeSvg(buffer);
+      if (!clean.ok) return NextResponse.json({ error: clean.error }, { status: 400 });
+      buffer = Buffer.from(clean.svg, 'utf8');
     }
 
     const mediaType = detectMediaType(file.type);
@@ -138,7 +165,7 @@ export async function POST(req: Request) {
       url,
       storagePath,
       mimeType: file.type,
-      sizeBytes: file.size,
+      sizeBytes: buffer.length,
       width,
       height,
       folder,

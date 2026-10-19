@@ -2,8 +2,9 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import dbConnect from '@/lib/db/connect';
 import Post from '@/models/Post';
-import { requireAdmin, serverError, zodFail } from '@/lib/api-helpers';
+import { requireAdmin, serverError, zodFail, readJson } from '@/lib/api-helpers';
 import DOMPurify from 'isomorphic-dompurify';
+import { revalidateBlog } from '@/lib/revalidate';
 
 const patchSchema = z.object({
   title: z.string().min(1).max(100).optional(),
@@ -26,7 +27,7 @@ export async function PATCH(
     }
     await dbConnect();
 
-    const parsed = patchSchema.safeParse(await req.json());
+    const parsed = patchSchema.safeParse(await readJson(req));
     if (!parsed.success) return zodFail(parsed.error);
     const body = parsed.data;
 
@@ -38,6 +39,7 @@ export async function PATCH(
     const post = await Post.findByIdAndUpdate(id, update, { new: true, runValidators: true });
     if (!post) return NextResponse.json({ error: 'Translation not found' }, { status: 404 });
 
+    revalidateBlog();
     return NextResponse.json(post);
   } catch (error) {
     return serverError('Failed to save translation edits', error);

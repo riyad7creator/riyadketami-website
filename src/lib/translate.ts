@@ -1,14 +1,12 @@
 import { BRAND } from '@/lib/brand';
-
-const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
-const MODEL = 'google/gemini-flash-2.5';
+import { getOpenRouterKey, getModel, openRouterJson } from '@/lib/ai-config';
 
 // Identity comes from BRAND so the prompt follows the title swap (brief §1).
 const WHO = `${BRAND.name} (${BRAND.title}, ${BRAND.proofLine}), based in ${BRAND.location.city}, ${BRAND.location.country}`;
 
 const INSTRUCTIONS: Record<'fr' | 'ar', string> = {
-  fr: `You are translating a blog post for ${WHO}. Translate to French. Use sharp, direct, modern French as written by a North African tech entrepreneur — NOT academic or formal Parisian French. Keep all HTML tags exactly as-is. Only translate visible text content. Preserve formatting.`,
-  ar: `You are translating a blog post for ${WHO}. Translate to Arabic. Use accessible Modern Standard Arabic (MSA) with Maghrebi-friendly tone — direct, practical, modern. NOT formal Gulf Arabic. Keep all HTML tags exactly as-is. Only translate visible text content. The output will be displayed RTL. Preserve formatting.`,
+  fr: `You are translating a blog post for ${WHO}. Translate to French. Use sharp, direct, modern French as written by a North African tech entrepreneur, NOT academic or formal Parisian French. Keep all HTML tags exactly as-is. Only translate visible text content. Preserve formatting.`,
+  ar: `You are translating a blog post for ${WHO}. Translate to Arabic. Use accessible Modern Standard Arabic (MSA) with Maghrebi-friendly tone: direct, practical, modern. NOT formal Gulf Arabic. Keep all HTML tags exactly as-is. Only translate visible text content. The output will be displayed RTL. Preserve formatting.`,
 };
 
 export async function translatePostContent({
@@ -22,43 +20,32 @@ export async function translatePostContent({
   content: string;
   targetLang: 'fr' | 'ar';
 }): Promise<{ title: string; excerpt: string; content: string }> {
-  const apiKey = process.env.OPENROUTER_API_KEY;
-  if (!apiKey) throw new Error('OPENROUTER_API_KEY is not set');
+  // Same key resolution (env first, then the key saved in Settings > AI) and
+  // the same configured translation model as the rest of the studio.
+  const apiKey = await getOpenRouterKey();
+  if (!apiKey) throw new Error('OpenRouter key not configured. Set it in Settings > AI.');
+  const model = await getModel('translation');
 
-  const response = await fetch(OPENROUTER_URL, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-      'HTTP-Referer': 'https://ketami.net',
-      'X-Title': 'Riyad Ketami Blog',
-    },
-    body: JSON.stringify({
-      model: MODEL,
-      temperature: 0.2,
-      messages: [
-        { role: 'system', content: INSTRUCTIONS[targetLang] },
-        {
-          role: 'user',
-          content: `Translate the following. Return a JSON object with keys: title, excerpt, content. No explanation, just the JSON.\n\nTitle: ${title}\n\nExcerpt: ${excerpt}\n\nContent HTML:\n${content}`,
-        },
-      ],
-    }),
+  const result = await openRouterJson<{ title?: unknown; excerpt?: unknown; content?: unknown }>({
+    apiKey,
+    model,
+    route: 'translate-post',
+    temperature: 0.2,
+    messages: [
+      { role: 'system', content: INSTRUCTIONS[targetLang] },
+      {
+        role: 'user',
+        content: `Translate the following. Return a JSON object with keys: title, excerpt, content. No explanation, just the JSON.\n\nTitle: ${title}\n\nExcerpt: ${excerpt}\n\nContent HTML:\n${content}`,
+      },
+    ],
   });
+  if (!result.ok) throw new Error(result.error);
 
-  if (!response.ok) {
-    const text = await response.text().catch(() => '');
-    throw new Error(`OpenRouter error ${response.status}: ${text}`);
-  }
-
-  const data = await response.json() as { choices?: { message?: { content?: string } }[] };
-  const raw = (data.choices?.[0]?.message?.content ?? '').trim();
-
-  // Strip markdown code fences if present
-  const cleaned = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
-
-  const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) throw new Error('Invalid translation response — no JSON found');
-
-  return JSON.parse(jsonMatch[0]) as { title: string; excerpt: string; content: string };
+  const out = {
+    title: typeof result.data.title === 'string' ? result.data.title.trim().slice(0, 100) : '',
+    excerpt: typeof result.data.excerpt === 'string' ? result.data.excerpt.trim().slice(0, 300) : '',
+    content: typeof result.data.content === 'string' ? result.data.content : '',
+  };
+  if (!out.title || !out.content) throw new Error('Invalid translation response: title or content missing');
+  return out;
 }

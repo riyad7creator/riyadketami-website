@@ -1,5 +1,5 @@
-import { requireAdmin, serverError } from '@/lib/api-helpers';
-import { getOpenRouterKey, getModel, logUsage, OPENROUTER_URL } from '@/lib/ai-config';
+import { requireAdmin, serverError, readJson } from '@/lib/api-helpers';
+import { getOpenRouterKey, getModel, checkBudget, openRouterJson } from '@/lib/ai-config';
 
 const LANG_LABELS: Record<string, string> = {
   fr: 'French',
@@ -14,28 +14,34 @@ export async function POST(req: Request) {
 
     const apiKey = await getOpenRouterKey();
     if (!apiKey) {
-      return new Response(JSON.stringify({ error: 'OpenRouter API key is not configured. Set it in Admin → Settings → AI.' }), {
+      return new Response(JSON.stringify({ error: 'OpenRouter API key is not configured. Set it in Admin > Settings > AI.' }), {
         status: 500,
         headers: { 'Content-Type': 'application/json' },
       });
     }
 
-    const body = await req.json() as { content: string; targetLanguage: string; title?: string; excerpt?: string };
-    const { content, targetLanguage, title, excerpt } = body;
+    const overBudget = await checkBudget();
+    if (overBudget) return overBudget;
 
-    if (!content || !targetLanguage) {
+    const body = await readJson<{ content?: unknown; targetLanguage?: unknown; title?: unknown; excerpt?: unknown }>(req);
+    const content = typeof body?.content === 'string' ? body.content : '';
+    const targetLanguage = typeof body?.targetLanguage === 'string' ? body.targetLanguage : '';
+    const title = typeof body?.title === 'string' ? body.title : undefined;
+    const excerpt = typeof body?.excerpt === 'string' ? body.excerpt : undefined;
+
+    if (!content || !LANG_LABELS[targetLanguage]) {
       return new Response(JSON.stringify({ error: 'content and targetLanguage are required' }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' },
       });
     }
 
-    const langLabel = LANG_LABELS[targetLanguage] ?? targetLanguage;
+    const langLabel = LANG_LABELS[targetLanguage];
     const model = await getModel('translation');
 
     const systemPrompt = `You are a professional translator specializing in blog content.
 Translate the provided HTML blog post content into ${langLabel}.
-Preserve all HTML tags exactly as they appear — only translate the text content between tags.
+Preserve all HTML tags exactly as they appear; only translate the text content between tags.
 Keep all HTML attributes, classes, and structure unchanged.
 Respond with a JSON object in this exact format:
 {
@@ -51,47 +57,27 @@ Excerpt: ${excerpt ?? ''}
 Content:
 ${content}`;
 
-    const upstream = await fetch(OPENROUTER_URL, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://ketami.net',
-        'X-Title': 'Riyad Ketami Admin',
-      },
-      body: JSON.stringify({
-        model,
-        stream: false,
-        response_format: { type: 'json_object' },
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userMessage },
-        ],
-      }),
+    const result = await openRouterJson<{ title?: string; excerpt?: string; content?: string }>({
+      apiKey,
+      model,
+      route: 'translate',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userMessage },
+      ],
     });
-
-    if (!upstream.ok) {
-      const text = await upstream.text();
-      return new Response(JSON.stringify({ error: `OpenRouter error: ${text}` }), {
-        status: upstream.status,
+    if (!result.ok) {
+      return new Response(JSON.stringify({ error: result.error }), {
+        status: result.status,
         headers: { 'Content-Type': 'application/json' },
       });
     }
 
-    const data = await upstream.json() as {
-      choices?: { message?: { content?: string } }[];
-      usage?: { prompt_tokens?: number; completion_tokens?: number };
-    };
-    const raw = data.choices?.[0]?.message?.content ?? '{}';
-
-    logUsage({
-      model,
-      promptTokens: data.usage?.prompt_tokens ?? 0,
-      completionTokens: data.usage?.completion_tokens ?? 0,
-      route: 'translate',
-    });
-
-    return new Response(raw, {
+    return new Response(JSON.stringify({
+      title: String(result.data.title ?? ''),
+      excerpt: String(result.data.excerpt ?? ''),
+      content: String(result.data.content ?? ''),
+    }), {
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {

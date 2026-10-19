@@ -24,7 +24,8 @@ export interface ISiteProfile extends Document<string> {
 const SocialEntrySchema = new mongoose.Schema<ISocialEntry>(
   {
     url: { type: String, required: true },
-    count: { type: String, required: true },
+    // Empty by default: the public site never shows follower counts (brief §2.1)
+    count: { type: String, default: '' },
     channelId: { type: String },
   },
   { _id: false }

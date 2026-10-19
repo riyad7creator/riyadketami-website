@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db/connect';
 import Subscriber from '@/models/Subscriber';
 import { syncToKit } from '@/lib/kit';
-import { requireAdmin, serverError } from '@/lib/api-helpers';
+import { requireAdmin, serverError, readJson } from '@/lib/api-helpers';
 import type { Locale } from '@/i18n/config';
 
 interface ImportEntry {
@@ -17,7 +17,7 @@ export async function POST(req: Request) {
   if (!check.ok) return check.response;
 
   try {
-    const body = await req.json() as { entries?: ImportEntry[]; emails?: string[] };
+    const body = await readJson(req) as { entries?: ImportEntry[]; emails?: string[] };
     // Support both new format (entries with language) and legacy format (emails array)
     const entries: ImportEntry[] =
       body.entries ??

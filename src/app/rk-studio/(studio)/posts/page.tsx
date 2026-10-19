@@ -94,7 +94,12 @@ export default function AdminPostsPage() {
 
   const handleDelete = async (id: string) => {
     const res = await fetch(`/api/posts/${id}`, { method: 'DELETE' });
-    if (res.ok) setPosts((prev) => prev.filter((p) => p._id !== id));
+    if (res.ok) {
+      setPosts((prev) => prev.filter((p) => p._id !== id));
+      setTotal((t) => Math.max(0, t - 1));
+      // Deleting an EN post also deletes its FR/AR translations: refresh the list and counter
+      void load();
+    }
   };
 
   const selectCls = 'bg-bg-1 border border-border rounded-[var(--radius-md)] px-3 py-1.5 text-sm text-text-1 focus:outline-none focus:border-matrix/50';

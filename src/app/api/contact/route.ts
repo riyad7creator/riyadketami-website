@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { getResend, FROM_EMAIL, ADMIN_EMAIL, escHtml, emailShell } from '@/lib/resend';
 import { contactFormSchema } from '@/lib/validation';
 import { rateLimit } from '@/lib/rate-limit';
-import { zodFail, serverError } from '@/lib/api-helpers';
+import { zodFail, serverError, readJson } from '@/lib/api-helpers';
 import { notifyAdmin } from '@/lib/notify';
 
 export async function POST(req: Request) {
@@ -10,7 +10,7 @@ export async function POST(req: Request) {
     const rateLimitRes = await rateLimit(req, 5, 60000, 'contact');
     if (rateLimitRes) return rateLimitRes;
 
-    const body = await req.json() as unknown;
+    const body = await readJson(req) as unknown;
     const result = contactFormSchema.safeParse(body);
     if (!result.success) return zodFail(result.error);
 
@@ -26,7 +26,8 @@ export async function POST(req: Request) {
         from: FROM_EMAIL,
         to: ADMIN_EMAIL,
         replyTo: email,
-        subject: `[ketami.net] ${escHtml(subject)}`,
+        // Plain-text header: HTML-escaping here showed "&amp;" etc. in the inbox
+        subject: `[ketami.net] ${subject.replace(/[\r\n]+/g, ' ')}`,
         html: emailShell('// new contact form submission', `
           <h2 style="color:#F2F2EE;margin:0 0 24px;font-size:20px;">${escHtml(subject)}</h2>
           <table style="width:100%;border-collapse:collapse;">

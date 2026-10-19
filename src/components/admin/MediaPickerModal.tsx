@@ -299,7 +299,7 @@ export default function MediaPickerModal({
                           <p className="text-sm text-text-1">
                             Drop image or <span className="text-matrix">click to browse</span>
                           </p>
-                          <p className="text-xs text-text-2 mt-1">JPG · PNG · GIF · SVG · WebP · max 10 MB</p>
+                          <p className="text-xs text-text-2 mt-1">JPG · PNG · GIF · SVG · WebP · max 4 MB</p>
                           {propFolder && (
                             <p className="text-xs font-mono text-matrix/50 mt-1">→ saves to /{propFolder}</p>
                           )}

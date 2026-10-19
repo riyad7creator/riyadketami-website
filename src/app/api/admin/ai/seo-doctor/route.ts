@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db/connect';
 import Post from '@/models/Post';
-import { requireAdmin, serverError } from '@/lib/api-helpers';
-import { getOpenRouterKey, getModel, logUsage, OPENROUTER_URL } from '@/lib/ai-config';
+import { requireAdmin, serverError, readJson } from '@/lib/api-helpers';
+import { getOpenRouterKey, getModel, checkBudget, openRouterJson } from '@/lib/ai-config';
 
 interface SEOResult {
   score: number;
@@ -12,7 +12,7 @@ interface SEOResult {
   suggestedTags?: string[];
 }
 
-/** POST /api/admin/ai/seo-doctor — analyze a post for SEO */
+/** POST /api/admin/ai/seo-doctor: analyze a post for SEO */
 export async function POST(req: Request) {
   try {
     const check = await requireAdmin();
@@ -23,13 +23,20 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'OpenRouter key not configured.' }, { status: 500 });
     }
 
-    const body = await req.json() as { postId: string };
-    if (!body.postId) {
+    const overBudget = await checkBudget();
+    if (overBudget) return overBudget;
+
+    const body = await readJson<{ postId?: unknown }>(req);
+    const postId = typeof body?.postId === 'string' ? body.postId.trim() : '';
+    if (!postId) {
       return NextResponse.json({ error: 'postId is required' }, { status: 400 });
+    }
+    if (!/^[0-9a-fA-F]{24}$/.test(postId)) {
+      return NextResponse.json({ error: 'Post not found' }, { status: 404 });
     }
 
     await dbConnect();
-    const post = await Post.findById(body.postId).lean() as {
+    const post = await Post.findById(postId).lean() as {
       title: string;
       excerpt?: string;
       content: string;
@@ -68,46 +75,21 @@ Return JSON with:
   "suggestedTags": ["up to 5 relevant tags"]
 }`;
 
-    const res = await fetch(OPENROUTER_URL, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://ketami.net',
-        'X-Title': 'Riyad Ketami Admin',
-      },
-      body: JSON.stringify({
-        model,
-        stream: false,
-        response_format: { type: 'json_object' },
-        messages: [{ role: 'user', content: userMessage }],
-      }),
-    });
-
-    if (!res.ok) {
-      const text = await res.text();
-      return NextResponse.json({ error: `AI error: ${text}` }, { status: res.status });
-    }
-
-    const data = await res.json() as {
-      choices?: { message?: { content?: string } }[];
-      usage?: { prompt_tokens?: number; completion_tokens?: number };
-    };
-    const raw = data.choices?.[0]?.message?.content ?? '{}';
-
-    logUsage({
+    const ai = await openRouterJson<Partial<SEOResult>>({
+      apiKey,
       model,
-      promptTokens: data.usage?.prompt_tokens ?? 0,
-      completionTokens: data.usage?.completion_tokens ?? 0,
       route: 'seo-doctor',
+      messages: [{ role: 'user', content: userMessage }],
     });
+    if (!ai.ok) return NextResponse.json({ error: ai.error }, { status: ai.status });
 
-    let result: SEOResult = { score: 0, issues: [], suggestions: [] };
-    try {
-      result = JSON.parse(raw) as SEOResult;
-    } catch {
-      return NextResponse.json({ error: 'Failed to parse AI response' }, { status: 500 });
-    }
+    const result: SEOResult = {
+      score: Math.max(0, Math.min(100, Number(ai.data.score) || 0)),
+      issues: Array.isArray(ai.data.issues) ? ai.data.issues.map(String) : [],
+      suggestions: Array.isArray(ai.data.suggestions) ? ai.data.suggestions.map(String) : [],
+      metaDescription: typeof ai.data.metaDescription === 'string' ? ai.data.metaDescription : undefined,
+      suggestedTags: Array.isArray(ai.data.suggestedTags) ? ai.data.suggestedTags.map(String).slice(0, 5) : undefined,
+    };
 
     return NextResponse.json({ result, post: { title: post.title, slug: post.slug } });
   } catch (error) {

@@ -597,7 +597,18 @@ function LinksTab({ data, onSaved }: { data: ContentPayload; onSaved: (d: Conten
                   </span>
                 )}
               </span>
-              <input value={l.label} onChange={(e) => update(i, { label: e.target.value })} maxLength={200} className={inputCls} />
+              {LOCALIZED_LINK_KEYS[l.key] ? (
+                // The public label comes from Texts (translated); editing it here would change nothing
+                <input
+                  value={l.label}
+                  readOnly
+                  aria-readonly
+                  title="Edit this wording in the Texts tab (Home page · Quick links)"
+                  className={`${inputCls} opacity-60 cursor-not-allowed`}
+                />
+              ) : (
+                <input value={l.label} onChange={(e) => update(i, { label: e.target.value })} maxLength={200} className={inputCls} />
+              )}
             </label>
             <label className="flex flex-col gap-1">
               <span className="text-xs text-text-2">URL (https:// or mailto:)</span>

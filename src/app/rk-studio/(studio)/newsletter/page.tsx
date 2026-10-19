@@ -174,6 +174,7 @@ export default function AdminNewsletterPage() {
   const [sendForm, setSendForm] = useState({ subject: '', body: '', preview: '' });
   const [sendResult, setSendResult] = useState<{ sent: number; total: number } | null>(null);
   const [sendError, setSendError] = useState('');
+  const sendKeyRef = useRef<{ signature: string; key: string } | null>(null);
 
   // Debounce search
   useEffect(() => {
@@ -267,22 +268,36 @@ export default function AdminNewsletterPage() {
 
   // Send newsletter
   const handleSend = async () => {
-    if (!sendForm.subject.trim() || !sendForm.body.trim()) return;
+    if (sending || !sendForm.subject.trim() || !sendForm.body.trim()) return;
+    const audience = stats ? ` to ${stats.total.toLocaleString()} active subscribers` : '';
+    if (!window.confirm(`Send "${sendForm.subject.trim()}"${audience} now? This cannot be undone.`)) return;
+
+    // Same content keeps the same key, so a retry or double submit is refused server-side
+    const signature = `${sendForm.subject}\u0000${sendForm.preview}\u0000${sendForm.body}`;
+    if (!sendKeyRef.current || sendKeyRef.current.signature !== signature) {
+      sendKeyRef.current = { signature, key: crypto.randomUUID() };
+    }
+
     setSending(true);
     setSendError('');
     setSendResult(null);
-    const res = await fetch('/api/newsletter/send', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(sendForm),
-    });
-    const result = await res.json() as { sent?: number; total?: number; error?: string };
-    if (res.ok && result.sent !== undefined) {
-      setSendResult({ sent: result.sent, total: result.total ?? 0 });
-    } else {
-      setSendError(result.error ?? 'Send failed.');
+    try {
+      const res = await fetch('/api/newsletter/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...sendForm, idempotencyKey: sendKeyRef.current.key }),
+      });
+      const result = await res.json() as { sent?: number; total?: number; failed?: number; error?: string };
+      if (res.ok && result.sent !== undefined) {
+        setSendResult({ sent: result.sent, total: result.total ?? 0 });
+      } else {
+        setSendError(result.error ?? 'Send failed.');
+      }
+    } catch {
+      setSendError('Network error. Check the campaign list before retrying.');
+    } finally {
+      setSending(false);
     }
-    setSending(false);
   };
 
   const totalPages = data ? Math.ceil(data.total / limit) : 1;

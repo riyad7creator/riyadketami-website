@@ -18,11 +18,18 @@ function getLocale(request: NextRequest): string {
 export default auth(function middleware(request) {
   const { pathname } = request.nextUrl;
 
+  // Studio pages: pass the requested path on so the session guard in
+  // (studio)/layout.tsx can send people back here after signing in.
+  if (pathname.startsWith('/rk-studio') && !PUBLIC_FILE.test(pathname)) {
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set('x-pathname', `${pathname}${request.nextUrl.search}`);
+    return NextResponse.next({ request: { headers: requestHeaders } });
+  }
+
   if (
     PUBLIC_FILE.test(pathname) ||
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
-    pathname.startsWith('/rk-studio') ||
     pathname.startsWith('/links') ||
     pathname.startsWith('/design-system')
   ) {

@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
 import { revalidateTag } from 'next/cache';
+import { revalidateLinksPage } from '@/lib/revalidate';
 import { z } from 'zod';
 import dbConnect from '@/lib/db/connect';
 import LinkCardModel from '@/models/LinkCard';
-import { requireAdmin, serverError, zodFail } from '@/lib/api-helpers';
+import { requireAdmin, serverError, zodFail, readJson } from '@/lib/api-helpers';
 
 const schema = z.object({
   ids: z.array(z.string()).min(1),
@@ -15,7 +16,7 @@ export async function PATCH(req: Request) {
   if (!check.ok) return check.response;
 
   try {
-    const body = (await req.json()) as unknown;
+    const body = (await readJson(req)) as unknown;
     const result = schema.safeParse(body);
     if (!result.success) return zodFail(result.error);
 
@@ -27,6 +28,7 @@ export async function PATCH(req: Request) {
     );
 
     revalidateTag('links-page', 'max');
+    revalidateLinksPage();
     return NextResponse.json({ success: true });
   } catch (error) {
     return serverError('Failed to reorder cards', error);

@@ -55,18 +55,14 @@ UserSchema.methods.isLocked = function () {
   return !!(this.lockUntil && this.lockUntil > new Date());
 };
 
+/**
+ * Records a failed login for visibility only. The account is never locked from
+ * unauthenticated traffic (that let anyone lock the admin out); brute force is
+ * throttled per email + IP in auth.ts instead. lockUntil stays in the schema but
+ * is no longer set; a successful login clears any old value.
+ */
 UserSchema.methods.incLoginAttempts = async function (): Promise<mongoose.UpdateWriteOpResult> {
-  if (this.lockUntil && this.lockUntil < new Date()) {
-    return this.updateOne({ $set: { loginAttempts: 1 }, $unset: { lockUntil: 1 } });
-  }
-
-  const updates: Record<string, unknown> = { $inc: { loginAttempts: 1 } };
-
-  if (this.loginAttempts + 1 >= 5 && !this.isLocked()) {
-    Object.assign(updates, { $set: { lockUntil: new Date(Date.now() + 2 * 60 * 60 * 1000) } });
-  }
-
-  return this.updateOne(updates);
+  return this.updateOne({ $inc: { loginAttempts: 1 } });
 };
 
 const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);

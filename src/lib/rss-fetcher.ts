@@ -1,5 +1,6 @@
 import { XMLParser } from 'fast-xml-parser';
 import { unstable_cache } from 'next/cache';
+import { assertPublicHttpsUrl } from '@/lib/url-safety';
 
 export interface RssItem {
   title: string;
@@ -17,16 +18,35 @@ const parser = new XMLParser({
 const FETCH_TIMEOUT_MS = 5_000;
 const USER_AGENT = 'RiyadKetami-Site/1.0 (+https://ketami.net)';
 
+const MAX_REDIRECTS = 3;
+
+/**
+ * Fetch an admin-supplied feed URL without SSRF: https only, and every hop
+ * (including redirects) must resolve to public addresses.
+ */
+async function safeFetch(url: string, signal: AbortSignal): Promise<Response> {
+  let current = url;
+  for (let hop = 0; hop <= MAX_REDIRECTS; hop++) {
+    await assertPublicHttpsUrl(current);
+    const res = await fetch(current, {
+      signal,
+      redirect: 'manual',
+      headers: { 'User-Agent': USER_AGENT },
+      next: { revalidate: 3600, tags: ['rss', `rss:${url}`] },
+    });
+    const location = res.status >= 300 && res.status < 400 ? res.headers.get('location') : null;
+    if (!location) return res;
+    current = new URL(location, current).toString();
+  }
+  throw new Error('Too many redirects');
+}
+
 async function fetchRssFeed(url: string): Promise<RssItem[] | null> {
   try {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
 
-    const res = await fetch(url, {
-      signal: controller.signal,
-      headers: { 'User-Agent': USER_AGENT },
-      next: { revalidate: 3600, tags: ['rss', `rss:${url}`] },
-    });
+    const res = await safeFetch(url, controller.signal);
     clearTimeout(timer);
 
     if (!res.ok) {

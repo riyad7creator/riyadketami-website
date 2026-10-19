@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db/connect';
 import MediaFileModel from '@/models/MediaFile';
-import { requireAdmin, serverError } from '@/lib/api-helpers';
+import { requireAdmin, serverError, readJson } from '@/lib/api-helpers';
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -19,7 +19,7 @@ export async function POST(req: Request, { params }: Params) {
       return NextResponse.json({ error: 'Invalid media id' }, { status: 400 });
     }
 
-    const { referenceId } = (await req.json()) as { referenceId?: string };
+    const { referenceId } = (await readJson(req)) as { referenceId?: string };
     if (!referenceId || !OBJECT_ID.test(referenceId)) {
       return NextResponse.json({ error: 'Valid referenceId required' }, { status: 400 });
     }

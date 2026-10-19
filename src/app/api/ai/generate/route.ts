@@ -1,5 +1,5 @@
-import { requireAdmin, serverError } from '@/lib/api-helpers';
-import { getOpenRouterKey, getModel, OPENROUTER_URL } from '@/lib/ai-config';
+import { requireAdmin, serverError, readJson } from '@/lib/api-helpers';
+import { getOpenRouterKey, getModel, checkBudget, OPENROUTER_URL } from '@/lib/ai-config';
 
 export async function POST(req: Request) {
   try {
@@ -8,13 +8,16 @@ export async function POST(req: Request) {
 
     const apiKey = await getOpenRouterKey();
     if (!apiKey) {
-      return new Response(JSON.stringify({ error: 'OpenRouter API key is not configured. Set it in Admin → Settings → AI.' }), {
+      return new Response(JSON.stringify({ error: 'OpenRouter API key is not configured. Set it in Admin > Settings > AI.' }), {
         status: 500,
         headers: { 'Content-Type': 'application/json' },
       });
     }
 
-    const body = await req.json() as { title?: string; prompt?: string; language?: string };
+    const overBudget = await checkBudget();
+    if (overBudget) return overBudget;
+
+    const body = await readJson(req) as { title?: string; prompt?: string; language?: string };
     const { title, prompt, language = 'en' } = body;
 
     const model = await getModel('writing');

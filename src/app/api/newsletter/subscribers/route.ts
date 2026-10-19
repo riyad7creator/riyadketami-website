@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db/connect';
 import Subscriber from '@/models/Subscriber';
 import { requireAdmin, escapeRegex, serverError } from '@/lib/api-helpers';
+import { csvRow } from '@/lib/csv';
 
 export async function GET(req: Request) {
   const check = await requireAdmin();
@@ -16,11 +17,11 @@ export async function GET(req: Request) {
       await dbConnect();
       const all = await Subscriber.find({}).sort({ createdAt: -1 }).lean();
       const rows = all.map((s) =>
-        [
+        csvRow([
           s.email,
           new Date(s.createdAt).toISOString().slice(0, 10),
           s.unsubscribed ? 'unsubscribed' : 'active',
-        ].join(',')
+        ])
       );
       const csv = 'email,joined,status\n' + rows.join('\n');
       return new Response(csv, {
@@ -31,8 +32,9 @@ export async function GET(req: Request) {
       });
     }
 
-    const page = Math.max(1, parseInt(searchParams.get('page') ?? '1'));
-    const limit = Math.min(100, parseInt(searchParams.get('limit') ?? '50'));
+    // Non-numeric page/limit (NaN) fall back to the defaults
+    const page = Math.max(1, parseInt(searchParams.get('page') ?? '1', 10) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(searchParams.get('limit') ?? '50', 10) || 50));
     const search = searchParams.get('search')?.trim() ?? '';
     const lang = searchParams.get('lang')?.trim() ?? '';
     const skip = (page - 1) * limit;

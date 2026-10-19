@@ -2,9 +2,11 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import dbConnect from '@/lib/db/connect';
 import Post from '@/models/Post';
-import { requireAdmin, serverError, zodFail } from '@/lib/api-helpers';
+import { requireAdmin, serverError, zodFail, readJson } from '@/lib/api-helpers';
 import { translatePostContent } from '@/lib/translate';
+import { checkBudget } from '@/lib/ai-config';
 import DOMPurify from 'isomorphic-dompurify';
+import { revalidateBlog } from '@/lib/revalidate';
 
 type TargetLang = 'fr' | 'ar';
 
@@ -93,7 +95,7 @@ export async function POST(req: Request) {
 
     await dbConnect();
 
-    const parsed = translatePostSchema.safeParse(await req.json());
+    const parsed = translatePostSchema.safeParse(await readJson(req));
     if (!parsed.success) return zodFail(parsed.error);
     const { postId, langs, lang, data: preTranslated, force } = parsed.data;
 
@@ -105,6 +107,12 @@ export async function POST(req: Request) {
     const targetLangs: TargetLang[] = langs ?? (lang ? [lang] : []);
     if (targetLangs.length === 0) {
       return NextResponse.json({ error: 'langs or lang required' }, { status: 400 });
+    }
+
+    // AI mode spends tokens: respect the monthly budget cap
+    if (!preTranslated) {
+      const overBudget = await checkBudget();
+      if (overBudget) return overBudget;
     }
 
     const now = new Date();
@@ -155,7 +163,8 @@ export async function POST(req: Request) {
               excerpt: translated.excerpt,
               content: safeContent,
               language: targetLang,
-              status: 'published',
+              // Translations follow the source post (a draft source stays a draft everywhere)
+              status: sourcePost.status,
               category: sourcePost.category,
               tags: sourcePost.tags,
               featuredImage: sourcePost.featuredImage,
@@ -176,6 +185,7 @@ export async function POST(req: Request) {
       })
     );
 
+    revalidateBlog();
     return NextResponse.json(results);
   } catch (error) {
     return serverError('Translation failed', error);

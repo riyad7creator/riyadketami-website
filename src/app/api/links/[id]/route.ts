@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db/connect';
 import Link from '@/models/Link';
 import { linkSchema } from '@/lib/validation';
-import { requireAdmin, zodFail, serverError } from '@/lib/api-helpers';
+import { requireAdmin, zodFail, serverError, readJson } from '@/lib/api-helpers';
 
 export async function PATCH(
   req: Request,
@@ -14,7 +14,7 @@ export async function PATCH(
 
     const { id } = await params;
     await dbConnect();
-    const body = await req.json() as unknown;
+    const body = await readJson(req) as unknown;
     const result = linkSchema.partial().safeParse(body);
     if (!result.success) return zodFail(result.error);
 

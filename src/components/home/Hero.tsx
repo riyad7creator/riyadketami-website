@@ -15,7 +15,9 @@ interface HeroProps {
 export default async function Hero({ locale, dict }: HeroProps) {
   const t = dict.home.hero;
   const site = await getSiteImages();
-  const HERO_ALT = site.heroMobile.alt;
+  // One <img> serves both art directions, so it carries one alt: the desktop
+  // slot's (the larger, default crop), falling back to the mobile one if empty.
+  const HERO_ALT = site.heroDesktop.alt || site.heroMobile.alt;
 
   // Art direction: V08 (subject right, text left) on desktop, V01 (3:4) on mobile.
   const common = { alt: HERO_ALT, sizes: '100vw', fetchPriority: 'high' as const, loading: 'eager' as const };

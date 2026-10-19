@@ -1,6 +1,7 @@
 import mongoose, { Document, Model } from 'mongoose';
 
-export type NotificationType = 'subscriber_new' | 'contact_new' | 'send_failure' | 'storage_warning';
+export const NOTIFICATION_TYPES = ['subscriber_new', 'contact_new', 'send_failure', 'storage_warning'] as const;
+export type NotificationType = (typeof NOTIFICATION_TYPES)[number];
 
 export interface IAdminNotification extends Document {
   type: NotificationType;
@@ -13,7 +14,7 @@ export interface IAdminNotification extends Document {
 
 const AdminNotificationSchema = new mongoose.Schema(
   {
-    type: { type: String, required: true, enum: ['subscriber_new', 'contact_new', 'send_failure', 'storage_warning'] },
+    type: { type: String, required: true, enum: NOTIFICATION_TYPES },
     title: { type: String, required: true, maxlength: 120 },
     // Long enough for a full contact message (form max 1000 chars + sender line)
     body: { type: String, required: true, maxlength: 1500 },

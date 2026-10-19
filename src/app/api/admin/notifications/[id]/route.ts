@@ -3,7 +3,7 @@ import dbConnect from '@/lib/db/connect';
 import AdminNotification from '@/models/AdminNotification';
 import { requireAdmin, serverError } from '@/lib/api-helpers';
 
-/** PATCH /api/admin/notifications/[id] — mark single notification read */
+/** PATCH /api/admin/notifications/[id]: mark single notification read */
 export async function PATCH(
   _req: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -26,7 +26,7 @@ export async function PATCH(
   }
 }
 
-/** DELETE /api/admin/notifications/[id] — delete notification */
+/** DELETE /api/admin/notifications/[id]: delete notification */
 export async function DELETE(
   _req: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -37,7 +37,8 @@ export async function DELETE(
 
     const { id } = await params;
     await dbConnect();
-    await AdminNotification.findByIdAndDelete(id);
+    const deleted = await AdminNotification.findByIdAndDelete(id);
+    if (!deleted) return NextResponse.json({ error: 'Not found' }, { status: 404 });
     return NextResponse.json({ ok: true });
   } catch (error) {
     return serverError('Failed to delete notification', error);

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Trash2 } from 'lucide-react';
 
@@ -16,12 +16,15 @@ interface InlineDeleteConfirmProps {
 /**
  * Replaces native confirm() with an inline two-step confirmation.
  *
- * First click → shows "Cancel / Delete?" inline.
- * Second click → fires onConfirm.
- * Click anywhere else / Cancel → resets.
+ * First click shows "Delete? / Cancel" inline; a click on "Delete?" fires onConfirm.
+ * Cancel sits where the trash icon was and "Delete?" ignores clicks for a
+ * moment after opening, so a double click on the icon never deletes.
  */
+const ARM_DELAY_MS = 400;
+
 export default function InlineDeleteConfirm({ onConfirm, label = 'Delete', disabled }: InlineDeleteConfirmProps) {
   const [confirming, setConfirming] = useState(false);
+  const openedAt = useRef(0);
 
   if (confirming) {
     return (
@@ -33,17 +36,21 @@ export default function InlineDeleteConfirm({ onConfirm, label = 'Delete', disab
       >
         <button
           type="button"
+          onClick={() => {
+            if (Date.now() - openedAt.current < ARM_DELAY_MS) return;
+            setConfirming(false);
+            onConfirm();
+          }}
+          className="px-2 py-1 text-[11px] font-mono text-danger border border-danger/30 bg-danger/10 rounded-[var(--radius-sm)] hover:bg-danger/20 transition-colors"
+        >
+          Delete?
+        </button>
+        <button
+          type="button"
           onClick={() => setConfirming(false)}
           className="px-2 py-1 text-[11px] font-mono text-text-2 glass border border-border rounded-[var(--radius-sm)] hover:text-text-0 transition-colors"
         >
           Cancel
-        </button>
-        <button
-          type="button"
-          onClick={() => { setConfirming(false); onConfirm(); }}
-          className="px-2 py-1 text-[11px] font-mono text-danger border border-danger/30 bg-danger/10 rounded-[var(--radius-sm)] hover:bg-danger/20 transition-colors"
-        >
-          Delete?
         </button>
       </motion.div>
     );
@@ -52,7 +59,7 @@ export default function InlineDeleteConfirm({ onConfirm, label = 'Delete', disab
   return (
     <button
       type="button"
-      onClick={() => setConfirming(true)}
+      onClick={() => { openedAt.current = Date.now(); setConfirming(true); }}
       disabled={disabled}
       aria-label={label}
       title={label}

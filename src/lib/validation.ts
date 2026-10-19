@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { BLOG_CATEGORY_VALUES, POST_STATUSES, POST_LANGUAGES, SOCIAL_PLATFORMS, USER_ROLES } from '@/lib/constants';
+import { BLOG_CATEGORY_VALUES, POST_STATUSES, POST_LANGUAGES, SOCIAL_PLATFORMS } from '@/lib/constants';
 
 export const contactFormSchema = z.object({
   name: z.string().min(2).max(50),
@@ -15,7 +15,8 @@ export const postSchema = z.object({
   slug: z.string().min(3).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Invalid slug format').optional(),
   content: z.string().min(10),
   excerpt: z.string().max(300).optional().or(z.literal('')),
-  category: z.enum(BLOG_CATEGORY_VALUES).optional(),
+  // '' clears the field (PATCH answers it with $unset)
+  category: z.enum(BLOG_CATEGORY_VALUES).optional().or(z.literal('')),
   status: z.enum(POST_STATUSES).optional(),
   language: z.enum(POST_LANGUAGES).optional(),
   tags: z.array(z.string()).optional(),
@@ -25,7 +26,14 @@ export const postSchema = z.object({
 
 export const linkSchema = z.object({
   title: z.string().min(1).max(50),
-  url: z.string().url(),
+  // Only https:// or mailto: (no javascript:, data:, http: or relative URLs)
+  url: z
+    .string()
+    .trim()
+    .max(2048)
+    .refine((u) => /^https:\/\/[^\s]+$/i.test(u) || /^mailto:[^\s]+$/i.test(u), {
+      message: 'URL must start with https:// or mailto:',
+    }),
   icon: z.string().min(1).optional().default('link'),
   icon_url: z.string().optional().or(z.literal('')),
   isVisible: z.boolean().optional(),
@@ -45,6 +53,7 @@ export const socialAccountSchema = z.object({
 export const teamMemberSchema = z.object({
   name: z.string().min(2).max(60),
   email: z.string().email(),
-  role: z.enum(USER_ROLES),
+  // Only admin accounts work in rk-studio today (no editor/viewer access exists)
+  role: z.enum(['admin']).default('admin'),
   password: z.string().min(8),
 });

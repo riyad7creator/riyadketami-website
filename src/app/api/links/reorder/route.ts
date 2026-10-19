@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db/connect';
 import Link from '@/models/Link';
-import { requireAdmin, serverError } from '@/lib/api-helpers';
+import { requireAdmin, serverError, readJson } from '@/lib/api-helpers';
 
 export async function PUT(req: Request) {
   try {
@@ -9,7 +9,7 @@ export async function PUT(req: Request) {
     if (!check.ok) return check.response;
 
     await dbConnect();
-    const body = await req.json() as { links?: { _id: string; order: number }[] };
+    const body = await readJson(req) as { links?: { _id: string; order: number }[] };
 
     if (!Array.isArray(body.links)) {
       return NextResponse.json({ error: 'Invalid data format' }, { status: 400 });

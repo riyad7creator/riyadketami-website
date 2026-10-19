@@ -3,6 +3,7 @@ import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import dbConnect from '@/lib/db/connect';
 import { getSetting, setSetting } from '@/models/SiteSettings';
+import MediaFileModel from '@/models/MediaFile';
 import { requireAdmin, serverError, zodFail } from '@/lib/api-helpers';
 import { getDictionary } from '@/lib/dictionaries';
 import { IMAGE_SLOTS, DEFAULT_LINKS, SITE_CONTENT_KEYS, type ImageOverrides, type ImageSlotKey, type SiteLink } from '@/lib/site-content';
@@ -70,6 +71,28 @@ const putSchema = z.object({
     .optional(),
 });
 
+/** usedIn marker for media referenced by site images or link icons */
+const SITE_CONTENT_REF = 'site-content';
+const MEDIA_PATH = /^\/media\/([a-f0-9]{24})(?:\.[a-z0-9]{2,5})?$/i;
+
+/**
+ * Keep MediaFile.usedIn in sync with what Content references, so a media file
+ * used on the public site cannot be deleted from the library (409).
+ */
+async function syncMediaUsage(saved: Awaited<ReturnType<typeof readAll>>): Promise<void> {
+  const srcs = [
+    ...Object.values(saved.images ?? {}).map((o) => (o as { src?: string } | undefined)?.src),
+    ...(saved.links ?? []).map((l) => l.icon),
+  ];
+  const ids = [...new Set(srcs.map((src) => (typeof src === 'string' ? MEDIA_PATH.exec(src)?.[1] : undefined)).filter((id): id is string => !!id))];
+  await Promise.all([
+    ids.length > 0
+      ? MediaFileModel.updateMany({ _id: { $in: ids } }, { $addToSet: { usedIn: SITE_CONTENT_REF } })
+      : Promise.resolve(),
+    MediaFileModel.updateMany({ _id: { $nin: ids }, usedIn: SITE_CONTENT_REF }, { $pull: { usedIn: SITE_CONTENT_REF } }),
+  ]);
+}
+
 async function readAll() {
   const [images, text, links] = await Promise.all([
     getSetting<ImageOverrides>(SITE_CONTENT_KEYS.images),
@@ -112,7 +135,8 @@ export async function PUT(req: Request) {
     const check = await requireAdmin();
     if (!check.ok) return check.response;
 
-    const body = await req.json().catch(() => null);
+    const body = await req.json().catch(() => undefined);
+    if (body === undefined) return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
     const parsed = putSchema.safeParse(body);
     if (!parsed.success) return zodFail(parsed.error);
     const { images, text, links } = parsed.data;
@@ -150,6 +174,7 @@ export async function PUT(req: Request) {
     revalidatePath('/', 'layout');
 
     const saved = await readAll();
+    await syncMediaUsage(saved);
     return NextResponse.json({ success: true, ...saved });
   } catch (error) {
     return serverError('Failed to save site content', error);

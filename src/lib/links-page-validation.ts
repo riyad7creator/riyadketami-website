@@ -1,15 +1,34 @@
 import { z } from 'zod';
+import { isPublicHttpsUrlSync } from '@/lib/url-safety';
 
-/** Only allow safe URL schemes — no javascript: or data: URIs */
+/** Only https:// or a site path: no javascript:, data: or plain http: URIs */
 const safeHref = z
   .string()
+  .trim()
   .min(1, 'URL is required')
+  .max(2048)
   .refine(
-    (v) => v.startsWith('https://') || v.startsWith('http://') || v.startsWith('/'),
-    { message: 'URL must start with https://, http://, or /' }
+    (v) => /^https:\/\/[^\s]+$/i.test(v) || (v.startsWith('/') && !v.startsWith('//')),
+    { message: 'URL must start with https:// or /' }
   );
 
-const optionalUrl = z.string().url().optional().or(z.literal(''));
+/** Optional public https URL (no localhost or private hosts) */
+const optionalUrl = z
+  .string()
+  .trim()
+  .max(2048)
+  .refine((v) => v === '' || isPublicHttpsUrlSync(v), { message: 'URL must be a public https:// address' })
+  .optional();
+
+/** RSS source: a public https feed URL, or a bare YouTube channel ID (UC...) */
+const rssSource = z
+  .string()
+  .trim()
+  .max(2048)
+  .refine((v) => v === '' || /^UC[A-Za-z0-9_-]{22}$/.test(v) || isPublicHttpsUrlSync(v), {
+    message: 'Feed must be a public https:// URL or a YouTube channel ID',
+  })
+  .optional();
 
 // ---------------------------------------------------------------------------
 // LinkCard
@@ -57,7 +76,7 @@ export const linkCardPatchSchema = linkCardBase
 const latestSourceBase = z.object({
   type: z.enum(['youtube', 'blog', 'tiktok', 'instagram']),
   label: z.string().min(1).max(50),
-  rssUrl: optionalUrl,
+  rssUrl: rssSource,
   manualUrl: optionalUrl,
   manualTitle: z.string().max(200).optional(),
   manualThumb: optionalUrl,

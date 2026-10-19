@@ -3,10 +3,9 @@ import Flag from '@/components/ui/Flag';
 import Image from 'next/image';
 import { withArabic } from '@/components/ui/Ar';
 import { BRAND } from '@/lib/brand';
+import { getSiteImages } from '@/lib/site-content';
 import type { Dictionary } from '@/lib/dictionaries';
 
-// Brief §6.2 manifest: one visual per card (V04 gives way to real event photos)
-const VISUALS = [BRAND.visuals.V02, BRAND.visuals.V03, BRAND.visuals.V04] as const;
 
 const LINKS: Array<{ href: string | null; external: boolean; missing?: string }> = [
   { href: BRAND.youtubeUrl, external: true },
@@ -20,7 +19,9 @@ interface WhatIDoProps {
   headingLevel?: 'h2' | 'h3';
 }
 
-export function WhatIDoCards({ dict, headingLevel = 'h3' }: WhatIDoProps) {
+export async function WhatIDoCards({ dict, headingLevel = 'h3' }: WhatIDoProps) {
+  const img = await getSiteImages();
+  const VISUALS = [img.cardDarija, img.cardLaunch, img.cardTalks] as const;
   const cards = dict.home.what_i_do.cards;
   const H = headingLevel;
   return (

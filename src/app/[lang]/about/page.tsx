@@ -5,6 +5,7 @@ import { isValidLocale } from '@/i18n/config';
 import { getDictionary } from '@/lib/dictionaries';
 import { localizedAlternates } from '@/lib/seo';
 import { BRAND } from '@/lib/brand';
+import { getSiteImages } from '@/lib/site-content';
 import { Button } from '@/components/ui';
 import Eyebrow from '@/components/ui/Eyebrow';
 import SocialRow from '@/components/ui/SocialRow';
@@ -29,6 +30,7 @@ export default async function AboutPage({
 }: {
   params: Promise<{ lang: string }>;
 }) {
+  const img = await getSiteImages();
   const { lang } = await params;
   if (!isValidLocale(lang)) notFound();
   const dict = getDictionary(lang);
@@ -53,17 +55,17 @@ export default async function AboutPage({
             <p className="text-muted">{dict.home.contact.location}</p>
             <div className="flex flex-col items-start gap-3 pt-2 sm:flex-row sm:items-center sm:gap-4">
               <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full border border-line">
-                <Image src={BRAND.images.avatar} alt="Riyad Ketami, portrait" fill sizes="64px" className="object-cover" />
+                <Image src={img.avatar.src} alt={img.avatar.alt} fill sizes="64px" className="object-cover" />
               </div>
               <SocialRow className="-ms-2" />
             </div>
           </div>
 
-          {/* V05 — About: OFFLINE / Oran daytime portrait (brief §6.2) */}
+          {/* About main image (admin slot: aboutMain) */}
           <div className="relative aspect-[3/2] w-full overflow-hidden rounded-[var(--radius-md)] border border-line">
             <Image
-              src={BRAND.visuals.V05.src}
-              alt={BRAND.visuals.V05.alt}
+              src={img.aboutMain.src}
+              alt={img.aboutMain.alt}
               fill
               preload
               sizes="(min-width: 768px) 560px, 100vw"

@@ -5,6 +5,7 @@ import { isValidLocale } from '@/i18n/config';
 import { getDictionary } from '@/lib/dictionaries';
 import { localizedAlternates } from '@/lib/seo';
 import { BRAND } from '@/lib/brand';
+import { getSiteImages } from '@/lib/site-content';
 import { Accordion, Button } from '@/components/ui';
 import type { AccordionItem } from '@/components/ui';
 import Eyebrow from '@/components/ui/Eyebrow';
@@ -30,6 +31,7 @@ export default async function ServicesPage({
 }: {
   params: Promise<{ lang: string }>;
 }) {
+  const img = await getSiteImages();
   const { lang } = await params;
   if (!isValidLocale(lang)) notFound();
   const dict = getDictionary(lang);
@@ -126,7 +128,8 @@ export default async function ServicesPage({
       </section>
 
       <section aria-labelledby="services-cta" className="border-t border-line px-4 py-20 sm:px-8">
-        <div className="mx-auto flex max-w-[1200px] flex-col gap-6">
+        <div className="mx-auto grid max-w-[1200px] items-center gap-10 md:grid-cols-2">
+          <div className="flex flex-col gap-6">
           <Eyebrow>{t.cta_eyebrow}</Eyebrow>
           <h2 id="services-cta" className="font-display text-3xl font-bold text-paper sm:text-4xl">
             {t.cta_title}
@@ -138,6 +141,10 @@ export default async function ServicesPage({
             <Button href={BRAND.speakMailto} variant="secondary" size="lg">
               {t.cta_button_alt}
             </Button>
+          </div>
+          </div>
+          <div className="relative aspect-[16/9] overflow-hidden rounded-[var(--radius-md)] border border-line">
+            <Image src={img.readyToStart.src} alt={img.readyToStart.alt} fill sizes="(min-width: 768px) 560px, 100vw" className="object-cover" />
           </div>
         </div>
       </section>

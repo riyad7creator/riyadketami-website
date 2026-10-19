@@ -3,6 +3,7 @@ import { Button } from '@/components/ui';
 import Eyebrow from '@/components/ui/Eyebrow';
 import Ar from '@/components/ui/Ar';
 import { BRAND } from '@/lib/brand';
+import { getSiteImages } from '@/lib/site-content';
 import type { Locale } from '@/i18n/config';
 import type { Dictionary } from '@/lib/dictionaries';
 
@@ -11,20 +12,19 @@ interface HeroProps {
   dict: Dictionary;
 }
 
-// Brief §6.2 V01 alt text
-const HERO_ALT = BRAND.visuals.V01.alt;
-
-export default function Hero({ locale, dict }: HeroProps) {
+export default async function Hero({ locale, dict }: HeroProps) {
   const t = dict.home.hero;
+  const site = await getSiteImages();
+  const HERO_ALT = site.heroMobile.alt;
 
   // Art direction: V08 (subject right, text left) on desktop, V01 (3:4) on mobile.
   const common = { alt: HERO_ALT, sizes: '100vw', fetchPriority: 'high' as const, loading: 'eager' as const };
   const {
     props: { srcSet: desktopSrcSet },
-  } = getImageProps({ ...common, src: BRAND.visuals.V08.src, width: BRAND.visuals.V08.width, height: BRAND.visuals.V08.height });
+  } = getImageProps({ ...common, src: site.heroDesktop.src, width: site.heroDesktop.width, height: site.heroDesktop.height });
   const {
     props: { srcSet: mobileSrcSet, ...img },
-  } = getImageProps({ ...common, src: BRAND.visuals.V01.src, width: BRAND.visuals.V01.width, height: BRAND.visuals.V01.height });
+  } = getImageProps({ ...common, src: site.heroMobile.src, width: site.heroMobile.width, height: site.heroMobile.height });
 
   return (
     <section className="relative isolate flex flex-col overflow-hidden bg-ink md:block md:min-h-[100svh]">

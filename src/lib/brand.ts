@@ -82,6 +82,7 @@ export const BRAND = {
     name: 'Algeria Business Bay',
     rootUrl: ABB_ROOT,
     url: `${ABB_ROOT}/?${ABB_UTM}`,
+    joinUrl: `${ABB_ROOT}/join?${ABB_UTM}`,
     cofounder: 'Larbi',
     // [VERIFY with ABB before launch] — read from algeriabusinessbay.com on 11 Oct 2026.
     stats: {
@@ -137,12 +138,15 @@ export const BRAND = {
   visuals: {
     V01: { src: '/brand/V01_mobile-hero.v5.jpg', width: 1440, height: 1920, alt: 'Riyad Ketami, studio portrait', approved: false },
     V02: { src: '/brand/V02_card-darija.v4.jpg', width: 1920, height: 1440, alt: 'Riyad recording an AI breakdown at his desk', approved: false },
-    V03: { src: '/brand/V03_card-launch.v4.jpg', width: 1920, height: 1440, alt: 'Riyad filming himself with his phone', approved: false },
+    V03: { src: '/brand/V03_card-launch.v5.jpg', width: 1920, height: 1440, alt: 'Riyad showing a new AI app on launch day', approved: false },
     V04: { src: '/brand/V04_card-talks.v4.jpg', width: 1920, height: 1440, alt: 'Riyad speaking on stage at WebExpo', approved: false },
     V05: { src: '/brand/V05_about-oran.v5.jpg', width: 1920, height: 1280, alt: 'Riyad on the Oran seafront', approved: false },
     // V08 (new slot): desktop hero in the same Flux set, so desktop and mobile match.
     // Kit A05 (hero_2816x1584.jpg) remains in public/brand as the fallback.
     V08: { src: '/brand/V08_desktop-hero.v6.jpg', width: 1920, height: 1080, alt: 'Riyad Ketami, studio portrait', approved: false },
+    V09: { src: '/brand/V09_contact.v1.jpg', width: 1920, height: 1080, alt: 'Riyad on a video call with a brand team from his studio in Oran', approved: false },
+    V10: { src: '/brand/V10_ready-to-start.v1.jpg', width: 1920, height: 1080, alt: 'Riyad shaking hands with a client at the start of a project', approved: false },
+    V11: { src: '/brand/V11_about.v1.jpg', width: 1920, height: 1280, alt: 'Riyad in his studio in Oran', approved: false },
     V06: { src: '/brand/V06_abb-texture.jpg', width: 2816, height: 1584, alt: '', approved: false },
   },
 } as const;

@@ -24,7 +24,8 @@
       "partner": "الأداة تاع هاد السمانة",
       "partner_label": "PARTNER",
       "youtube": "YouTube: الـAI بالدارجة",
-      "linkedin": "LinkedIn"
+      "linkedin": "LinkedIn",
+      "collab": "التعاون: riyad@ketami.net"
     },
     "now": {
       "eyebrow": "درك",
@@ -65,7 +66,9 @@
         "wilayas": "ولاية حاضرة",
         "communities": "مجتمع وشبكة"
       },
-      "source": "المصدر"
+      "source": "المصدر",
+      "tagline": "توقف عن البحث. ابدأ التواصل.",
+      "join": "انضم لـ Algeria Business Bay"
     },
     "trusted": {
       "eyebrow": "فرق الـAI اللي يثقو فيّا"
@@ -227,7 +230,8 @@
   "links_page": {
     "cta_home": "شوف الموقع",
     "cta_contact": "تواصل معايا",
-    "latest": "الجديد"
+    "latest": "الجديد",
+    "abb_body": "الشبكة الخاصة للبزنس في الجزائر. أجوبة حقيقية والناس اللي يلزموك، في ڨاع الـ69 ولاية."
   },
   "visual": {
     "placeholder": "الصورة جاية"

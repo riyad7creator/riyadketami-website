@@ -9,6 +9,7 @@ import { BRAND } from '@/lib/brand';
 import Eyebrow from '@/components/ui/Eyebrow';
 import { QuickLinkList } from '@/components/home/QuickLinks';
 import ProfileHeader from './_components/ProfileHeader';
+import AbbCover from '@/components/abb/AbbCover';
 import LatestSection from './_components/LatestSection';
 import NewsletterCard from './_components/NewsletterCard';
 import type { Locale } from '@/i18n/config';
@@ -84,6 +85,14 @@ export default async function LinksPage() {
             {statusLine}
           </p>
         )}
+
+        {/* Algeria Business Bay cover: logo, copy and Join button (admin-editable images) */}
+        <AbbCover
+          variant="card"
+          tagline={dict.home.abb.tagline}
+          body={dict.links_page.abb_body}
+          joinLabel={dict.home.abb.join}
+        />
 
         <section aria-labelledby="links" className="flex flex-col gap-3">
           <Eyebrow as="h2" id="links">

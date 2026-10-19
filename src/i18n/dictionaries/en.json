@@ -24,7 +24,8 @@
       "partner": "This week's tool",
       "partner_label": "PARTNER",
       "youtube": "YouTube: AI in Darija",
-      "linkedin": "LinkedIn"
+      "linkedin": "LinkedIn",
+      "collab": "Collaborations: riyad@ketami.net"
     },
     "now": {
       "eyebrow": "Now",
@@ -65,7 +66,9 @@
         "wilayas": "wilayas represented",
         "communities": "communities & networks"
       },
-      "source": "Source"
+      "source": "Source",
+      "tagline": "Stop searching. Start connecting.",
+      "join": "Join Algeria Business Bay"
     },
     "trusted": {
       "eyebrow": "Trusted by AI teams"
@@ -227,7 +230,8 @@
   "links_page": {
     "cta_home": "Visit website",
     "cta_contact": "Get in touch",
-    "latest": "Latest"
+    "latest": "Latest",
+    "abb_body": "The private network for doing business in Algeria. Real answers and the right people, across all 69 wilayas."
   },
   "visual": {
     "placeholder": "Visual coming"

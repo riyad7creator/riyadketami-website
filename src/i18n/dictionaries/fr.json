@@ -24,7 +24,8 @@
       "partner": "L'outil de la semaine",
       "partner_label": "PARTNER",
       "youtube": "YouTube : l'IA en darija",
-      "linkedin": "LinkedIn"
+      "linkedin": "LinkedIn",
+      "collab": "Collaborations : riyad@ketami.net"
     },
     "now": {
       "eyebrow": "En ce moment",
@@ -65,7 +66,9 @@
         "wilayas": "wilayas représentées",
         "communities": "communautés et réseaux"
       },
-      "source": "Source"
+      "source": "Source",
+      "tagline": "Arrêtez de chercher. Commencez à connecter.",
+      "join": "Rejoindre Algeria Business Bay"
     },
     "trusted": {
       "eyebrow": "Des équipes IA me font confiance"
@@ -227,7 +230,8 @@
   "links_page": {
     "cta_home": "Visiter le site",
     "cta_contact": "Me contacter",
-    "latest": "Dernières publications"
+    "latest": "Dernières publications",
+    "abb_body": "Le réseau privé pour faire des affaires en Algérie. De vraies réponses et les bonnes personnes, dans les 69 wilayas."
   },
   "visual": {
     "placeholder": "Visuel à venir"

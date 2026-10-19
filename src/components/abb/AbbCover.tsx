@@ -32,7 +32,7 @@ export default async function AbbCover({ tagline, body, joinLabel, variant = 'se
         src={img.abbCover.src}
         alt=""
         loading="lazy"
-        className="absolute inset-0 -z-10 h-full w-full object-cover object-[50%_65%]"
+        className="absolute inset-0 -z-10 h-full w-full object-cover object-[10%_30%] rtl:-scale-x-100"
       />
       <div
         aria-hidden

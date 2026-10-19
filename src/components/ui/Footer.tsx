@@ -18,7 +18,9 @@ export default function Footer({ locale, dict }: FooterProps) {
     { label: dict.nav.services, href: `/${locale}/services` },
     { label: dict.nav.blog, href: `/${locale}/blog` },
     { label: dict.nav.contact, href: `/${locale}/contact` },
+    { label: dict.newsletter.nav_label, href: `/${locale}/newsletter` },
     { label: 'Links', href: '/links' },
+    { label: dict.newsletter.privacy_nav, href: `/${locale}/privacy` },
   ];
 
   return (

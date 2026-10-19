@@ -1,6 +1,6 @@
 import mongoose, { Document, Model } from 'mongoose';
 
-export const NOTIFICATION_TYPES = ['subscriber_new', 'contact_new', 'send_failure', 'storage_warning'] as const;
+export const NOTIFICATION_TYPES = ['subscriber_new', 'contact_new', 'send_failure', 'storage_warning', 'newsletter_draft'] as const;
 export type NotificationType = (typeof NOTIFICATION_TYPES)[number];
 
 export interface IAdminNotification extends Document {

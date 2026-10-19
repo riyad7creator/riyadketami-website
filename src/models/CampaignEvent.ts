@@ -13,14 +13,14 @@ const CampaignEventSchema = new mongoose.Schema(
     campaignId: { type: String, required: true },
     type: { type: String, required: true, enum: ['open', 'click'] },
     emailHash: { type: String, required: true },
-    url: { type: String },
+    url: { type: String, maxlength: 2000 },
   },
   { timestamps: true }
 );
 
 // TTL: 90 days
 CampaignEventSchema.index({ createdAt: 1 }, { expireAfterSeconds: 90 * 24 * 3600 });
-CampaignEventSchema.index({ campaignId: 1, type: 1 });
+CampaignEventSchema.index({ campaignId: 1, type: 1, emailHash: 1 });
 
 const CampaignEvent: Model<ICampaignEvent> =
   mongoose.models.CampaignEvent ||

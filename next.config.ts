@@ -7,8 +7,8 @@ const isDev = process.env.NODE_ENV === 'development';
 // Clarity loads its script from scripts.clarity.ms and posts to <n>.clarity.ms;
 // allowing only www.clarity.ms blocked it entirely (CSP violation in console).
 const scriptSrc = isDev
-  ? "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.clarity.ms"
-  : "script-src 'self' 'unsafe-inline' https://*.clarity.ms";
+  ? "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.clarity.ms https://challenges.cloudflare.com"
+  : "script-src 'self' 'unsafe-inline' https://*.clarity.ms https://challenges.cloudflare.com";
 
 const CSP = [
   "default-src 'self'",
@@ -17,7 +17,9 @@ const CSP = [
   // data: for base64 images stored in MongoDB; blob: for canvas/object URLs
   "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
-  "connect-src 'self' https://*.clarity.ms https://dc.services.visualstudio.com",
+  "connect-src 'self' https://*.clarity.ms https://dc.services.visualstudio.com https://challenges.cloudflare.com",
+  // Cloudflare Turnstile (newsletter bot check) renders in an iframe
+  "frame-src 'self' https://challenges.cloudflare.com",
   "media-src 'self'",
   "frame-ancestors 'none'",
   "base-uri 'self'",

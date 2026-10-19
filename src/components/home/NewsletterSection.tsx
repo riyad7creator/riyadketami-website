@@ -21,7 +21,7 @@ export default function NewsletterSection({ dict, locale }: NewsletterSectionPro
           </h2>
           <p className="text-base leading-relaxed text-text-1 sm:text-lg">{t.subtitle}</p>
         </div>
-        <NewsletterForm dict={dict} locale={locale} variant="inline" />
+        <NewsletterForm dict={dict} locale={locale} variant="inline" source="homepage" />
       </div>
     </section>
   );

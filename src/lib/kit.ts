@@ -1,9 +1,19 @@
 /**
  * Kit.com V4 API integration.
- * All calls are fire-and-forget — failures are logged but never surface to the user.
+ * Failures are logged but never surface to the user.
  */
 
 const KIT_API_BASE = 'https://api.kit.com/v4';
+
+/**
+ * Resend is the sending engine now; the Kit copy is optional and off unless
+ * KIT_SYNC_ENABLED=true (with KIT_API_KEY). Keeping two lists in sync only adds
+ * drift and a second place to erase data from.
+ */
+function kitKey(): string | null {
+  if (process.env.KIT_SYNC_ENABLED !== 'true') return null;
+  return process.env.KIT_API_KEY || null;
+}
 
 interface KitSubscriberPayload {
   email_address: string;
@@ -22,11 +32,8 @@ function kitHeaders(apiKey: string): HeadersInit {
  * Designed to be fire-and-forgotten: call without await and let it run in background.
  */
 export async function syncToKit(payload: KitSubscriberPayload): Promise<void> {
-  const apiKey = process.env.KIT_API_KEY;
-  if (!apiKey) {
-    console.warn('[kit] KIT_API_KEY is not set — skipping sync');
-    return;
-  }
+  const apiKey = kitKey();
+  if (!apiKey) return;
 
   try {
     const res = await fetch(`${KIT_API_BASE}/subscribers`, {
@@ -50,11 +57,8 @@ export async function syncToKit(payload: KitSubscriberPayload): Promise<void> {
  * Fire-and-forget like syncToKit — a failure only logs.
  */
 export async function unsubscribeFromKit(email: string): Promise<void> {
-  const apiKey = process.env.KIT_API_KEY;
-  if (!apiKey) {
-    console.warn('[kit] KIT_API_KEY is not set — skipping unsubscribe sync');
-    return;
-  }
+  const apiKey = kitKey();
+  if (!apiKey) return;
 
   try {
     const lookup = await fetch(

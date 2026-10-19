@@ -1,58 +1,40 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db/connect';
-import Subscriber from '@/models/Subscriber';
+import Subscriber, { ACTIVE_FILTER, PENDING_FILTER } from '@/models/Subscriber';
 import { requireAdmin, escapeRegex, serverError } from '@/lib/api-helpers';
-import { csvRow } from '@/lib/csv';
 
+const STATUS_FILTERS: Record<string, Record<string, unknown>> = {
+  active: { ...ACTIVE_FILTER },
+  pending: { ...PENDING_FILTER },
+  unsubscribed: { unsubscribed: true, confirmed: { $ne: false } },
+};
+
+/** GET ?page&limit&search&lang&status: paginated subscriber list for the studio */
 export async function GET(req: Request) {
   const check = await requireAdmin();
   if (!check.ok) return check.response;
 
   try {
     const { searchParams } = new URL(req.url);
-
-    // Full-list CSV export — server-side so it is never limited to one UI page,
-    // and includes unsubscribe status so a re-import elsewhere can respect it.
-    if (searchParams.get('format') === 'csv') {
-      await dbConnect();
-      const all = await Subscriber.find({}).sort({ createdAt: -1 }).lean();
-      const rows = all.map((s) =>
-        csvRow([
-          s.email,
-          new Date(s.createdAt).toISOString().slice(0, 10),
-          s.unsubscribed ? 'unsubscribed' : 'active',
-        ])
-      );
-      const csv = 'email,joined,status\n' + rows.join('\n');
-      return new Response(csv, {
-        headers: {
-          'Content-Type': 'text/csv; charset=utf-8',
-          'Content-Disposition': `attachment; filename="subscribers-${new Date().toISOString().slice(0, 10)}.csv"`,
-        },
-      });
-    }
-
-    // Non-numeric page/limit (NaN) fall back to the defaults
     const page = Math.max(1, parseInt(searchParams.get('page') ?? '1', 10) || 1);
     const limit = Math.min(100, Math.max(1, parseInt(searchParams.get('limit') ?? '50', 10) || 50));
     const search = searchParams.get('search')?.trim() ?? '';
     const lang = searchParams.get('lang')?.trim() ?? '';
+    const status = searchParams.get('status')?.trim() ?? '';
     const skip = (page - 1) * limit;
 
     await dbConnect();
-
-    const query: Record<string, unknown> = {};
-
-    if (search) {
-      query.email = { $regex: escapeRegex(search), $options: 'i' };
-    }
-
-    if (lang && ['ar', 'en', 'fr'].includes(lang)) {
-      query.preferredLanguage = lang;
-    }
+    const query: Record<string, unknown> = { ...(STATUS_FILTERS[status] ?? {}) };
+    if (search) query.email = { $regex: escapeRegex(search), $options: 'i' };
+    if (lang && ['ar', 'en', 'fr'].includes(lang)) query.preferredLanguage = lang;
 
     const [subscribers, total] = await Promise.all([
-      Subscriber.find(query).sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
+      Subscriber.find(query)
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .select('email preferredLanguage confirmed confirmedAt unsubscribed unsubscribeReason source createdAt lastClickAt welcomeStep')
+        .lean(),
       Subscriber.countDocuments(query),
     ]);
 

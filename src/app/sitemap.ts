@@ -2,10 +2,14 @@ import { BRAND } from '@/lib/brand';
 import type { MetadataRoute } from 'next';
 import { locales } from '@/i18n/config';
 import { getBlogPosts } from '@/lib/blog-data';
+import { getArchiveIndex } from '@/lib/newsletter/archive';
 
 const BASE = BRAND.url;
 
-const STATIC_PATHS = ['', '/about', '/services', '/blog', '/contact'];
+// Rebuilt hourly so new posts and newsletter issues appear without a deploy
+export const revalidate = 3600;
+
+const STATIC_PATHS = ['', '/about', '/services', '/blog', '/contact', '/subscribe', '/newsletter', '/privacy'];
 
 // Static pages don't change between deploys — bump this when the site copy or
 // layout meaningfully changes so crawlers see a real `lastModified` signal
@@ -46,6 +50,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         lastModified: new Date(post.createdAt),
         changeFrequency: 'monthly',
         priority: 0.6,
+      });
+    }
+  }
+
+  // Public newsletter issues, in each language they were written in
+  for (const issue of await getArchiveIndex()) {
+    for (const l of issue.languages) {
+      entries.push({
+        url: `${BASE}/${l}/newsletter/${issue.slug}`,
+        lastModified: issue.sentAt,
+        changeFrequency: 'yearly',
+        priority: 0.5,
       });
     }
   }

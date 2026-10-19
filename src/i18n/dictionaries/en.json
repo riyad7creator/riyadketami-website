@@ -113,9 +113,9 @@
       "confirm": "Confirm my language",
       "back": "← Change email",
       "confirmation": {
-        "en": "You're in. Your newsletter will arrive in English.",
-        "fr": "C'est noté. Vous recevrez la newsletter en français.",
-        "ar": "صايي، راك معانا. النيوزلتر توصلك بالعربية."
+        "en": "Almost there. Check your inbox and click the link to confirm.",
+        "fr": "Presque fini. Vérifiez votre boîte mail et cliquez sur le lien pour confirmer.",
+        "ar": "قريب كملنا. شوف الإيمايل تاعك وكليكي على الرابط باش تأكّد."
       },
       "error": "Something went wrong. Try again."
     }
@@ -240,5 +240,104 @@
     "stats": "VERIFY with ABB before launch",
     "partners": "VERIFY permission to show names",
     "missing": "MISSING"
+  },
+  "newsletter": {
+    "nav_label": "Newsletter",
+    "privacy_nav": "Privacy",
+    "consent_before": "I agree to receive the newsletter by email and accept the ",
+    "consent_link": "privacy policy",
+    "consent_after": ". I can unsubscribe at any time.",
+    "consent_error": "Please tick the box to subscribe.",
+    "pending": "Almost there. Check your inbox and click the link to confirm your subscription.",
+    "subscribe": {
+      "meta_title": "Subscribe to the newsletter",
+      "meta_description": "One email a week from Riyad Ketami: AI tools that earn their keep, tactics that work, and lessons from building from Algeria.",
+      "eyebrow": "// the digital rebel",
+      "title": "One email a week. AI tools, tactics, and unfair advantages.",
+      "subtitle": "What I test, build and learn as an AI expert and digital creator in Algeria, written for entrepreneurs in MENA. In English, French or Arabic.",
+      "points": [
+        "The AI tools earning their keep, tested before I recommend them",
+        "Tactics that actually work, with real examples",
+        "Lessons from building digital projects from Algeria"
+      ],
+      "lead_magnet_prefix": "Free when you join:",
+      "note": "One email a week. Unsubscribe in one click.",
+      "archive_link": "Read past issues"
+    },
+    "archive": {
+      "meta_title": "Newsletter archive",
+      "meta_description": "Every past issue of Riyad Ketami's weekly newsletter on AI tools, tactics and building from Algeria.",
+      "eyebrow": "// newsletter archive",
+      "title": "Past issues",
+      "subtitle": "Every issue I've sent, readable on the web.",
+      "empty": "The first issue is on its way. Subscribe to get it in your inbox.",
+      "read": "Read",
+      "back": "All issues",
+      "subscribe_title": "Get the next issue in your inbox"
+    },
+    "confirm": {
+      "title": "Confirm your subscription",
+      "body": "One click and you're in.",
+      "button": "Confirm my subscription",
+      "working": "Confirming...",
+      "invalid_title": "This link has expired",
+      "invalid_body": "Confirmation links work for 7 days. Sign up again and you'll get a fresh one.",
+      "retry": "Sign up again"
+    },
+    "confirmed": {
+      "title": "You're in. Welcome.",
+      "body": "Your subscription is confirmed. A welcome email is on its way, and the weekly issue starts with the next send.",
+      "lead_magnet": "Your free resource:",
+      "back_blog": "Read the blog meanwhile"
+    },
+    "preferences": {
+      "title": "Newsletter settings",
+      "request_body": "Enter your email and I'll send you a personal link to change your newsletter language or unsubscribe.",
+      "email_label": "Your email",
+      "request_button": "Send me the link",
+      "request_sent": "If this address is on the list, a link is on its way. Check your inbox.",
+      "language_label": "Newsletter language",
+      "status_label": "Subscription",
+      "status_active": "Subscribed",
+      "status_unsubscribed": "Unsubscribed",
+      "save": "Save",
+      "saved": "Saved.",
+      "unsubscribe": "Unsubscribe",
+      "resubscribe": "Subscribe again",
+      "invalid": "This link is not valid. Ask for a new one below.",
+      "error": "Something went wrong. Try again."
+    },
+    "privacy": {
+      "meta_title": "Privacy policy",
+      "meta_description": "How ketami.net handles your personal data: newsletter, contact form and analytics.",
+      "title": "Privacy policy",
+      "updated": "Last updated: 19 October 2026",
+      "sections": [
+        {
+          "h": "Who is responsible",
+          "p": "ketami.net is run by Riyad Ketami (KETAMI), based in Algeria. For any question about your data, write to riyad@ketami.net."
+        },
+        {
+          "h": "What I collect",
+          "p": "For the newsletter: your email address, the language you chose, the date, IP address and browser of your signup and confirmation (proof of your consent), the page you signed up from, and whether you clicked links in my emails. For the contact form: the details you type in. For site statistics: anonymous usage data from Microsoft Clarity."
+        },
+        {
+          "h": "Why",
+          "p": "To send you the newsletter you asked for, based on your consent; to answer your messages; to see which content helps readers and to stop emailing people who no longer read."
+        },
+        {
+          "h": "Who processes it",
+          "p": "Resend (email delivery, United States), MongoDB Atlas (database), Vercel (hosting), Upstash (anti-abuse rate limits) and Microsoft Clarity (statistics). Your data is never sold or rented."
+        },
+        {
+          "h": "How long",
+          "p": "Newsletter data is kept while you are subscribed. Unconfirmed signups are deleted after 14 days. Click and open records are deleted after 90 days. After you unsubscribe, I keep only your email and the date, so I never email you again by mistake."
+        },
+        {
+          "h": "Your rights",
+          "p": "You can access, correct or delete your data and withdraw your consent at any time: use the unsubscribe or settings link in any email, or write to riyad@ketami.net. I answer within one month. These rights come from Algerian Law 18-07 on personal data and, for readers in the European Union, from the GDPR."
+        }
+      ]
+    }
   }
 }

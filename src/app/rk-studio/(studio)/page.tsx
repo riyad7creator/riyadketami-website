@@ -49,6 +49,7 @@ const TYPE_ICON: Record<string, string> = {
   contact_new: '✉️',
   send_failure: '⚠️',
   storage_warning: '💾',
+  newsletter_draft: '📝',
 };
 
 function timeAgo(iso: string) {
@@ -102,9 +103,8 @@ export default function AdminDashboard() {
     }).catch(() => null);
 
     // Subscriber count + this week delta
-    fetch('/api/newsletter').then(r => r.json()).then((d: { count: number }) => setSubscribers(d.count)).catch(() => null);
-
-    fetch('/api/newsletter/stats').then(r => r.json()).then((d: { recentCount?: number }) => {
+    fetch('/api/newsletter/stats').then(r => r.json()).then((d: { total?: number; recentCount?: number }) => {
+      setSubscribers(d.total ?? 0);
       if (d.recentCount !== undefined) setSubscribersThisWeek(d.recentCount);
     }).catch(() => null);
 

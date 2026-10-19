@@ -113,9 +113,9 @@
       "confirm": "Confirmer ma langue",
       "back": "← Modifier l'email",
       "confirmation": {
-        "en": "You're in. Your newsletter will arrive in English.",
-        "fr": "C'est noté. Vous recevrez la newsletter en français.",
-        "ar": "صايي، راك معانا. النيوزلتر توصلك بالعربية."
+        "en": "Almost there. Check your inbox and click the link to confirm.",
+        "fr": "Presque fini. Vérifiez votre boîte mail et cliquez sur le lien pour confirmer.",
+        "ar": "قريب كملنا. شوف الإيمايل تاعك وكليكي على الرابط باش تأكّد."
       },
       "error": "Une erreur s'est produite. Réessayez."
     }
@@ -240,5 +240,104 @@
     "stats": "À VÉRIFIER avec ABB avant lancement",
     "partners": "À VÉRIFIER : autorisation d'afficher les noms",
     "missing": "MANQUANT"
+  },
+  "newsletter": {
+    "nav_label": "Newsletter",
+    "privacy_nav": "Confidentialité",
+    "consent_before": "J'accepte de recevoir la newsletter par email et la ",
+    "consent_link": "politique de confidentialité",
+    "consent_after": ". Je peux me désinscrire à tout moment.",
+    "consent_error": "Cochez la case pour vous inscrire.",
+    "pending": "Presque fini. Vérifiez votre boîte mail et cliquez sur le lien pour confirmer votre inscription.",
+    "subscribe": {
+      "meta_title": "S'inscrire à la newsletter",
+      "meta_description": "Un email par semaine de Riyad Ketami : les outils IA qui méritent leur abonnement, les tactiques qui marchent, et les leçons de ceux qui construisent depuis l'Algérie.",
+      "eyebrow": "// the digital rebel",
+      "title": "Un email par semaine. Outils IA, tactiques, avantages déloyaux.",
+      "subtitle": "Ce que je teste, construis et apprends comme expert IA et créateur digital en Algérie, écrit pour les entrepreneurs de la région MENA. En français, en anglais ou en arabe.",
+      "points": [
+        "Les outils IA qui méritent leur abonnement, testés avant que je les recommande",
+        "Des tactiques qui marchent vraiment, avec de vrais exemples",
+        "Les leçons de projets digitaux construits depuis l'Algérie"
+      ],
+      "lead_magnet_prefix": "Offert à l'inscription :",
+      "note": "Un email par semaine. Désinscription en un clic.",
+      "archive_link": "Lire les anciens numéros"
+    },
+    "archive": {
+      "meta_title": "Archives de la newsletter",
+      "meta_description": "Tous les anciens numéros de la newsletter hebdomadaire de Riyad Ketami sur les outils IA, les tactiques et l'entrepreneuriat depuis l'Algérie.",
+      "eyebrow": "// archives newsletter",
+      "title": "Anciens numéros",
+      "subtitle": "Tous les numéros envoyés, à lire sur le web.",
+      "empty": "Le premier numéro arrive bientôt. Inscrivez-vous pour le recevoir.",
+      "read": "Lire",
+      "back": "Tous les numéros",
+      "subscribe_title": "Recevez le prochain numéro par email"
+    },
+    "confirm": {
+      "title": "Confirmez votre inscription",
+      "body": "Un clic et c'est fait.",
+      "button": "Confirmer mon inscription",
+      "working": "Confirmation...",
+      "invalid_title": "Ce lien a expiré",
+      "invalid_body": "Les liens de confirmation sont valables 7 jours. Inscrivez-vous à nouveau pour en recevoir un nouveau.",
+      "retry": "S'inscrire à nouveau"
+    },
+    "confirmed": {
+      "title": "C'est fait. Bienvenue.",
+      "body": "Votre inscription est confirmée. Un email de bienvenue arrive, et le numéro hebdomadaire commence au prochain envoi.",
+      "lead_magnet": "Votre ressource gratuite :",
+      "back_blog": "Lire le blog en attendant"
+    },
+    "preferences": {
+      "title": "Réglages de la newsletter",
+      "request_body": "Entrez votre email et je vous envoie un lien personnel pour changer la langue de la newsletter ou vous désinscrire.",
+      "email_label": "Votre email",
+      "request_button": "Recevoir le lien",
+      "request_sent": "Si cette adresse est inscrite, un lien arrive. Vérifiez votre boîte mail.",
+      "language_label": "Langue de la newsletter",
+      "status_label": "Inscription",
+      "status_active": "Inscrit",
+      "status_unsubscribed": "Désinscrit",
+      "save": "Enregistrer",
+      "saved": "Enregistré.",
+      "unsubscribe": "Se désinscrire",
+      "resubscribe": "Se réinscrire",
+      "invalid": "Ce lien n'est pas valide. Demandez-en un nouveau ci-dessous.",
+      "error": "Une erreur s'est produite. Réessayez."
+    },
+    "privacy": {
+      "meta_title": "Politique de confidentialité",
+      "meta_description": "Comment ketami.net traite vos données personnelles : newsletter, formulaire de contact et statistiques.",
+      "title": "Politique de confidentialité",
+      "updated": "Dernière mise à jour : 19 octobre 2026",
+      "sections": [
+        {
+          "h": "Responsable",
+          "p": "ketami.net est édité par Riyad Ketami (KETAMI), basé en Algérie. Pour toute question sur vos données, écrivez à riyad@ketami.net."
+        },
+        {
+          "h": "Ce que je collecte",
+          "p": "Pour la newsletter : votre adresse email, la langue choisie, la date, l'adresse IP et le navigateur de votre inscription et de votre confirmation (preuve de votre consentement), la page d'inscription, et si vous cliquez sur les liens de mes emails. Pour le formulaire de contact : les informations que vous saisissez. Pour les statistiques : des données d'usage anonymes via Microsoft Clarity."
+        },
+        {
+          "h": "Pourquoi",
+          "p": "Pour vous envoyer la newsletter demandée, sur la base de votre consentement ; pour répondre à vos messages ; pour savoir quels contenus aident les lecteurs et arrêter d'écrire à ceux qui ne lisent plus."
+        },
+        {
+          "h": "Qui traite ces données",
+          "p": "Resend (envoi des emails, États-Unis), MongoDB Atlas (base de données), Vercel (hébergement), Upstash (limites anti-abus) et Microsoft Clarity (statistiques). Vos données ne sont jamais vendues ni louées."
+        },
+        {
+          "h": "Durée de conservation",
+          "p": "Les données newsletter sont gardées tant que vous êtes inscrit. Les inscriptions non confirmées sont supprimées après 14 jours. Les traces de clics et d'ouvertures sont supprimées après 90 jours. Après une désinscription, je garde seulement votre email et la date, pour ne jamais vous écrire par erreur."
+        },
+        {
+          "h": "Vos droits",
+          "p": "Vous pouvez accéder à vos données, les corriger, les supprimer et retirer votre consentement à tout moment : utilisez le lien de désinscription ou de réglages présent dans chaque email, ou écrivez à riyad@ketami.net. Je réponds sous un mois. Ces droits viennent de la loi algérienne 18-07 sur les données personnelles et, pour les lecteurs de l'Union européenne, du RGPD."
+        }
+      ]
+    }
   }
 }

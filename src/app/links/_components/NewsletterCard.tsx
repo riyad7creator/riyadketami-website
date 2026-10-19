@@ -18,7 +18,7 @@ export default function NewsletterCard({ dict, locale = 'en' }: { dict: Dictiona
         <p className="font-display text-base font-bold text-paper">{dict.home.newsletter.title}</p>
       </div>
 
-      <NewsletterForm dict={dict} locale={locale} variant="stacked" />
+      <NewsletterForm dict={dict} locale={locale} variant="stacked" source="links-page" />
     </section>
   );
 }

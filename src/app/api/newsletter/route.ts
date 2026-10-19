@@ -1,104 +1,113 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, after } from 'next/server';
 import { z } from 'zod';
-import { getResend, FROM_EMAIL, emailShell } from '@/lib/resend';
 import dbConnect from '@/lib/db/connect';
-import Subscriber from '@/models/Subscriber';
-import { syncToKit } from '@/lib/kit';
-import { rateLimit } from '@/lib/rate-limit';
-import { notifyAdmin } from '@/lib/notify';
-import { readJson, InvalidJsonError, badJson } from '@/lib/api-helpers';
+import Subscriber, { ACTIVE_FILTER, SUBSCRIBER_SOURCES } from '@/models/Subscriber';
+import { rateLimit, clientIp, hitLimit } from '@/lib/rate-limit';
+import { readJson, InvalidJsonError, badJson, requireAdmin } from '@/lib/api-helpers';
+import { verifyTurnstile } from '@/lib/newsletter/turnstile';
+import { sendConfirmEmail, langOf } from '@/lib/newsletter/mail';
+import { CONSENT_TEXT_VERSION } from '@/lib/newsletter/config';
 
-const SOURCES = ['homepage', 'blog-cta', 'links-page', 'import', 'other'] as const;
+const utmField = z.string().trim().max(120).optional();
 
 const schema = z.object({
-  email: z.string().email(),
+  email: z.string().trim().toLowerCase().email().max(254),
   preferredLanguage: z.enum(['ar', 'en', 'fr']).optional(),
-  source: z.enum(SOURCES).optional(),
+  source: z.enum(SUBSCRIBER_SOURCES).optional(),
+  utm: z.object({ source: utmField, medium: utmField, campaign: utmField }).optional(),
+  /** Must be ticked: the consent checkbox under the form */
+  consent: z.literal(true),
+  /** Honeypot: humans never see or fill this field */
+  company: z.string().max(200).optional(),
+  /** When the form was shown (ms). Submissions under 2 seconds are bots. */
+  startedAt: z.number().int().positive().optional(),
+  turnstileToken: z.string().max(4096).optional(),
 });
 
+/** The same answer for every outcome, so the form never reveals who is subscribed */
+const ACCEPTED = () => NextResponse.json({ ok: true, pending: true }, { status: 202 });
+
+/** GET /api/newsletter: active subscriber count, admin only (never shown publicly) */
 export async function GET() {
-  try {
-    await dbConnect();
-    // Only count active subscribers (exclude those who unsubscribed) so the
-    // public number doesn't drift upward from opt-outs.
-    const count = await Subscriber.countDocuments({ unsubscribed: { $ne: true } });
-    return NextResponse.json({ count });
-  } catch {
-    return NextResponse.json({ count: 0 });
-  }
+  const check = await requireAdmin();
+  if (!check.ok) return check.response;
+  await dbConnect();
+  const count = await Subscriber.countDocuments(ACTIVE_FILTER);
+  return NextResponse.json({ count });
 }
 
+/**
+ * POST /api/newsletter: double opt-in signup. Stores the consent record and
+ * sends a confirmation email; the address only joins the list after the click.
+ */
 export async function POST(req: Request) {
-  const limited = await rateLimit(req, 3, 60_000, 'newsletter-signup');
+  const limited = await rateLimit(req, 5, 60_000, 'newsletter-signup');
   if (limited) return limited;
 
   try {
     const body = await readJson(req);
-    const { email, preferredLanguage, source } = schema.parse(body);
+    const parsed = schema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: 'Invalid email, language or consent' }, { status: 400 });
+    }
+    const { email, preferredLanguage, source, utm, company, startedAt, turnstileToken } = parsed.data;
+
+    // Bots: filled honeypot or impossibly fast submit. Answer as if accepted.
+    if (company && company.trim()) return ACCEPTED();
+    if (startedAt && Date.now() - startedAt < 2000) return ACCEPTED();
+
+    const ip = clientIp(req);
+    if (!(await verifyTurnstile(turnstileToken, ip))) {
+      return NextResponse.json({ error: 'Verification failed. Please try again.' }, { status: 400 });
+    }
 
     await dbConnect();
+    const existing = await Subscriber.findOne({ email }).lean();
 
-    // Atomic upsert — prevents TOCTOU race where two concurrent signups both pass findOne.
-    // A previously-unsubscribed address signing up again is a RE-subscribe: flip the flag
-    // back in the same atomic operation so they actually receive emails again.
-    const setFields: Record<string, unknown> = { unsubscribed: false };
-    if (preferredLanguage) setFields.preferredLanguage = preferredLanguage;
+    // Already on the list: only refresh the language, send nothing
+    if (existing && existing.confirmed !== false && existing.unsubscribed !== true) {
+      if (preferredLanguage && preferredLanguage !== existing.preferredLanguage) {
+        await Subscriber.updateOne({ _id: existing._id }, { $set: { preferredLanguage } });
+        after(async () => {
+          const { syncSubscriber } = await import('@/lib/newsletter/esp');
+          await syncSubscriber(email);
+        });
+      }
+      return ACCEPTED();
+    }
 
-    const before = await Subscriber.findOneAndUpdate(
+    // One confirmation email per address per 10 minutes, whatever the IP
+    const recent = existing?.confirmSentAt && Date.now() - new Date(existing.confirmSentAt).getTime() < 10 * 60_000;
+    if (recent || (await hitLimit(email, 1, 10 * 60_000, 'newsletter-confirm'))) return ACCEPTED();
+
+    const lang = langOf(preferredLanguage);
+    const consent = {
+      at: new Date(),
+      ip: ip.slice(0, 64),
+      userAgent: (req.headers.get('user-agent') ?? '').slice(0, 300),
+      form: source ?? 'other',
+      textVersion: CONSENT_TEXT_VERSION,
+      language: lang,
+    };
+
+    await Subscriber.updateOne(
       { email },
       {
-        $setOnInsert: { email, ...(source ? { source } : {}) },
-        $set: setFields,
-        $unset: { unsubscribedAt: '' },
+        $setOnInsert: { email, unsubscribed: false, ...(source ? { source } : {}), ...(utm ? { utm } : {}) },
+        $set: { confirmed: false, consent, confirmSentAt: new Date(), ...(preferredLanguage ? { preferredLanguage } : {}) },
       },
-      { upsert: true, new: false }
+      { upsert: true }
     );
 
-    const isNew = before === null;
-    const isResubscribe = before !== null && before.unsubscribed === true;
+    after(async () => {
+      const res = await sendConfirmEmail(email, lang);
+      if (!res.ok) console.error('[newsletter] confirmation email failed:', res.error);
+    });
 
-    // Already subscribed and active — nothing more to do (language was updated above)
-    if (!isNew && !isResubscribe) {
-      return NextResponse.json({ ok: true });
-    }
-
-    // Fire-and-forget Kit.com sync — non-fatal, must not block the response.
-    // Runs for both new signups and re-subscribes (Kit reactivates on re-create).
-    syncToKit({ email_address: email }).catch(() => {});
-
-    // Admin notification for a genuinely new subscriber
-    if (isNew) {
-      void notifyAdmin({
-        type: 'subscriber_new',
-        title: 'New subscriber',
-        body: `${email} just joined${preferredLanguage ? ` (${preferredLanguage.toUpperCase()})` : ''}.`,
-        link: '/rk-studio/newsletter',
-      });
-    }
-
-    // Fire-and-forget welcome email — only for genuinely new subscribers
-    const resend = getResend();
-    if (resend && isNew) {
-      const p = resend.emails.send({
-        from: FROM_EMAIL,
-        to: email,
-        subject: "Welcome. You're in. 👋",
-        html: emailShell('// welcome to the list', `
-          <h2 style="color:#F4F4EF;margin:0 0 16px;font-size:22px;">You're in. Welcome.</h2>
-          <p style="color:#9A9A94;line-height:1.7;margin:0 0 16px;">Every week I send one sharp email: AI strategies, business tactics, and creator insights. No filler, no fluff.</p>
-          <p style="color:#9A9A94;line-height:1.7;margin:0 0 24px;">If you ever want to work together, <a href="https://ketami.net/en/contact" style="color:#00CD29;text-decoration:none;">reach out here</a>.</p>
-          <p style="color:#9A9A94;font-size:12px;margin:0;">— Riyad<br/>ketami.net</p>
-        `),
-      });
-      p.catch(() => {}); // prevent UnhandledPromiseRejection; failure is non-fatal
-    }
-
-    return NextResponse.json({ ok: true }, { status: 201 });
+    return ACCEPTED();
   } catch (err) {
     if (err instanceof InvalidJsonError) return badJson();
-    if (err instanceof z.ZodError) {
-      return NextResponse.json({ error: 'Invalid email or language' }, { status: 400 });
-    }
+    console.error('[newsletter] signup failed:', err);
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
   }
 }

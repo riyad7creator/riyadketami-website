@@ -26,6 +26,7 @@ const TYPE_ICON: Record<string, string> = {
   contact_new: '✉️',
   send_failure: '⚠️',
   storage_warning: '💾',
+  newsletter_draft: '📝',
 };
 
 const TYPE_LABEL: Record<string, string> = {
@@ -33,6 +34,7 @@ const TYPE_LABEL: Record<string, string> = {
   contact_new: 'Contact form',
   send_failure: 'Send failure',
   storage_warning: 'Storage warning',
+  newsletter_draft: 'Newsletter draft',
 };
 
 function timeAgo(iso: string) {
